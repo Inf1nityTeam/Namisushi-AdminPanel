@@ -19,9 +19,108 @@
   font-family: Ubuntu;
   font-style: normal;
   font-weight: normal;
-  inset: 0px auto auto -8px !important;
+  // inset: 0px auto auto -8px !important;
   font-size: 12px;
   line-height: 20px;
   color: #FFFFFF;
   border-radius: 200px;
+}
+
+.el-table__body-wrapper {
+  .el-table__cell {
+
+    .cell {
+      height: 120px;
+      font-family: Ubuntu;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 18px;
+      color: #2A2A2A;
+      //word-wrap: break-word;
+      //white-space:break-spaces;
+      // overflow: scroll;
+      box-sizing: border-box;
+      padding-top: 20px !important;
+
+      display: flex;
+      gap: 8px;
+    }
+
+    height: 120px;
+  }
+
+  .el-table__row {
+    height: 120px;
+    box-sizing: border-box;
+  }
+}
+
+.el-table .el-table__cell {
+  padding: 0 0 !important;
+  box-sizing: border-box;
+  background-color: transparent !important;
+}
+
+.el-table th.el-table__cell.is-leaf {
+  border-bottom: none !important;
+}
+
+.el-table__body {
+  padding: 0 10px;
+}
+
+.el-table .cell {
+  padding-left: 10px;
+  padding-right: 15px;
+}
+
+.el-table__header {
+  height: 46px;
+
+  > thead {
+    > tr {
+      //background: linear-gradient(195.87deg, rgba(0, 67, 255, 0.04) 11.06%, rgba(0, 67, 255, 0) 88.93%);
+      background: linear-gradient(180.87deg, rgba(0, 67, 255, 0.08) 11.06%, rgba(0, 67, 255, 0) 88.93%);
+
+      > th {
+        height: 46px;
+        font-family: Ubuntu;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 20px;
+        color: #07103A;
+      }
+
+      .el-table th.el-table__cell.is-leaf {
+        border-bottom: transparent !important;
+      }
+    }
+  }
+}
+
+.el-pagination {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.el-button + .el-button {
+  margin-left: 0 !important;
+}
+
+.el-switch__core {
+  height: 16px !important;
+}
+
+.el-switch__action {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.el-switch.is-checked .el-switch__core .el-switch__action {
+  margin-left: calc(3px - var(--el-switch-button-size)) !important;
 }

@@ -1,0 +1,40 @@
+{
+  "categories": [
+    {
+      "_id": "6098ed58f9e36f238f5e91cf",
+      "title": "Роллы",
+      "createdAt": 1630241415694,
+      "updatedAt": 1630241415694
+    },
+    {
+      "_id": "6098ed93f9e36f238f5e91d2",
+      "title": "Суши и гунканы",
+      "createdAt": 1630241415694,
+      "updatedAt": 1630241415694
+    },
+    {
+      "_id": "6098ee7ef9e36f238f5e91d4",
+      "title": "Горячие блюда",
+      "createdAt": 1630241415694,
+      "updatedAt": 1630241415694
+    },
+    {
+      "_id": "6098ee8cf9e36f238f5e91d5",
+      "title": "Салаты",
+      "createdAt": 1630241415694,
+      "updatedAt": 1630241415694
+    },
+    {
+      "_id": "6098eea7f9e36f238f5e91d6",
+      "title": "Сеты",
+      "createdAt": 1630241415694,
+      "updatedAt": 1630241415694
+    },
+    {
+      "_id": "6098eee0f9e36f238f5e91d7",
+      "title": "Лапша и рис",
+      "createdAt": 1630241415694,
+      "updatedAt": 1630241415694
+    }
+  ]
+}
