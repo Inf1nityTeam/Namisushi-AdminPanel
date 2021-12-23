@@ -1,7 +1,6 @@
 <template>
   <el-table :data="productList"
-            max-height="calc(100% - 140px)"
-            style="max-width: 100%;">
+            style="min-height: calc(100vh - 210px)">
 
     <el-table-column v-for="(column, i) in columns"
                      :key=i
@@ -52,7 +51,7 @@ export default {
       return tableColumns.filter((el) => el.prop === 'status' || el.prop === 'actions')
     },
     productList() {
-      return productsState.currentProducts
+      return productsState.productsList
     }
   },
   data() {

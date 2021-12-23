@@ -6,8 +6,8 @@
     <div class="products-navigation__setup">
       <el-select placeholder="Выберите категорию">
         <el-option
-            v-for="item in categoriesList"
-            :key="item.indexNum"
+            v-for="(item, i) in categoriesList"
+            :key="i"
             :label="item.title"
             :value="item.title"
         >
@@ -30,14 +30,14 @@ import {categoriesState, GET_CATEGORIES} from "@/app/products/category.state";
 
 export default {
   name: "ProductsNavigationBar",
-  computed: {
-    categoriesList() {
-      return categoriesState.categoriesList
-    }
-  },
   mounted() {
     GET_CATEGORIES()
   },
+  computed:{
+    categoriesList(){
+      return categoriesState.categoriesList
+    }
+  }
 }
 </script>
 
@@ -52,14 +52,14 @@ export default {
   padding: 0 15px;
   box-sizing: border-box;
 
-  &__setup{
+  &__setup {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     gap: 20px;
   }
 
-  &__title{
+  &__title {
     font-family: Ubuntu;
     font-style: normal;
     font-weight: 600;

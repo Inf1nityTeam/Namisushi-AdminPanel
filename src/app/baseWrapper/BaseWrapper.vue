@@ -24,7 +24,7 @@
 
 <script>
 import BaseHeader from "./components/baseHeader";
-import BaseSidebar from "./components/baseSidebar";
+import BaseSidebar from "./components/baseSidebar/BaseSidebar";
 import {baseSidebarState} from "@/app/baseWrapper/components/baseSidebar/baseSidebar.state";
 
 export default {
@@ -55,7 +55,6 @@ export default {
   &__header {
     width: 100%;
     height: 70px;
-    background-color: blue;
   }
 
 }

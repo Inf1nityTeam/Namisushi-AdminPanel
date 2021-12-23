@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
 import LoginPage from "../app/loginPage";
-import BaseWrapper from "../app/baseWrapper";
+import BaseWrapper from "../app/baseWrapper/BaseWrapper";
 import {baseWrapperRoutes} from "../app/baseWrapper/base-wrapper.router";
 
 const routes = [{

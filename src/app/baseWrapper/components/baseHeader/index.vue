@@ -13,6 +13,9 @@ export default {
 
 <style scoped lang="scss">
 .base-header {
-
+  position: fixed;
+  width: 100%;
+  height: 70px;
+  background-color: blue;
 }
 </style>

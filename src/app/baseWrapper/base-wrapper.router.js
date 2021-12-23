@@ -5,5 +5,5 @@ export const baseWrapperRoutes = [{
 }, {
     path: '/products',
     name: 'products',
-    component: () => import('@/app/products')
+    component: () => import('@/app/products/Products')
 }]

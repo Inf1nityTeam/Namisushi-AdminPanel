@@ -7,6 +7,6 @@ export const tableColumns = [
     {prop: 'weight', label: 'Вес, г', width: '70px'},
     {prop: 'cost', label: 'Стоимость, Р', width: '120px'},
     {prop: 'status', label: 'Статус', width: '60px'},
-    {prop: 'actions', label: 'Действия', width: '130px'},
+    {prop: 'actions', label: 'Действия', width: '110px'},
 ]
 

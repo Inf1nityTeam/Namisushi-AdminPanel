@@ -1,18 +1,19 @@
 import {reactive} from 'vue'
-import products from "./products.json"
+import axios from "axios";
+import {AUTH} from "@/store/authentification";
 
 export const productsState = reactive({
     productsList: [],
-    productsCount: null,
-    currentProducts:[]
+    productsCount: null
 })
 
-export function GET_PRODUCTS() {
-    productsState.productsList = JSON.parse(JSON.stringify(products.products))
-    productsState.productsList.forEach((el, i) => el.indexNum = i + 1)
-    productsState.productsCount = JSON.parse(JSON.stringify(products.total))
-}
-
-export function GET_CURRENT_PRODUCT_LIST(startPosition,endPosition){
-    productsState.currentProducts = JSON.parse(JSON.stringify(productsState.productsList.slice(startPosition, endPosition)))
+export async function GET_PRODUCTS(limit, page) {
+    await AUTH()
+        //await axios.get('/api/admin/products', {params: {limit, page}})
+    await axios.get('/api/products', {params: {limit, page}})
+        .then(response => {
+            productsState.productsList = response.data.products
+            productsState.productsCount = response.data.total
+            console.log(productsState.productsList)
+        })
 }

@@ -1,11 +1,13 @@
 import {reactive} from 'vue'
-import categories from "./categories.json"
+import axios from "axios";
 
 export const categoriesState = reactive({
     categoriesList: [],
 })
 
-export function GET_CATEGORIES() {
-    categoriesState.categoriesList = JSON.parse(JSON.stringify(categories.categories))
-    categoriesState.categoriesList.forEach((el, i) => el.indexNum = i + 1)
+export async function GET_CATEGORIES() {
+    await axios.get('/api/categories')
+        .then(response => {
+            categoriesState.categoriesList = response.data.categories
+        })
 }

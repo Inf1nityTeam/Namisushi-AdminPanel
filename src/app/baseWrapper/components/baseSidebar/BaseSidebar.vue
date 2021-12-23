@@ -70,13 +70,14 @@ export default {
 
 <style scoped lang="scss">
 .base-sidebar {
+  position: fixed;
   background-image: url("../../../../assets/image/sidebar/bg.png");
   height: 100vh;
   background-size: cover;
   background-repeat: no-repeat;
   box-sizing: border-box;
   background-position: left;
-  position: relative;
+ // position: relative;
   padding-top: 20px;
   transition: all 350ms ease-in-out;
 

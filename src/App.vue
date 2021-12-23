@@ -2,8 +2,24 @@
   <router-view/>
 </template>
 
+<script>
+//import axios from "axios";
+
+export default {
+  mounted() {
+    this.authentication()
+  },
+  methods: {
+    async authentication() {
+
+    }
+  }
+}
+</script>
+
 <style lang="scss">
 @import "assets/styles/index.scss";
+
 body {
   padding: 0;
   margin: 0;
