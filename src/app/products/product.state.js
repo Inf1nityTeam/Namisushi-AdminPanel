@@ -9,8 +9,7 @@ export const productsState = reactive({
 
 export async function GET_PRODUCTS(limit, page) {
     await AUTH()
-        //await axios.get('/api/admin/products', {params: {limit, page}})
-    await axios.get('/api/products', {params: {limit, page}})
+    await axios.get('/api/admin/products', {params: {limit, page}})
         .then(response => {
             productsState.productsList = response.data.products
             productsState.productsCount = response.data.total
