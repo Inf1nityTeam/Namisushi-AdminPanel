@@ -4,7 +4,10 @@
     <div class="products-navigation__title">Продукты</div>
 
     <div class="products-navigation__setup">
-      <el-select placeholder="Выберите категорию">
+
+      <el-select v-model=activeCategoryTitle
+                 placeholder="Выберите категорию"
+                 @change="changeCurrentCategory">
         <el-option
             v-for="(item, i) in categoriesList"
             :key="i"
@@ -14,7 +17,7 @@
         </el-option>
       </el-select>
 
-      <el-button class="products-navigation__btn products-navigation__btn--long">Новый продукт</el-button>
+      <ProductsModalWindow/>
 
       <el-button class="products-navigation__btn products-navigation__btn--small">
         <img src="@/assets/image/products/settings.svg">
@@ -26,16 +29,33 @@
 </template>
 
 <script>
+import {productsState, GET_PRODUCTS} from "@/app/products/product.state";
 import {categoriesState, GET_CATEGORIES} from "@/app/products/category.state";
+import ProductsModalWindow from "@/app/products/components/ProductsModalWindow";
 
 export default {
   name: "ProductsNavigationBar",
+  components: {ProductsModalWindow},
   mounted() {
     GET_CATEGORIES()
   },
-  computed:{
-    categoriesList(){
+  computed: {
+    categoriesList() {
       return categoriesState.categoriesList
+    }
+  },
+  data() {
+    return {
+      activeCategoryTitle: null
+    }
+  },
+  methods: {
+    changeCurrentCategory(categoryTitle) {
+      const activeCategory = this.categoriesList.filter(el => el.title === categoryTitle)[0]
+      this.activeCategoryTitle = activeCategory.title
+      productsState.activeCategoryId = activeCategory._id
+      productsState.currentPage = 1
+      GET_PRODUCTS()
     }
   }
 }
@@ -80,19 +100,6 @@ export default {
 
     > img {
       width: 20px;
-    }
-
-    &--long {
-      font-family: Ubuntu;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 12px;
-      line-height: 18px;
-      text-align: center;
-      color: #FFFFFF;
-      width: 142px;
-      background: #004AFF;
-      margin-right: 15px;
     }
 
     &--small {

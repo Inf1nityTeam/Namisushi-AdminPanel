@@ -3,7 +3,7 @@
     <el-pagination
         v-model:currentPage="currentPage"
         background
-        :page-sizes="[1,2,3,4,5,10, 20, 30, 40, productCount]"
+        :page-sizes="[1,2,3,4,5,10, 20, 30, 40]"
         :page-size="currentProductsLimit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="productCount"
@@ -19,34 +19,27 @@ import {GET_PRODUCTS, productsState} from "@/app/products/product.state";
 export default {
   name: "ProductsPagination",
   mounted() {
-    GET_PRODUCTS(this.currentProductsLimit, this.currentPage)
-  },
-  data() {
-    return {
-      currentPage: 1,
-      currentProductsLimit:20
-    }
+    GET_PRODUCTS()
   },
   methods: {
-    changeLimitValue(val) {
-      GET_PRODUCTS(val, this.currentPage)
-      this.currentProductsLimit = val
-      console.log('handleSizeChange' + val)
+    changeLimitValue(currentLimit) {
+      productsState.currentLimit = currentLimit
+      GET_PRODUCTS()
     },
-    changePageValue(val) {
-      GET_PRODUCTS(this.currentProductsLimit, val)
-      console.log('handleCurrentChange' + val)
+    changePageValue(currentPage) {
+      productsState.currentPage = currentPage
+      GET_PRODUCTS()
     },
-    async openAnotherPage() {
-      //this.tableHeight = document.getElementsByClassName('products')[0].clientHeight
-      // this.rowCount = Math.floor((this.tableHeight - 63 - 75 - 46) / 120)
-      //await GET_PRODUCTS(this.rowCount, this.currentPage)
-      //this.pageCount = Math.ceil(this.productCount / this.rowCount)
-    }
   },
   computed:{
     productCount(){
       return productsState.productsCount
+    },
+    currentPage(){
+      return productsState.currentPage
+    },
+    currentProductsLimit(){
+      return productsState.currentLimit
     }
   }
 }
