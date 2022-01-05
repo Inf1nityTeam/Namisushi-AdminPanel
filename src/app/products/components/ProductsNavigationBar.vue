@@ -31,7 +31,7 @@
 <script>
 import {productsState, GET_PRODUCTS} from "@/app/products/product.state";
 import {categoriesState, GET_CATEGORIES} from "@/app/products/category.state";
-import ProductsModalWindow from "@/app/products/components/ProductsModalWindow";
+import ProductsModalWindow from "@/app/products/modalWindow/ProductsModalWindow";
 
 export default {
   name: "ProductsNavigationBar",

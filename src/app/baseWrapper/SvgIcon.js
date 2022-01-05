@@ -1,4 +1,4 @@
-import {imgToSvgByRef} from "./imgToSvg";
+import {imgToSvgByRef} from "@/helpers/imgToSvg";
 
 const SvgIcon = (props, context) => {
     const onload = e => {
