@@ -31,3 +31,13 @@ export async function UPDATE_PRODUCT_STATUS(product) {
             productsState.productsList.find(el => el._id === productId).show = !product.show
         })
 }
+
+export async function CREATE_PRODUCT(product) {
+    await axios.post('/api/admin/product', product)
+        .then((response) => {
+            console.log(response)
+        })
+
+    // console.log('state')
+    // console.log(product)
+}

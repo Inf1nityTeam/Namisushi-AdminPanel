@@ -63,7 +63,6 @@ export default {
       return tableColumns.filter((el) => el.prop === 'show' || el.prop === 'actions')
     },
     columnImg() {
-      console.log(tableColumns.filter((el) => el.prop === 'images'))
       return tableColumns.filter((el) => el.prop === 'images')
     },
     productList() {

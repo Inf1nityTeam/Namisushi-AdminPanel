@@ -13,7 +13,8 @@
       style="max-height: 889px"
       width="462px"
       center
-      :before-close="beforeCloseModalWindow">
+      :before-close="beforeCloseModalWindow"
+      :close="closeModalWindow">
 
     <template #title>
       <div class="products-modal__header">
@@ -22,70 +23,77 @@
       </div>
     </template>
 
-    <el-form>
+    <div class="products-modal__type">
 
-      <div class="products-modal__type">
+      <div class="products-modal__title">Тип продукта</div>
 
-        <div class="products-modal__title">Тип продукта</div>
+      <div class="products-modal__section">
 
-        <div class="products-modal__section">
+        <label class="radio">
+          <input type="radio" name="modal-radio-btn"
+                 class="radio__input"
+                 v-model="productType"
+                 value="ordinary">
+          <div class="radio__radio"></div>
+          Обычный
+        </label>
 
-          <label class="radio">
-            <input type="radio" name="ordinary"
-                   class="radio__input"
-                   @input="productType='ordinary'">
-            <div class="radio__radio"></div>
-            Обычный
-          </label>
-
-          <label class="radio">
-            <input type="radio" name="ordinary"
-                   class="radio__input"
-                   @input="productType='differentFillings'" checked>
-            <div class="radio__radio"></div>
-            С различными начинками
-          </label>
-
-        </div>
-
-      </div>
-
-      <div class="products-modal__category modal-section">
-        <div class="modal-section__title products-modal__title">Категория</div>
-        <CategoriesSelect v-model="productCategories"/>
-      </div>
-
-      <div class="products-modal__name modal-section">
-        <div class="products-modal__title modal-section__title">Наименование продукта</div>
-        <el-input placeholder="Введите название продукта" v-model="productName"/>
-      </div>
-
-      <div class="products-modal__description modal-section">
-        <div class="products-modal__title modal-section__title">Описание</div>
-        <el-input type="textarea" placeholder="Введите название продукта" v-model="productDescription"/>
-      </div>
-
-      <div class="products-modal__another products-modal__section">
-
-        <div class="modal-section">
-          <div class="products-modal__title modal-section__title">Стоимость</div>
-          <el-input-number :min="100" :max="5990" step="10" v-model="productCost"/>
-        </div>
-
-        <div class="modal-section">
-          <div class="products-modal__title modal-section__title">Вес (граммы)</div>
-          <el-input-number :min="1" :max="5990" v-model="productWeight"/>
-        </div>
-
-        <div class="modal-section">
-          <div class="products-modal__title modal-section__title">Ингридиенты</div>
-          <el-input placeholder="Добавить ингридиент" v-model="productIngredients"/>
-        </div>
+        <label class="radio">
+          <input type="radio" name="modal-radio-btn"
+                 class="radio__input"
+                 value="differentFillings"
+                 v-model="productType"
+                 checked>
+          <div class="radio__radio"></div>
+          С различными начинками
+        </label>
 
       </div>
 
-      <div class="products-modal__teg modal-section"></div>
+    </div>
 
+    <div class="products-modal__category modal-section">
+      <div class="modal-section__title products-modal__title">Категория</div>
+      <CategoriesSelect v-model="productCategories"/>
+    </div>
+
+    <div class="products-modal__name modal-section">
+      <div class="products-modal__title modal-section__title">Наименование продукта</div>
+      <el-input placeholder="Введите название продукта" v-model="productName"/>
+    </div>
+
+    <div class="products-modal__description modal-section">
+      <div class="products-modal__title modal-section__title">Описание</div>
+      <el-input type="textarea" placeholder="Введите название продукта" v-model="productDescription"/>
+    </div>
+
+    <div class="products-modal__another products-modal__section">
+
+      <div class="modal-section">
+        <div class="products-modal__title modal-section__title">Стоимость</div>
+        <el-input-number :min="100" :max="5990" step="10" v-model="productCost"/>
+      </div>
+
+      <div class="modal-section">
+        <div class="products-modal__title modal-section__title">Вес (граммы)</div>
+        <el-input-number :min="1" :max="5990" v-model="productWeight"/>
+      </div>
+
+      <div class="modal-section">
+        <div class="products-modal__title modal-section__title">Ингридиенты</div>
+        <IngredientsTag @sendIngredients="getProductIngredients" :ingredients="productIngredients"/>
+      </div>
+
+    </div>
+
+    <div class="products-modal__teg modal-section">
+      <div class="products-modal__title">Тег</div>
+
+      <div class="products-modal__section">
+      </div>
+    </div>
+
+    <template #footer>
       <span class="dialog-footer modal-section">
         <el-button class="products-modal__btn"
                    type="submit"
@@ -97,14 +105,16 @@
           Сохранить
         </el-button>
       </span>
-    </el-form>
+    </template>
   </el-dialog>
-  <div></div>
+
 </template>
 
 <script>
 import {ElMessageBox, ElNotification} from 'element-plus'
 import CategoriesSelect from "@/app/products/modalWindow/components/CategoriesSelect";
+import IngredientsTag from "@/app/products/modalWindow/components/IngredientsTag";
+import {CREATE_PRODUCT} from "@/app/products/product.state";
 
 export default {
   name: "ProductsModalWindow",
@@ -115,7 +125,7 @@ export default {
       productDescription: '',
       productCost: 1000,
       productWeight: 10,
-      productIngredients: '',
+      productIngredients: ['Дракон Хото', 'Ролл Темпура с креветкой', 'Тунец'],
       productType: 'differentFillings',
       productCategories: []
     }
@@ -133,30 +143,51 @@ export default {
         ElNotification({
           message: 'Вы отменили создание продукта',
           type: 'info',
-        })
+        }).then(() => this.closeModalWindow())
       })
-          .catch(() => {
-          })
     },
-    addNewProduct() {
+    async addNewProduct() {
       const newProduct = {
         show: false,
         title: this.productName,
         description: this.productDescription,
-        cost: this.productCost,
+        cost: +this.productCost,
         ingredients: this.productIngredients,
-        weight: this.productWeight,
+        weight: +this.productWeight,
         categories: this.productCategories
       }
-      console.log(newProduct)
-      this.dialogVisible = false
-      ElNotification({
-        message: 'Продукт добавлен',
-        type: 'success',
-      })
+      if (!newProduct.title || !newProduct.cost) {
+        ElNotification({
+          message: 'Данные заполнены некорректно',
+          type: 'error',
+        })
+      } else {
+        this.dialogVisible = false
+        //метод state, который должен отправить данные
+        await CREATE_PRODUCT(newProduct)
+            .then(() => {
+              this.closeModalWindow()
+            })
+        ElNotification({
+          message: 'Запрос на создание продукта отправлен',
+          type: 'success',
+        })
+      }
     },
+    getProductIngredients(pr) {
+      this.productIngredients = pr
+    },
+    closeModalWindow() {
+      this.productName = ''
+      this.productDescription = ''
+      this.productCost = 1000
+      this.productWeight = 10
+      this.productIngredients = ['Дракон Хото', 'Ролл Темпура с креветкой', 'Тунец']
+      this.productType = 'differentFillings'
+      this.productCategories = []
+    }
   },
-  components: {CategoriesSelect},
+  components: {IngredientsTag, CategoriesSelect},
 }
 </script>
 

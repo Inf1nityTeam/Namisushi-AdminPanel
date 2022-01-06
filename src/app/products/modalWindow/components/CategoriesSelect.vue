@@ -52,7 +52,7 @@ export default {
       this.categoriesList.forEach(el => {
         const indexEl = val.indexOf(el.title)
         if (indexEl !== -1) {
-          if(!el.showIcon) {
+          if (!el.showIcon) {
             el.showIcon = true
             this.$nextTick(() => {
               const selectedTags = modalWindow.getElementsByClassName('el-tag el-tag--info el-tag--small el-tag--light')[indexEl]
@@ -69,9 +69,9 @@ export default {
           }
         } else el.showIcon = false
       })
-
       this.selectedCategories = val.slice(0)
-      this.$emit('productCategories',this.selectedCategories)
+      this.$emit('productCategories', this.selectedCategories)
+      this.categoriesList.forEach(el => el.showIcon = false)
     },
   },
   computed: {
@@ -84,15 +84,14 @@ export default {
       return categoriesState.categoriesList
     }
   },
-  components: {SvgIcon}
+  components: {SvgIcon},
 }
 </script>
 
 <style lang="scss">
-
 .el-tag {
   height: 48px;
-  padding-left: 50px;
+  //padding-left: 50px;
   padding-top: 5px;
   position: relative;
   box-sizing: border-box;
@@ -106,8 +105,10 @@ export default {
   line-height: 24px;
   color: #1454F2;
 }
+
 .el-select .el-select__tags .el-tag {
   padding-top: 11px;
+  padding-left: 50px;
 }
 
 .img-select-wrapper {
