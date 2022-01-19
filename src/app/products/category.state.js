@@ -8,6 +8,6 @@ export const categoriesState = reactive({
 export async function GET_CATEGORIES() {
     await axios.get('/api/categories')
         .then(response => {
-            categoriesState.categoriesList = response.data.categories
+            categoriesState.categoriesList = JSON.parse(JSON.stringify(response.data.categories))
         })
 }

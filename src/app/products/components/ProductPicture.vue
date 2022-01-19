@@ -1,18 +1,16 @@
 <template>
   <div class="product-picture">
-
     <div class="img1">
-      <img :src="imgPath"/>
+      <img :src="imgPath" />
     </div>
 
     <div class="img2">
-      <img :src="imgPath"/>
+      <img :src="imgPath" />
     </div>
 
     <div class="img3">
-      <img :src="imgPath"/>
+      <img :src="imgPath" />
     </div>
-
   </div>
 </template>
 
@@ -20,9 +18,9 @@
 export default {
   name: "ProductPicture",
   props: {
-    imgPath: {type: String}
-  }
-}
+    imgPath: { type: String },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -30,14 +28,15 @@ export default {
   display: flex;
   align-items: center;
 
-  > .img1, .img3 {
-    opacity: .6;
-    background: rgba(172,170,170,.9);
+  > .img1,
+  .img3 {
+    opacity: 0.6;
+    background: rgba(172, 170, 170, 0.9);
     border: none;
     border-radius: 8px;
     width: 60px;
     height: 60px;
-    >img {
+    > img {
       width: 50px;
       height: 50px;
     }
@@ -53,7 +52,7 @@ export default {
     margin-left: -50px;
     width: 80px;
     height: 80px;
-    >img {
+    > img {
       width: 70px;
       height: 70px;
     }
@@ -64,7 +63,6 @@ export default {
     justify-content: center;
     align-items: center;
     > img {
-
     }
   }
 }

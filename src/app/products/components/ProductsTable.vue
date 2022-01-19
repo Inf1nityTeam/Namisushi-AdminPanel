@@ -67,7 +67,8 @@ export default {
     },
     productList() {
       const mas = productsState.productsList.map((el) => {
-        return {...el, categories: el.categories[0].title}
+        const currrentCategory = el.categories[0]?el.categories[0].title:"Роллы"
+        return {...el, categories: currrentCategory }
       })
       //console.log(mas)
       return mas
