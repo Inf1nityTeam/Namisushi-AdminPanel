@@ -7,17 +7,19 @@ export const productsState = reactive({
     productsCount: null,
     showProducts: false,
     activeCategoryId: null,
-    currentLimit: 2,
+    currentLimit: 1,
     currentPage: 1
 })
 
 export async function GET_PRODUCTS() {
     await AUTH()
-
+//61e7ec5b6968db777c1ddf3a
+    //await axios.delete('/api/admin/product/61e7ec5b6968db777c1ddf3a')
     // await axios.get('/api/admin/products')
     //     .then((response) => {
     //         const tr = response.data.find(el => el.tittle === "roll")._id
     //         axios.delete('/api/admin/product/' + tr)
+    //        // console.log(response.data);
     //     })
 
     const payload = { limit: productsState.currentLimit, page: productsState.currentPage }
@@ -26,7 +28,7 @@ export async function GET_PRODUCTS() {
         .then(response => {
             productsState.productsList = JSON.parse(JSON.stringify(response.data.products))
             productsState.productsCount = response.data.total
-            console.log(productsState.productsList);
+           // console.log(productsState.productsList);
         }).then(() => {
             productsState.showProducts = true
         })
@@ -48,7 +50,4 @@ export async function CREATE_PRODUCT(product) {
             console.log(response)
         })
         .catch(reject => console.log(reject))
-
-    // console.log('state')
-    // console.log(product)
 }

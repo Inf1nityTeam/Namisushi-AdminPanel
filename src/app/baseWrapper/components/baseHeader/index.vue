@@ -13,9 +13,10 @@ export default {
 
 <style scoped lang="scss">
 .base-header {
+  z-index: 10;
   position: fixed;
   width: 100%;
-  height: 70px;
-  background-color: blue;
+  height: 64px;
+  background: linear-gradient(180deg, #7EA8FC 0%, #2662F3 100%);
 }
 </style>

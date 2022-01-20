@@ -1,11 +1,15 @@
 <template>
-  <el-button
+  <!-- <el-button
     type="text"
     class="products-modal__btn"
     @click="dialogVisible = true"
   >
     Новый продукт
-  </el-button>
+  </el-button> -->
+  <ProductsBtn
+    :btnConfig="{ title: 'Добавить продукт', height: '50px', width: '218px' }"
+    @click="dialogVisible = true"
+  />
 
   <el-dialog
     class="products-modal"
@@ -56,8 +60,11 @@
     <div class="products-modal__category modal-section">
       <div class="modal-section__title products-modal__title">Категория</div>
       <CategoriesSelect
+        class="products-modal-window-select"
+        :currentClass="'products-modal-window-select'"
         @getSelectedCategories="getSelectedCategories"
         :isClearList="isClearCategoriesList"
+        :isMultiple="true"
       />
       <!-- <CategoriesSelect @func12="func12"/> -->
     </div>
@@ -143,12 +150,13 @@ import IngredientsTag from "@/app/products/modalWindow/components/IngredientsTag
 import { CREATE_PRODUCT } from "@/app/products/product.state";
 import { categoriesState } from "../category.state";
 import { productsState } from "../product.state";
+import ProductsBtn from "@/app/products/ProductsBtn.vue";
 
 export default {
   name: "ProductsModalWindow",
   data() {
     return {
-      dialogVisible: true,
+      dialogVisible: false,
       productName: "",
       productDescription: "",
       productCost: 1000,
@@ -165,14 +173,16 @@ export default {
         confirmButtonText: "Да",
         cancelButtonText: "Нет",
         type: "warning",
-      }).then(() => {
-        done();
-        this.closeModalWindow();
-        ElNotification({
-          message: "Вы отменили создание продукта",
-          type: "info",
-        });
-      }).catch(()=>{});
+      })
+        .then(() => {
+          done();
+          this.closeModalWindow();
+          ElNotification({
+            message: "Вы отменили создание продукта",
+            type: "info",
+          });
+        })
+        .catch(() => {});
     },
     async addNewProduct() {
       const newProduct = {
@@ -182,7 +192,7 @@ export default {
         cost: +this.productCost,
         ingredients: JSON.parse(JSON.stringify(this.productIngredients)),
         weight: +this.productWeight,
-        categories: JSON.parse(JSON.stringify(this.productCategories)),
+        categories: this.productCategories,
       };
       //console.log(newProduct);
       if (!newProduct.title || !newProduct.cost) {
@@ -224,7 +234,7 @@ export default {
       this.isClearCategoriesList = false;
     },
   },
-  components: { IngredientsTag, CategoriesSelect },
+  components: { IngredientsTag, CategoriesSelect, ProductsBtn },
 };
 </script>
 

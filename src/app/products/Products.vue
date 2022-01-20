@@ -1,16 +1,12 @@
 <template>
   <div class="products">
-    <el-scrollbar height="100%">
+    <!-- <el-scrollbar height="100%" > -->
+      <ProductsNavigationBar />
 
-      <ProductsNavigationBar/>
+      <ProductsTable />
 
-<!--      <div style="height: calc(100% - 140px); min-height: calc(100% - 140px)">-->
-        <ProductsTable/>
-<!--      </div>-->
-
-      <ProductsPagination/>
-
-    </el-scrollbar>
+      <ProductsPagination />
+    <!-- </el-scrollbar> -->
   </div>
 </template>
 
@@ -20,14 +16,16 @@ import ProductsNavigationBar from "@/app/products/components/ProductsNavigationB
 import ProductsPagination from "@/app/products/components/ProductsPagination";
 
 export default {
-  components: {ProductsPagination, ProductsNavigationBar, ProductsTable},
-}
+  components: { ProductsPagination, ProductsNavigationBar, ProductsTable },
+};
 </script>
 
 <style scoped lang="scss">
 .products {
-  height: 100%;
+  //height: 100%;
   position: relative;
+  //overflow: auto;
   // overflow-y: scroll;
+  padding: 20px 20px 0 20px;
 }
 </style>

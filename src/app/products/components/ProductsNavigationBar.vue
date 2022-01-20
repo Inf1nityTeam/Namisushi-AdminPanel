@@ -1,92 +1,137 @@
 <template>
   <div class="products-navigation">
-
     <div class="products-navigation__title">Продукты</div>
 
-    <div class="products-navigation__setup">
+    <div class="products-navigation__btn-setup">
+      <div>
+        <ProductsBtn
+          :btnConfig="{ title: 'Продукты', height: '38px', width: '103px' }"
+        />
+        <ProductsBtn
+          :btnConfig="{
+            title: 'Категории',
+            height: '38px',
+            width: '107px',
+            isNotActive: true,
+          }"
+        />
+      </div>
 
-      <el-select v-model=activeCategoryTitle
-                 placeholder="Выберите категорию"
-                 @change="changeCurrentCategory">
-        <el-option
-            v-for="(item, i) in categoriesList"
-            :key="i"
-            :label="item.title"
-            :value="item.title"
-        >
-        </el-option>
-      </el-select>
-
-      <ProductsModalWindow/>
-
-      <el-button class="products-navigation__btn products-navigation__btn--small">
-        <img src="@/assets/image/products/settings.svg">
-      </el-button>
-
+      <ProductsModalWindow />
     </div>
 
+    <div class="products-navigation__table-setup">
+      <el-input
+        size="large"
+        placeholder="Please Input"
+        :suffix-icon="Search"
+      ></el-input>
+      <CategoriesSelect
+        class="products-navigation-bar-select"
+        @getSelectedCategories="getSelectedCategories"
+        :isClearList="isClearCategoriesList"
+        :currentClass="'products-navigation-bar-select'"
+        :isMultiple="false"
+      />
+    </div>
+    <!-- <el-select
+      v-model="activeCategoryTitle"
+      placeholder="Выберите категорию"
+      @change="changeCurrentCategory"
+    >
+      <el-option
+        v-for="(item, i) in categoriesList"
+        :key="i"
+        :label="item.title"
+        :value="item.title"
+      >
+      </el-option>
+    </el-select> -->
   </div>
 </template>
 
 <script>
-import {productsState, GET_PRODUCTS} from "@/app/products/product.state";
-import {categoriesState, GET_CATEGORIES} from "@/app/products/category.state";
+import { productsState, GET_PRODUCTS } from "@/app/products/product.state";
+import { categoriesState, GET_CATEGORIES } from "@/app/products/category.state";
 import ProductsModalWindow from "@/app/products/modalWindow/ProductsModalWindow";
+import ProductsBtn from "@/app/products/ProductsBtn.vue";
+import CategoriesSelect from "@/app/products/modalWindow/components/CategoriesSelect";
 
 export default {
   name: "ProductsNavigationBar",
-  components: {ProductsModalWindow},
+  components: { ProductsModalWindow, ProductsBtn, CategoriesSelect },
   mounted() {
-    GET_CATEGORIES()
+    GET_CATEGORIES();
   },
   computed: {
     categoriesList() {
-      return categoriesState.categoriesList
-    }
-  },
-  data() {
-    return {
-      activeCategoryTitle: null
-    }
+      return categoriesState.categoriesList;
+    },
   },
   methods: {
-    changeCurrentCategory(categoryTitle) {
-      const activeCategory = this.categoriesList.filter(el => el.title === categoryTitle)[0]
-      this.activeCategoryTitle = activeCategory.title
-      productsState.activeCategoryId = activeCategory._id
-      productsState.currentPage = 1
-      GET_PRODUCTS()
-    }
-  }
-}
+    getSelectedCategories(val) {
+      productsState.activeCategoryId = val[0];
+      productsState.currentPage = 1;
+      GET_PRODUCTS();
+    },
+  },
+};
 </script>
 
-<style scoped lang="scss">
-
+<style lang="scss">
 .products-navigation {
-  height: 63px;
+  height: 180px;
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
+  gap: 10px;
+  flex-direction: column;
   box-sizing: border-box;
 
-  &__setup {
+  &__btn-setup {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    width: 100%;
+
+    > div:first-child {
+      display: flex;
+      gap: 20px;
+    }
+  }
+  &__table-setup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .el-input,
+    .el-select {
+      width: calc(50% - 7px);
+    }
+    .el-input__inner {
+      min-height: 50px !important;
+    }
+    .el-select {
+      > div {
+        > div {
+          width: 100% !important;
+        }
+      }
+    }
+  }
+
+  &-bar-select {
+    .el-input__inner {
+      padding-left: 16px;
+    }
   }
 
   &__title {
-    font-family: Ubuntu;
+    font-family: Raleway;
     font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
-    color: #060E2E;
-    margin-left: 9px;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 28px;
+    color: #07103a;
   }
 
   &__btn {

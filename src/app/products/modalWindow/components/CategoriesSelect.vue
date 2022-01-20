@@ -1,9 +1,11 @@
 <template>
   <el-select
+    :clearable="!isMultiple"
     v-model="selectedCategories"
-    multiple
+    :multiple="isMultiple"
     placeholder="Выберите категорию"
     @change="changeCategory"
+    @clear="clearSelect"
   >
     <el-option
       v-for="(item, i) in categoriesList"
@@ -51,41 +53,88 @@ export default {
   },
   methods: {
     changeCategory(val) {
-      const modalWindow = document.getElementsByClassName(
-        "products-modal__category modal-section"
-      )[0];
+      // const modalWindow = document.getElementsByClassName(this.parrentClass)[0];
+      const modalWindow = document.getElementsByClassName(this.currentClass)[0];
       this.categoriesList.forEach((el) => {
         const indexEl = val.indexOf(el.title);
         if (indexEl !== -1) {
           if (!el.showIcon) {
             el.showIcon = true;
+            //Создание иконки для выбранной категории
             this.$nextTick(() => {
-              const selectedTags = modalWindow.getElementsByClassName(
-                "el-tag el-tag--info el-tag--small el-tag--light"
-              )[indexEl];
-              const divImgWrapper = document.createElement("div");
-              divImgWrapper.className =
-                "img-select-wrapper--active img-select-wrapper";
-              divImgWrapper.style.cssText =
-                "position:absolute; !important; top:5px; left:5px; margin-right:0 !important;";
-              const img = document.createElement("img");
-              img.src = require(`@/assets/image/products/${el.imgUrl}`);
-              img.style.cssText = "height:24px;";
-              divImgWrapper.appendChild(img);
-              selectedTags.appendChild(divImgWrapper);
-              imgToSvgByRef(img);
+              //Добавление иконок, если select multiple
+              //т.е. можно выбрать несколько категорий
+              if (this.isMultiple) {
+                const selectedTags = modalWindow.getElementsByClassName(
+                  "el-tag el-tag--info el-tag--small el-tag--light"
+                )[indexEl];
+
+                let { divImgWrapper, img } = this.createdIcon(el);
+
+                selectedTags.appendChild(divImgWrapper);
+                imgToSvgByRef(img);
+              }
+              //Select с выбором только одной категории
+              else {
+                let span = modalWindow.getElementsByClassName(
+                  "img-select-wrapper--active img-select-wrapper"
+                )[0];
+                //Удаление иконки предыдущей категории,
+                //если такая существовала
+                if (span) {
+                  modalWindow
+                    .getElementsByClassName("el-input")[0]
+                    .removeChild(span);
+                }
+                modalWindow
+                  .getElementsByClassName(
+                    "el-input__inner"
+                  )[0].style.paddingLeft = "60px";
+
+                let { divImgWrapper, img } = this.createdIcon(el);
+
+                modalWindow
+                  .getElementsByClassName("el-input")[0]
+                  .appendChild(divImgWrapper);
+                imgToSvgByRef(img);
+              }
             });
           }
         } else el.showIcon = false;
       });
-      const selectedCategories = categoriesState.categoriesList.filter((el) =>
-        val.includes(el.title)
-      );
-      // this.$emit("productCategories", JSON.parse(JSON.stringify(selectedCategories)));
+      const selectedCategories = categoriesState.categoriesList
+        .filter((el) => val.includes(el.title))
+        .map((el) => el._id);
       this.$emit(
         "getSelectedCategories",
         JSON.parse(JSON.stringify(selectedCategories))
       );
+    },
+    //вызывается только для select
+    //с выбором одной категории
+    clearSelect() {
+      const modalWindow = document.getElementsByClassName(this.currentClass)[0];
+      const divImgWrapper = modalWindow.getElementsByClassName(
+        "img-select-wrapper--active img-select-wrapper"
+      );
+      modalWindow
+        .getElementsByClassName("el-input__inner")[0].style.paddingLeft =
+        "16px";
+      modalWindow
+        .getElementsByClassName("el-input")[0]
+        .removeChild(divImgWrapper[0]);
+    },
+    createdIcon(el) {
+      let divImgWrapper = document.createElement("div");
+      divImgWrapper.className = "img-select-wrapper--active img-select-wrapper";
+      divImgWrapper.style.cssText = this.isMultiple
+        ? "position:absolute; !important; top:5px; left:6px; margin-right:0 !important;"
+        : "position:absolute; !important; top:6.5px; left:12px; margin-right:0 !important;";
+      const img = document.createElement("img");
+      img.src = require(`@/assets/image/products/${el.imgUrl}`);
+      img.style.cssText = "height:24px;";
+      divImgWrapper.appendChild(img);
+      return { divImgWrapper, img };
     },
   },
   computed: {
@@ -104,7 +153,8 @@ export default {
     },
   },
   components: { SvgIcon },
-  props: ["isClearList"],
+  // * currentClass - класс, которы находиться на этом компоненте
+  props: ["isClearList", "isMultiple", "currentClass"],
   watch: {
     isClearList() {
       if (this.isClearList) {

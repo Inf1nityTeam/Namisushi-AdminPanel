@@ -25,8 +25,14 @@ export const sidebarMenu = [
     },
     {
         id:5,
+        img:'icon-notification.svg',
+        title: 'Уведомления',
+        path: '/'
+    },
+    {
+        id:6,
         img:'icon-logout.svg',
         title: 'Выйти',
         path: '/login'
-    }
+    },
 ]

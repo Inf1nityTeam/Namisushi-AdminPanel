@@ -13,7 +13,7 @@
         <base-header/>
       </div>
 
-      <div :style="{height:'calc(100vh - 70px)'}">
+      <div :style="{height:'calc(100vh - 64px)'}">
         <router-view/>
       </div>
 
@@ -54,7 +54,7 @@ export default {
 
   &__header {
     width: 100%;
-    height: 70px;
+    height: 64px;
   }
 
 }
