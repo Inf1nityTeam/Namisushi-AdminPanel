@@ -5,5 +5,11 @@ export const baseWrapperRoutes = [{
 }, {
     path: '/products',
     name: 'products',
-    component: () => import('@/app/products/Products')
+    meta:{layout:'GroupWrapper'},
+    component: () => import('@/app/product_&_category/products/Products.vue')
+}, {
+    path: '/categories',
+    name: 'categories',
+    meta:{layout:'GroupWrapper'},
+    component: () => import('@/app/product_&_category/categories/Categories.vue')
 }]

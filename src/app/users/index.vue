@@ -1,17 +1,17 @@
 <template>
-  <div class="users">
-    users
-  </div>
+  <div class="users">users</div>
 </template>
 
 <script>
 export default {
-  name: 'users'
-}
+  name: "users",
+};
 </script>
 
 <style scoped lang="scss">
 .users {
-
+  width: 100px;
+  height: 100px;
+  background: palevioletred;
 }
 </style>

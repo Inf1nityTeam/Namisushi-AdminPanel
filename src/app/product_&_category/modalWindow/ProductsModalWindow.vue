@@ -1,12 +1,5 @@
 <template>
-  <!-- <el-button
-    type="text"
-    class="products-modal__btn"
-    @click="dialogVisible = true"
-  >
-    Новый продукт
-  </el-button> -->
-  <ProductsBtn
+  <CommonButton
     :btnConfig="{ title: 'Добавить продукт', height: '50px', width: '218px' }"
     @click="dialogVisible = true"
   />
@@ -59,7 +52,7 @@
 
     <div class="products-modal__category modal-section">
       <div class="modal-section__title products-modal__title">Категория</div>
-      <CategoriesSelect
+      <CommonSelect
         class="products-modal-window-select"
         :currentClass="'products-modal-window-select'"
         @getSelectedCategories="getSelectedCategories"
@@ -145,12 +138,12 @@
 <script>
 /*eslint-disable*/
 import { ElMessageBox, ElNotification } from "element-plus";
-import CategoriesSelect from "@/app/products/modalWindow/components/CategoriesSelect";
-import IngredientsTag from "@/app/products/modalWindow/components/IngredientsTag";
-import { CREATE_PRODUCT } from "@/app/products/product.state";
-import { categoriesState } from "../category.state";
-import { productsState } from "../product.state";
-import ProductsBtn from "@/app/products/ProductsBtn.vue";
+import CommonSelect from "@/app/product_&_category/components/CommonSelect.vue";
+import IngredientsTag from "@/app/product_&_category/modalWindow/components/IngredientsTag";
+import { CREATE_PRODUCT } from "@/app/product_&_category/product.state";
+import { categoriesState } from "@/app/product_&_category/category.state";
+import { productsState } from "@/app/product_&_category/product.state";
+import CommonButton from "@/app/product_&_category/components/CommonButton.vue";
 
 export default {
   name: "ProductsModalWindow",
@@ -234,7 +227,7 @@ export default {
       this.isClearCategoriesList = false;
     },
   },
-  components: { IngredientsTag, CategoriesSelect, ProductsBtn },
+  components: { IngredientsTag, CommonSelect, CommonButton },
 };
 </script>
 
@@ -340,19 +333,19 @@ export default {
       width: 412px;
     }
 
-    .el-select__caret {
-      content: url("../../../assets/image/products/arrow-in-select-of-category-in-modal-products.svg");
-      width: 10px;
-      margin-left: -18px;
-    }
+    // .el-select__caret {
+    //   content: url("../../../assets/image/products/arrow-in-select-of-category-in-modal-products.svg");
+    //   width: 10px;
+    //   margin-left: -18px;
+    // }
 
-    .el-select .el-input .el-select__caret.is-reverse {
-      transform: rotateZ(180deg) !important;
-    }
+    // .el-select .el-input .el-select__caret.is-reverse {
+    //   transform: rotateZ(180deg) !important;
+    // }
 
-    .el-select .el-input .el-select__caret {
-      transform: rotateZ(0) !important;
-    }
+    // .el-select .el-input .el-select__caret {
+    //   transform: rotateZ(0) !important;
+    // }
 
     .el-input__inner {
       color: #1454f2 !important;

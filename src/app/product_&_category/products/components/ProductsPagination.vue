@@ -14,20 +14,23 @@
 </template>
 
 <script>
-import { GET_PRODUCTS, productsState } from "@/app/products/product.state";
+import {
+  GET_PRODUCTS,
+  productsState,
+} from "@/app/product_&_category/product.state";
 
 export default {
   name: "ProductsPagination",
   mounted() {
-    GET_PRODUCTS().then(() => {
-      const pag = document
-        .getElementsByClassName("products-pagination")[0]
-        .getElementsByClassName("el-pagination__total")[0];
-      console.log(pag);
-      if (pag) {
-        pag.innerHTML = `Всего ${this.productCount}`;
-      }
-    });
+    GET_PRODUCTS();
+    // .then(() => {
+    //   const pag = document
+    //     .getElementsByClassName("products-pagination")[0]
+    //     .getElementsByClassName("el-pagination__total")[0];
+    //   if (pag) {
+    //     pag.innerHTML = `Всего ${this.productCount}`;
+    //   }
+    // });
   },
   methods: {
     changeLimitValue(currentLimit) {
@@ -58,7 +61,12 @@ export default {
 
 <style lang="scss">
 .products-pagination {
+  background: #fff;
   width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-sizing: border-box;
+  box-shadow: 10px 10px 10px rgba(0, 74, 255, 0.05), -5px -5px 10px #fafbff;
+  border-radius: 0 0 8px 8px;
 
   .el-pager {
     .number {

@@ -23,24 +23,25 @@
   // inset: 0px auto auto -8px !important;
   font-size: 12px;
   line-height: 20px;
-  color: #FFFFFF;
+  color: #ffffff;
   border-radius: 200px;
 }
 
-.el-table--border::after, .el-table--group::after, .el-table::before {
+.el-table--border::after,
+.el-table--group::after,
+.el-table::before {
   display: none;
 }
 
 .el-table__body-wrapper {
   .el-table__cell {
-
     .cell {
       font-family: Ubuntu;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
       line-height: 18px;
-      color: #2A2A2A;
+      color: #2a2a2a;
       box-sizing: border-box;
       padding-top: 20px !important;
       padding-bottom: 10px !important;
@@ -61,29 +62,42 @@
 .el-table .el-table__cell {
   padding: 0 0 !important;
   box-sizing: border-box;
-  background-color: transparent !important;
+ // background-color: transparent !important;
 }
 
 .el-table th.el-table__cell.is-leaf {
   border-bottom: none !important;
+  //border-bottom: 1px solid #f0f0f0 !important;
 }
-
+.el-table__header-wrapper::before {
+  content: "";
+  height: 1px;
+  width: calc(100% - 40px);
+  left: 20px;
+  top: 46px;
+  z-index: 2;
+  position: absolute;
+  background: rgba(29, 91, 243, 0.39);
+  border-radius: 2px;
+  border: none;
+  //border-bottom: 1px solid rgba(29, 91, 243, 0.39) !important;
+}
 .el-table__header {
   height: 46px;
 
   > thead {
     > tr {
       //background: linear-gradient(195.87deg, rgba(0, 67, 255, 0.04) 11.06%, rgba(0, 67, 255, 0) 88.93%);
-      background: linear-gradient(180.87deg, rgba(0, 67, 255, 0.08) 11.06%, rgba(0, 67, 255, 0) 88.93%);
+      //background: linear-gradient(180.87deg, rgba(0, 67, 255, 0.08) 11.06%, rgba(0, 67, 255, 0) 88.93%);
 
       > th {
         height: 46px;
-        font-family: Ubuntu;
+        font-family: Manrope;
         font-style: normal;
         font-weight: normal;
         font-size: 12px;
-        line-height: 20px;
-        color: #07103A;
+        line-height: 24px;
+        color: #6a6a6a;
       }
 
       .el-table th.el-table__cell.is-leaf {
@@ -105,8 +119,8 @@
   margin-left: 0 !important;
 }
 
-.el-button{
-  >span{
+.el-button {
+  > span {
     display: flex;
     align-items: center;
   }
@@ -136,15 +150,11 @@
 }
 
 .el-dialog__header::after {
-  content: ' ';
+  content: " ";
   width: 292px;
   height: 2px;
   display: block;
-  background: #1454F2;
+  background: #1454f2;
   border-radius: 2px;
   margin: 14px auto 0;
 }
-
-
-
-

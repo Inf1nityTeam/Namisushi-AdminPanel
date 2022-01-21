@@ -23,7 +23,12 @@
         >
           <router-link
             :to="el.path"
-            :class="$route.path === el.path ? 'active' : ''"
+            :class="
+              $route.path === el.path ||
+              ($route.path === '/categories' && el.path === '/products')
+                ? 'active'
+                : ''
+            "
           >
             <img :src="require(`@/assets/image/sidebar/${el.img}`)" />
             <span>{{ el.title }}</span>

@@ -86,10 +86,9 @@ export default {
                     .getElementsByClassName("el-input")[0]
                     .removeChild(span);
                 }
-                modalWindow
-                  .getElementsByClassName(
-                    "el-input__inner"
-                  )[0].style.paddingLeft = "60px";
+                modalWindow.getElementsByClassName(
+                  "el-input__inner"
+                )[0].style.paddingLeft = "60px";
 
                 let { divImgWrapper, img } = this.createdIcon(el);
 
@@ -117,9 +116,9 @@ export default {
       const divImgWrapper = modalWindow.getElementsByClassName(
         "img-select-wrapper--active img-select-wrapper"
       );
-      modalWindow
-        .getElementsByClassName("el-input__inner")[0].style.paddingLeft =
-        "16px";
+      modalWindow.getElementsByClassName(
+        "el-input__inner"
+      )[0].style.paddingLeft = "16px";
       modalWindow
         .getElementsByClassName("el-input")[0]
         .removeChild(divImgWrapper[0]);
@@ -167,6 +166,22 @@ export default {
 </script>
 
 <style lang="scss">
+//через слот селекта сделать стрелку как на макете
+// и добавлять крестик для селекта с одной категорией
+
+// .el-select__caret {
+//   content: url("../../../../assets/image/products/arrow-in-select-of-category-in-modal-products.svg");
+//   width: 10px;
+//   margin-left: -18px;
+// }
+
+// .el-select .el-input .el-select__caret.is-reverse {
+//   transform: rotateZ(180deg) !important;
+// }
+
+// .el-select .el-input .el-select__caret {
+//   transform: rotateZ(0) !important;
+// }
 .el-tag {
   height: 48px;
   //padding-left: 50px;

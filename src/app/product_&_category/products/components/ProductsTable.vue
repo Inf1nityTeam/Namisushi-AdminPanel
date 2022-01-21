@@ -1,7 +1,9 @@
 <template>
   <el-table
+    class="products-table"
+    v-loading="loading"
     :data="productList"
-    style="min-height: calc(100vh - 343px); width: 100%"
+    style="min-height: calc(100vh - 363px); width: 100%"
   >
     <el-table-column :prop="columnImg[0].prop" :width="columnImg[0].width">
       <template #default="scope">
@@ -18,6 +20,7 @@
       :label="column.label"
       class="table-row"
       :width="column.width"
+      :sortable="column.isSortable"
     >
     </el-table-column>
 
@@ -62,12 +65,12 @@
 </template>
 
 <script>
-import { tableColumns } from "@/app/products/table.config";
+import { tableColumns } from "@/app/product_&_category/table.config";
 import {
   productsState,
   UPDATE_PRODUCT_STATUS,
-} from "@/app/products/product.state";
-import ProductPicture from "@/app/products/components/ProductPicture";
+} from "@/app/product_&_category/product.state";
+import ProductPicture from "@/app/product_&_category/products/components/ProductPicture.vue";
 
 export default {
   name: "ProductsTable",
@@ -106,10 +109,30 @@ export default {
       console.log(val);
     },
   },
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  mounted() {
+    this.loading = true;
+    setInterval(() => {
+      if (this.productList.length > 0) {
+        this.loading = false;
+        return;
+      }
+    }, 100);
+  },
 };
 </script>
 
 <style scoped lang="scss">
+.products-table {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-sizing: border-box;
+  box-shadow: 10px 0px 10px rgb(0 74 255 / 5%), -5px -5px 10px #fafbff;
+  border-radius: 8px 8px 0 0;
+}
 .table-btn {
   width: 36px;
   height: 36px;
