@@ -161,11 +161,10 @@ export default {
         line-height: 24px;
         color: rgba(255, 255, 255, 0.9);
       }
-    }
 
-    > .active {
-      //background: rgba(21, 21, 21, 0.7);
-      background: linear-gradient(180deg, #7ea8fc 0%, #2662f3 100%);
+      &.active {
+      background-image: linear-gradient(180deg, #7ea8fc 0%, #2662f3 100%);
+    }
     }
 
     &:nth-last-child(1) {

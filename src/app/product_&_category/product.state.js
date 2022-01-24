@@ -13,8 +13,7 @@ export const productsState = reactive({
 
 export async function GET_PRODUCTS() {
     await AUTH()
-//61e7ec5b6968db777c1ddf3a
-    //await axios.delete('/api/admin/product/61e7ec5b6968db777c1ddf3a')
+    // await axios.delete('/api/admin/product/61eeb4c76968db777c1ddf3c')
     // await axios.get('/api/admin/products')
     //     .then((response) => {
     //         const tr = response.data.find(el => el.tittle === "roll")._id
@@ -28,7 +27,7 @@ export async function GET_PRODUCTS() {
         .then(response => {
             productsState.productsList = JSON.parse(JSON.stringify(response.data.products))
             productsState.productsCount = response.data.total
-           // console.log(productsState.productsList);
+            console.log(productsState.productsList);
         }).then(() => {
             productsState.showProducts = true
         })

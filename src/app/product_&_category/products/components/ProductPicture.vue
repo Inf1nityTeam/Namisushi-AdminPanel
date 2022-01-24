@@ -1,16 +1,19 @@
 <template>
-  <div class="product-picture">
-    <div class="img1">
+  <div class="product-picture" v-if="pathToImg !== 1">
+    <div class="product-picture__img1" >
       <img :src="imgPath" />
     </div>
 
-    <div class="img2">
+    <div class="product-picture__img2">
       <img :src="imgPath" />
     </div>
 
-    <div class="img3">
+    <div class="product-picture__img3">
       <img :src="imgPath" />
     </div>
+  </div>
+  <div v-else>
+    {{pathToImg}}
   </div>
 </template>
 
@@ -20,6 +23,11 @@ export default {
   props: {
     imgPath: { type: String },
   },
+  computed: {
+    pathToImg() {
+      return this.imgPath || 1;
+    },
+  },
 };
 </script>
 
@@ -28,8 +36,8 @@ export default {
   display: flex;
   align-items: center;
 
-  > .img1,
-  .img3 {
+  &__img1,
+  &__img3 {
     opacity: 0.6;
     background: rgba(172, 170, 170, 0.9);
     border: none;
@@ -42,11 +50,11 @@ export default {
     }
   }
 
-  > .img3 {
+  &__img3 {
     margin-left: -50px;
   }
 
-  > .img2 {
+  &__img2 {
     background: white;
     z-index: 2;
     margin-left: -50px;

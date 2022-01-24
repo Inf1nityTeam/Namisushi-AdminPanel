@@ -1,5 +1,5 @@
 <template>
-  <div class="products-pagination">
+  <div class="products-pagination general-pagination">
     <el-pagination
       v-model:currentPage="currentPage"
       :pager-count="4"
@@ -61,36 +61,6 @@ export default {
 
 <style lang="scss">
 .products-pagination {
-  background: #fff;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-sizing: border-box;
-  box-shadow: 10px 10px 10px rgba(0, 74, 255, 0.05), -5px -5px 10px #fafbff;
-  border-radius: 0 0 8px 8px;
-
-  .el-pager {
-    .number {
-      box-sizing: border-box;
-      width: 20px;
-      height: 28px;
-      text-align: center;
-      font-family: Manrope;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 12px;
-      color: #212121;
-      transition: 0.1ms;
-    }
-
-    .active {
-      color: #fff;
-      border-radius: 50%;
-      border: none;
-      background: linear-gradient(210.51deg, #709df3 5.3%, #1757f3 90.07%);
-    }
-  }
-  .el-pagination {
-    --el-pagination-button-width: 28px;
-  }
 }
 </style>

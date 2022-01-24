@@ -91,7 +91,20 @@
 
       <div class="modal-section">
         <div class="products-modal__title modal-section__title">
-          Вес (граммы)
+          <div class="products-modal__title--open-list">
+            <div>
+              <img
+                :class="{ 'arrow-close-list': isShowTypesOfWeight }"
+                src="@/assets/image/products/arrow-in-select-of-category-in-modal-products.svg"
+                alt=""
+                @click="isShowTypesOfWeight = !isShowTypesOfWeight"
+              />
+              <div @click="changeTypeOfWeiht(0)">{{ typeOfWeight[0] }}</div>
+            </div>
+            <div @click="changeTypeOfWeiht(1)" v-if="isShowTypesOfWeight">
+              {{ typeOfWeight[1] }}
+            </div>
+          </div>
         </div>
         <el-input-number :min="1" :max="5990" v-model="productWeight" />
       </div>
@@ -110,40 +123,36 @@
     <div class="products-modal__teg modal-section">
       <div class="products-modal__title">Тег</div>
 
-      <div class="products-modal__section"></div>
+      <div class="products-modal__section">
+        <ProductTag />
+      </div>
     </div>
 
     <template #footer>
       <span class="dialog-footer modal-section">
-        <el-button
-          class="products-modal__btn"
+        <button
+          class="products-modal__btn general-btn"
           @click.prevent="addNewProduct"
-          style="
-            width: 412px;
-            background: linear-gradient(180deg, #719df2 0%, #1454f2 100%);
-            margin: auto;
-          "
+          style="width: 412px"
         >
           <img
             src="@/assets/image/products/icon-check.svg"
             style="margin-right: 10px"
           />
           Сохранить
-        </el-button>
+        </button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-/*eslint-disable*/
 import { ElMessageBox, ElNotification } from "element-plus";
 import CommonSelect from "@/app/product_&_category/components/CommonSelect.vue";
 import IngredientsTag from "@/app/product_&_category/modalWindow/components/IngredientsTag";
 import { CREATE_PRODUCT } from "@/app/product_&_category/product.state";
-import { categoriesState } from "@/app/product_&_category/category.state";
-import { productsState } from "@/app/product_&_category/product.state";
 import CommonButton from "@/app/product_&_category/components/CommonButton.vue";
+import ProductTag from "@/app/product_&_category/modalWindow/components/ProductTag.vue";
 
 export default {
   name: "ProductsModalWindow",
@@ -158,6 +167,8 @@ export default {
       productType: "differentFillings",
       productCategories: [],
       isClearCategoriesList: false,
+      typeOfWeight: ["Вес (граммы)", "Вес (штуки)"],
+      isShowTypesOfWeight: false,
     };
   },
   methods: {
@@ -187,7 +198,7 @@ export default {
         weight: +this.productWeight,
         categories: this.productCategories,
       };
-      //console.log(newProduct);
+      console.log(newProduct);
       if (!newProduct.title || !newProduct.cost) {
         ElNotification({
           message: "Данные заполнены некорректно",
@@ -226,31 +237,32 @@ export default {
       this.productCategories = JSON.parse(JSON.stringify(val));
       this.isClearCategoriesList = false;
     },
+    changeTypeOfWeiht(num) {
+      console.log(num);
+      this.typeOfWeight.reverse();
+      this.isShowTypesOfWeight = false;
+      console.log(this.typeOfWeight);
+    },
   },
-  components: { IngredientsTag, CommonSelect, CommonButton },
+  components: { IngredientsTag, CommonSelect, CommonButton, ProductTag },
 };
 </script>
 
 <style lang="scss">
 .products-modal {
   &__btn {
-    height: 36px;
-    border-radius: 8px;
-    box-sizing: border-box;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: none;
-    font-family: Ubuntu;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 18px;
-    text-align: center;
-    color: #ffffff;
     width: 142px;
-    background: #004aff;
     margin-right: 15px;
+    font-family: Manrope;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: center;
   }
 
   &__title {
@@ -260,6 +272,45 @@ export default {
     font-size: 12px;
     line-height: 18px;
     color: #585858;
+    &--open-list {
+      background: #ffffff;
+      position: relative;
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 4px;
+      transition: all 200ms linear;
+
+      > div {
+        font-family: Manrope;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 18px;
+        color: #585858;
+        width: max-content;
+        transition: all 200ms linear;
+        cursor: pointer;
+        &:nth-of-type(2) {
+          top: 15px;
+          left: 0;
+          position: absolute;
+        }
+        &:nth-of-type(1) {
+          display: flex;
+          flex-direction: row-reverse;
+          gap: 4px;
+        }
+      }
+      > img {
+        cursor: pointer;
+        transform: rotate(0);
+        transition: all 100ms linear;
+      }
+      .arrow-close-list {
+        transform: rotate(-180deg);
+        transition: all 100ms linear;
+      }
+    }
   }
   &__section {
     display: flex;
@@ -380,6 +431,9 @@ export default {
         border: none;
         color: var(--el-text-color-regular);
         font-size: 13px;
+        &:hover {
+          background: #1454f2;
+        }
       }
 
       .el-input-number__decrease {
@@ -462,28 +516,5 @@ export default {
   .el-textarea__inner::placeholder {
     color: #c4c4c4;
   }
-}
-
-.el-select-dropdown__item.selected {
-  color: #1454f2 !important;
-  font-weight: normal !important;
-}
-
-.el-dialog__headerbtn .el-dialog__close {
-  color: #000000;
-}
-
-.el-message-box__btns {
-  > button {
-    margin: 0 10px;
-  }
-}
-
-.el-select-dropdown__item:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(162, 192, 250, 0.08) 0%,
-    rgba(10, 56, 171, 0.07) 100%
-  ) !important;
 }
 </style>

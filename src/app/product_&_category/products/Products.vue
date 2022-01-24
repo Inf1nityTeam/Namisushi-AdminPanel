@@ -20,10 +20,6 @@ export default {
 
 <style scoped lang="scss">
 .products {
-  //height: 100%;
   position: relative;
-  //overflow: auto;
-  // overflow-y: scroll;
-  //padding: 10px 20px 20px 20px;
 }
 </style>

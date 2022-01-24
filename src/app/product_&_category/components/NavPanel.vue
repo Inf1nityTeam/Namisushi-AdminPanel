@@ -1,22 +1,17 @@
 <template>
-  <div class="products-group-nav">
-    <div class="products-group-nav__title">Продукты</div>
+  <div class="nav-panel">
+    <div class="nav-panel__title">Продукты</div>
 
-    <div class="products-group-nav__btn-setup">
+    <div class="nav-panel__setup">
       <div>
-        <!-- <router-link :to="'/products'"> -->
         <CommonButton
           :btnConfig="btnOpenProducts"
           @click="openPage('/products')"
         />
-        <!-- </router-link>
-
-        <router-link :to="'/categories'"> -->
         <CommonButton
           :btnConfig="btnOpenCategories"
           @click="openPage('/categories')"
         />
-        <!-- </router-link> -->
       </div>
 
       <ProductsModalWindow />
@@ -57,39 +52,4 @@ export default {
 </script>
 
 <style lang="scss">
-.products-group-nav {
-  height: 110px;
-  position: relative;
-  display: flex;
-  gap: 10px;
-  flex-direction: column;
-  box-sizing: border-box;
-
-  &__btn-setup {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    width: 100%;
-
-    > div:first-child {
-      display: flex;
-      gap: 20px;
-    }
-    > div {
-      > a {
-        text-decoration: none;
-      }
-    }
-  }
-
-  &__title {
-    font-family: Raleway;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 28px;
-    color: #07103a;
-  }
-}
 </style>

@@ -5,6 +5,7 @@
         class="search"
         v-model="searchProduct"
         type="text"
+        disabled
         size="large"
         placeholder="Поиск по наименованию продукта"
         :suffix-icon="Search"
@@ -28,16 +29,19 @@
 </template>
 
 <script>
-import { productsState, GET_PRODUCTS } from "@/app/product_&_category/product.state";
-import { categoriesState, GET_CATEGORIES } from "@/app/product_&_category/category.state";
-import CommonSelect from '@/app/product_&_category/components/CommonSelect.vue';
-//import ProductsModalWindow from "@/app/products/modalWindow/ProductsModalWindow";
-//import ProductsBtn from "@/app/products/ProductsBtn.vue";
-//import CategoriesSelect from "@/app/products/modalWindow/components/CategoriesSelect";
+import {
+  productsState,
+  GET_PRODUCTS,
+} from "@/app/product_&_category/product.state";
+import {
+  categoriesState,
+  GET_CATEGORIES,
+} from "@/app/product_&_category/category.state";
+import CommonSelect from "@/app/product_&_category/components/CommonSelect.vue";
 
 export default {
   name: "ProductsNavigationBar",
-  components: { /*ProductsModalWindow, ProductsBtn, */ CommonSelect },
+  components: { CommonSelect },
   mounted() {
     GET_CATEGORIES();
   },

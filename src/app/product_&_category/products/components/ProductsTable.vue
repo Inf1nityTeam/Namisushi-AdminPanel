@@ -1,6 +1,6 @@
 <template>
   <el-table
-    class="products-table"
+    class="general-table"
     v-loading="loading"
     :data="productList"
     style="min-height: calc(100vh - 363px); width: 100%"
@@ -18,7 +18,6 @@
       :key="i"
       :prop="column.prop"
       :label="column.label"
-      class="table-row"
       :width="column.width"
       :sortable="column.isSortable"
     >
@@ -27,7 +26,6 @@
     <el-table-column
       :prop="columnsWithBtn[0].prop"
       :label="columnsWithBtn[0].label"
-      class="table-row"
       :width="columnsWithBtn[0].width"
     >
       <template #default="scope">
@@ -45,10 +43,9 @@
 
     <el-table-column
       :prop="columnsWithBtn[1].prop"
-      :label="columnsWithBtn[1].label"
-      class="table-row"
       :width="columnsWithBtn[1].width"
     >
+       <!-- :label="columnsWithBtn[1].label"> -->
       <template #default="scope">
         <el-button
           class="table-btn table-btn--blue"
@@ -127,12 +124,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.products-table {
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-sizing: border-box;
-  box-shadow: 10px 0px 10px rgb(0 74 255 / 5%), -5px -5px 10px #fafbff;
-  border-radius: 8px 8px 0 0;
-}
 .table-btn {
   width: 36px;
   height: 36px;
