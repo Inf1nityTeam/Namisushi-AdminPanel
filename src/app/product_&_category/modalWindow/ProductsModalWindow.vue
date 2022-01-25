@@ -19,7 +19,12 @@
       </div>
     </template>
 
-    <div class="products-modal__type">
+    <AddProductPhoto
+      @sendProductImgs="getProductImages"
+      :isClearList="isClearIconsList"
+    />
+
+    <div class="products-modal__type modal-section">
       <div class="products-modal__title">Тип продукта</div>
 
       <div class="products-modal__section">
@@ -150,15 +155,19 @@
 import { ElMessageBox, ElNotification } from "element-plus";
 import CommonSelect from "@/app/product_&_category/components/CommonSelect.vue";
 import IngredientsTag from "@/app/product_&_category/modalWindow/components/IngredientsTag";
-import { CREATE_PRODUCT } from "@/app/product_&_category/product.state";
+import {
+  CREATE_PRODUCT,
+  GET_PRODUCTS,
+} from "@/app/product_&_category/product.state";
 import CommonButton from "@/app/product_&_category/components/CommonButton.vue";
 import ProductTag from "@/app/product_&_category/modalWindow/components/ProductTag.vue";
+import AddProductPhoto from "@/app/product_&_category/modalWindow/components/AddProductPhoto.vue";
 
 export default {
   name: "ProductsModalWindow",
   data() {
     return {
-      dialogVisible: false,
+      dialogVisible: true,
       productName: "",
       productDescription: "",
       productCost: 1000,
@@ -169,6 +178,8 @@ export default {
       isClearCategoriesList: false,
       typeOfWeight: ["Вес (граммы)", "Вес (штуки)"],
       isShowTypesOfWeight: false,
+      productIcons: [],
+      isClearIconsList: false,
     };
   },
   methods: {
@@ -189,6 +200,7 @@ export default {
         .catch(() => {});
     },
     async addNewProduct() {
+      const formData = new FormData();
       const newProduct = {
         show: false,
         title: this.productName,
@@ -198,7 +210,10 @@ export default {
         weight: +this.productWeight,
         categories: this.productCategories,
       };
-      console.log(newProduct);
+      formData.append("data", JSON.stringify(newProduct));
+      for (let icon of this.productIcons.values()) {
+        formData.append("images", icon);
+      }
       if (!newProduct.title || !newProduct.cost) {
         ElNotification({
           message: "Данные заполнены некорректно",
@@ -207,9 +222,10 @@ export default {
       } else {
         this.dialogVisible = false;
         //метод state, который должен отправить данные
-        await CREATE_PRODUCT(newProduct).then(() => {
+        await CREATE_PRODUCT(formData).then(() => {
           this.closeModalWindow();
         });
+        await GET_PRODUCTS();
         ElNotification({
           message: "Запрос на создание продукта отправлен",
           type: "success",
@@ -232,6 +248,8 @@ export default {
       this.productType = "differentFillings";
       this.productCategories = [];
       this.isClearCategoriesList = true;
+      this.productIcons = [];
+      this.isClearIconsList = true;
     },
     getSelectedCategories(val) {
       this.productCategories = JSON.parse(JSON.stringify(val));
@@ -243,8 +261,21 @@ export default {
       this.isShowTypesOfWeight = false;
       console.log(this.typeOfWeight);
     },
+    getProductImages(val) {
+      this.productIcons = [];
+      for (let icon of val.values()) {
+        this.productIcons.push(icon);
+      }
+      this.isClearIconsList = false
+    },
   },
-  components: { IngredientsTag, CommonSelect, CommonButton, ProductTag },
+  components: {
+    IngredientsTag,
+    CommonSelect,
+    CommonButton,
+    ProductTag,
+    AddProductPhoto,
+  },
 };
 </script>
 

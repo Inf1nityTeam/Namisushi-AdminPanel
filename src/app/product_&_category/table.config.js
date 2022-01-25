@@ -1,5 +1,5 @@
 export const tableColumns = [
-    {prop: 'images', label: '', width: '140px', isSortable:false},
+    {prop: 'images', label: '', width: '150px', isSortable:false},
     {prop: 'title', label: 'Наименование', width: 'auto', isSortable:false},
     {prop: 'categories', label: 'Категория', width: 'auto', isSortable:false},
     {prop: 'ingredients', label: 'Список ингридиентов', width: 'auto', isSortable:false},

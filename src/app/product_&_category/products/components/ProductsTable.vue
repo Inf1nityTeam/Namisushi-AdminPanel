@@ -7,9 +7,7 @@
   >
     <el-table-column :prop="columnImg[0].prop" :width="columnImg[0].width">
       <template #default="scope">
-        <ProductPicture
-          :img-path="`https://dev.namisushi.dn.ua${scope.row.images[0]}`"
-        />
+        <ProductPicture :img-path="scope.row.images[0]" />
       </template>
     </el-table-column>
 
@@ -45,15 +43,17 @@
       :prop="columnsWithBtn[1].prop"
       :width="columnsWithBtn[1].width"
     >
-       <!-- :label="columnsWithBtn[1].label"> -->
       <template #default="scope">
         <el-button
           class="table-btn table-btn--blue"
-          @click="clickHandler(scope.row)"
+          @click="changeProduct(scope.row)"
         >
-          <img src="@/assets/image/products/icons-actions.svg"
-        /></el-button>
-        <el-button class="table-btn table-btn--red">
+          <img src="@/assets/image/products/icons-actions.svg" />
+        </el-button>
+        <el-button
+          class="table-btn table-btn--red"
+          @click="deleteProduct(scope.row)"
+        >
           <img src="@/assets/image/products/archive.svg" />
         </el-button>
       </template>
@@ -64,6 +64,8 @@
 <script>
 import { tableColumns } from "@/app/product_&_category/table.config";
 import {
+  DELETE_PRODUCT,
+  GET_PRODUCTS,
   productsState,
   UPDATE_PRODUCT_STATUS,
 } from "@/app/product_&_category/product.state";
@@ -102,8 +104,12 @@ export default {
     async changeProductStatus(currentProduct) {
       await UPDATE_PRODUCT_STATUS(currentProduct);
     },
-    clickHandler(val) {
+    changeProduct(val) {
       console.log(val);
+    },
+    deleteProduct(val) {
+      DELETE_PRODUCT(val._id)
+      GET_PRODUCTS()
     },
   },
   data() {

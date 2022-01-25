@@ -152,13 +152,17 @@
   .el-table__row {
     box-sizing: border-box;
 
-    .el-table__cell:nth-last-child(1){
-      transition: 200ms;
-      opacity: 0;
+    .el-table__cell:nth-last-child(1) {
+      .cell {
+        transition: 200ms;
+        opacity: 0;
+      }
     }
 
-    &:hover .el-table__cell:nth-last-child(1){
-      opacity: 1;
+    &:hover .el-table__cell:nth-last-child(1) {
+      .cell {
+        opacity: 1;
+      }
     }
   }
 }

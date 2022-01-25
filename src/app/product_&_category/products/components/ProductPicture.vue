@@ -1,15 +1,15 @@
 <template>
   <div class="product-picture" v-if="pathToImg !== 1">
     <div class="product-picture__img1" >
-      <img :src="imgPath" />
+      <img :src="pathToImg" />
     </div>
 
     <div class="product-picture__img2">
-      <img :src="imgPath" />
+      <img :src="pathToImg" />
     </div>
 
     <div class="product-picture__img3">
-      <img :src="imgPath" />
+      <img :src="pathToImg" />
     </div>
   </div>
   <div v-else>
@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     pathToImg() {
-      return this.imgPath || 1;
+      return this.imgPath? `https://dev.namisushi.dn.ua${this.imgPath}` : 1;
     },
   },
 };

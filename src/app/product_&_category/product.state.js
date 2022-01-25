@@ -13,14 +13,6 @@ export const productsState = reactive({
 
 export async function GET_PRODUCTS() {
     await AUTH()
-    // await axios.delete('/api/admin/product/61eeb4c76968db777c1ddf3c')
-    // await axios.get('/api/admin/products')
-    //     .then((response) => {
-    //         const tr = response.data.find(el => el.tittle === "roll")._id
-    //         axios.delete('/api/admin/product/' + tr)
-    //        // console.log(response.data);
-    //     })
-
     const payload = { limit: productsState.currentLimit, page: productsState.currentPage }
     if (productsState.activeCategoryId) payload.category = productsState.activeCategoryId
     await axios.get('/api/admin/products', { params: payload })
@@ -42,9 +34,15 @@ export async function UPDATE_PRODUCT_STATUS(product) {
 }
 
 export async function CREATE_PRODUCT(product) {
-    console.log('productState')
-    console.log(product)
     await axios.post('/api/admin/product/default', product)
+        .then((response) => {
+            console.log(response)
+        })
+        .catch(reject => console.log(reject))
+}
+
+export async function DELETE_PRODUCT(productId) {
+    await axios.delete(`/api/admin/product/${productId}`)
         .then((response) => {
             console.log(response)
         })
