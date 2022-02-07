@@ -1,23 +1,20 @@
 <template>
   <div class="base-wrapper">
-    <div
-      class="base-wrapper__sidebar"
-      :style="{ minWidth: isCollapsed ? '292px' : '84px' }"
-    >
-      <base-sidebar />
+    <div class="base-wrapper__sidebar"
+         :style="{ minWidth: isCollapsed ? '292px' : '84px' }">
+      <base-sidebar/>
     </div>
 
-    <div
-      class="base-wrapper__content"
-      :style="{
-        width: isCollapsed ? 'calc(100% - 292px)' : 'calc(100% - 84px)',
-      }"
-    >
+    <div class="base-wrapper__content"
+         :style="{
+            width: isCollapsed ? 'calc(100% - 292px)' : 'calc(100% - 84px)',
+         }">
       <div class="base-wrapper__header">
-        <base-header />
+        <base-header/>
       </div>
 
-      <div :style="{ height: 'calc(100vh - 64px)' }">
+      <div class="base-wrapper__view"
+           :style="{ height: 'calc(100vh - 64px)' }">
         <component v-if="layout" :is="layout">
           <router-view />
         </component>
@@ -31,7 +28,8 @@
 import GroupWrapper from "@/app/product_&_category/GroupWrapper.vue";
 import BaseHeader from "./components/baseHeader";
 import BaseSidebar from "./components/baseSidebar/BaseSidebar";
-import { baseSidebarState } from "@/app/baseWrapper/components/baseSidebar/baseSidebar.state";
+import { baseSidebarState } from "@/app/common/baseWrapper/components/baseSidebar/baseSidebar.state";
+import {categoriesController} from "@/app/categories/categories.controller";
 
 export default {
   name: "base-wrapper",
@@ -44,6 +42,9 @@ export default {
       return this.$route.meta.layout || null;
     },
   },
+  created() {
+    categoriesController.getCategories()
+  }
 };
 </script>
 
@@ -58,7 +59,10 @@ export default {
 
   &__content {
     transition: 350ms ease-in-out;
-    // width: 100%;
+  }
+
+  &__view {
+    padding: 16px;
   }
 
   &__header {

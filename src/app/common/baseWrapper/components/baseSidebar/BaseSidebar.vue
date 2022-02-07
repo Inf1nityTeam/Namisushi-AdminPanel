@@ -37,24 +37,24 @@
       </template>
     </div>
 
-    <hr class="base-sidebar__hr base-sidebar__hr--center" />
+<!--    <hr class="base-sidebar__hr base-sidebar__hr&#45;&#45;center" />-->
 
-    <div class="base-sidebar__menu base-sidebar__menu--center">
-      <el-tooltip
-        effect="dark"
-        :content="notificationEl.title"
-        placement="right"
-        :disabled="isCollapsed"
-      >
-        <router-link
-          :to="notificationEl.path"
-          :class="$route.path === '/' ? 'active' : ''"
-        >
-          <img :src="require(`@/assets/image/sidebar/${notificationEl.img}`)" />
-          <span>{{ notificationEl.title }}</span>
-        </router-link>
-      </el-tooltip>
-    </div>
+<!--    <div class="base-sidebar__menu base-sidebar__menu&#45;&#45;center">-->
+<!--      <el-tooltip-->
+<!--        effect="dark"-->
+<!--        :content="notificationEl.title"-->
+<!--        placement="right"-->
+<!--        :disabled="isCollapsed"-->
+<!--      >-->
+<!--        <router-link-->
+<!--          :to="notificationEl.path"-->
+<!--          :class="$route.path === '/' ? 'active' : ''"-->
+<!--        >-->
+<!--          <img :src="require(`@/assets/image/sidebar/${notificationEl.img}`)" />-->
+<!--          <span>{{ notificationEl.title }}</span>-->
+<!--        </router-link>-->
+<!--      </el-tooltip>-->
+<!--    </div>-->
 
     <hr class="base-sidebar__hr base-sidebar__hr--last" />
 
@@ -68,9 +68,9 @@
 </template>
 
 <script>
-import { baseSidebarState } from "@/app/baseWrapper/components/baseSidebar/baseSidebar.state";
-import BaseSidebarToggle from "@/app/baseWrapper/components/baseSidebar/BaseSidebarToggle";
-import { sidebarMenu } from "@/app/baseWrapper/components/baseSidebar/baseSidebar.config";
+import { baseSidebarState } from "@/app/common/baseWrapper/components/baseSidebar/baseSidebar.state";
+import BaseSidebarToggle from "@/app/common/baseWrapper/components/baseSidebar/BaseSidebarToggle";
+import { sidebarMenu } from "@/app/common/baseWrapper/components/baseSidebar/baseSidebar.config";
 
 export default {
   name: "base-sidebar",
@@ -80,7 +80,7 @@ export default {
       return baseSidebarState.isCollapsed;
     },
     menuList() {
-      return sidebarMenu.filter((el) => el.id < sidebarMenu.length - 1);
+      return sidebarMenu.slice(0, 3)
     },
     logoutEl() {
       return sidebarMenu[sidebarMenu.length - 1];
