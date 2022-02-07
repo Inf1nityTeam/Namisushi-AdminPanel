@@ -3,23 +3,23 @@
     <el-dialog
         class="base-popup--dialog"
         v-model="visible"
-        title="Добавить продукт"
         width="462px"
         center>
       <template #title>
         <div class="base-popup__header">
           <img src="@/assets/image/products/modal-icon-edit.svg" alt=""/>
-          <span>Добавить продукт</span>
+          <span>{{ title }}</span>
         </div>
       </template>
 
-      <div class="base-popup__content">
+      <div class="base-popup__content"
+           v-loading="loading">
         <slot/>
       </div>
 
       <template #footer>
         <div class="base-popup__footer">
-          <base-button/>
+          <base-button @click="clickSubmit"/>
         </div>
       </template>
 
@@ -33,9 +33,24 @@ import BaseButton from "@/app/common/BaseButton";
 export default {
   name: "base-popup",
   components: { BaseButton },
+  props: {
+    title: { type: String },
+    loading: { type: Boolean, default: true }
+  },
   data() {
     return {
-      visible: true
+      visible: false
+    }
+  },
+  methods: {
+    clickSubmit($event) {
+      this.$emit('submit', $event)
+    },
+    open() {
+      this.visible = true
+    },
+    close() {
+      this.visible = false
     }
   }
 }

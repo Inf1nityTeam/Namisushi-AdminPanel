@@ -8,6 +8,10 @@ class CategoriesController {
         return await this.#service.getCategories()
     }
 
+    async createCategory(category) {
+        return await this.#service.createCategory(category)
+    }
+
 }
 
 export const categoriesController = new CategoriesController()
