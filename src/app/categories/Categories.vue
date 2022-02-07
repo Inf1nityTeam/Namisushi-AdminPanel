@@ -1,11 +1,17 @@
 <template>
   <div class="categories">
 
-    <div>
-      <button @click="createCategory">afasfasfa</button>
+    <div class="categories__header">
+      <div class="categories__header--button">
+        <base-button @click="createCategory">Добавить категорию</base-button>
+      </div>
     </div>
 
-    <categories-table/>
+    <div class="categories__content">
+      <categories-table
+          @edit="editCategory"
+          @delete="deleteCategory"/>
+    </div>
 
     <category-popup ref="popup"/>
 
@@ -14,14 +20,18 @@
 
 <script>
 import CategoriesTable from "@/app/categories/components/CategoriesTable";
-import CategoryPopup from "@/app/categories/components/categoriesPopup/CategoryPopup";
+import CategoryPopup from "@/app/categories/components/CategoryPopup";
+import BaseButton from "@/app/common/BaseButton";
 
 export default {
   name: "categories",
-  components: { CategoriesTable, CategoryPopup },
+  components: { CategoriesTable, CategoryPopup, BaseButton },
   methods: {
     createCategory() {
-      this.$refs.popup.open()
+      this.$refs.popup.open(null)
+    },
+    editCategory(category) {
+      this.$refs.popup.open(category)
     }
   }
 }
@@ -29,6 +39,14 @@ export default {
 
 <style scoped lang="scss">
 .categories {
+
+  &__header {
+    &--button {
+      max-width: 240px;
+      margin-left: auto;
+    }
+
+  }
 
 }
 </style>

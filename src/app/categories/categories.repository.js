@@ -12,4 +12,14 @@ export default class CategoriesRepository {
         return response.data
     }
 
+    async updateCategory(category) {
+        const response = await http.patch(`/api/admin/product/category/${category._id}`, category)
+        return response.data.category
+    }
+
+    async deleteCategory(categoryId) {
+        const response = await http.delete(`/api/admin/product/category/${categoryId}`)
+        return response.data
+    }
+
 }

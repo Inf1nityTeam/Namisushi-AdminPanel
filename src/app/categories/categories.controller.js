@@ -12,6 +12,14 @@ class CategoriesController {
         return await this.#service.createCategory(category)
     }
 
+    async updateCategory(category) {
+        return await this.#service.updateCategory(category)
+    }
+
+    async deleteCategory(categoryId) {
+        return await this.#service.deleteCategory(categoryId)
+    }
+
 }
 
 export const categoriesController = new CategoriesController()

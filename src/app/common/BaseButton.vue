@@ -1,7 +1,9 @@
 <template>
   <button class="base-button">
-    <img src="@/assets/image/products/icon-check.svg" alt="">
-    <span>Сохранить</span>
+    <svg-icon :src="require('@/assets/image/products/icon-check.svg')"/>
+    <span>
+      <slot/>
+    </span>
   </button>
 </template>
 
@@ -41,5 +43,11 @@ export default {
 
     color: #FFFFFF;
   }
+}
+</style>
+
+<style lang="scss">
+.base-button svg {
+  margin-right: 10px;
 }
 </style>

@@ -13,13 +13,17 @@
       <el-table-column
           label="Действия"
           width="120">
-        <div class="categories__table--actions">
-          <base-circle-button
-              icon="edit"/>
-          <base-circle-button
-              icon="delete"
-              type="delete"/>
-        </div>
+        <template #default="scope">
+          <div class="categories__table--actions">
+            <base-circle-button
+                icon="edit"
+                @click="$emit('edit', scope.row)"/>
+            <base-circle-button
+                icon="delete"
+                type="delete"
+                @click="deleteCategory(scope.row._id)"/>
+          </div>
+        </template>
       </el-table-column>
 
     </el-table>
@@ -29,6 +33,7 @@
 <script>
 import BaseCircleButton from "@/app/common/BaseCircleButton";
 import {categoriesState} from "@/app/categories/categories.state";
+import {categoriesController} from "@/app/categories/categories.controller";
 
 export default {
   name: "products-table",
@@ -36,6 +41,11 @@ export default {
   computed: {
     categories() {
       return categoriesState.categories
+    }
+  },
+  methods: {
+    deleteCategory(categoryId) {
+      categoriesController.deleteCategory(categoryId)
     }
   }
 }

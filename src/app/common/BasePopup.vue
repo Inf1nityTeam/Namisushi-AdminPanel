@@ -1,7 +1,6 @@
 <template>
   <div class="base-popup">
     <el-dialog
-        class="base-popup--dialog"
         v-model="visible"
         width="462px"
         center>
@@ -19,7 +18,7 @@
 
       <template #footer>
         <div class="base-popup__footer">
-          <base-button @click="clickSubmit"/>
+          <base-button @click="clickSubmit">Сохранить</base-button>
         </div>
       </template>
 
@@ -40,6 +39,11 @@ export default {
   data() {
     return {
       visible: false
+    }
+  },
+  watch: {
+    visible(val) {
+      if (!val) this.$emit('close')
     }
   },
   methods: {

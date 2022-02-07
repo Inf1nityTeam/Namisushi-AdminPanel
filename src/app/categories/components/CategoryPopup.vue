@@ -4,6 +4,7 @@
         title="Добавить категорию"
         :loading="loading"
         @submit="submit"
+        @close="close"
         ref="popup">
       <form action="">
         <base-input
@@ -18,12 +19,18 @@
 import BasePopup from "@/app/common/BasePopup";
 import BaseInput from "@/app/common/BaseInput";
 import {categoriesController} from "@/app/categories/categories.controller";
+import {copyDeep} from "@/utils/copy-deep";
 
 export default {
   name: "categories-popup",
   components: { BasePopup, BaseInput },
   props: {
     editCategory: { type: Object, default: null }
+  },
+  computed: {
+    isEditMode() {
+      return !!this.category._id
+    }
   },
   data() {
     return {
@@ -36,11 +43,20 @@ export default {
   methods: {
     submit() {
       this.loading = true
-      categoriesController.createCategory(this.category)
-          .then(() => this.close())
-          .finally(() => this.loading = false)
+      if (this.isEditMode) {
+        categoriesController.updateCategory(this.category)
+            .then(() => this.close())
+            .finally(() => this.loading = false)
+      } else {
+        categoriesController.createCategory(this.category)
+            .then(() => this.close())
+            .finally(() => this.loading = false)
+      }
     },
-    open() {
+    open(category = null) {
+      if (category) {
+        this.category = copyDeep(category)
+      }
       this.$refs.popup.open()
     },
     close() {
