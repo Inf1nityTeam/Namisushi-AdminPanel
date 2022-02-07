@@ -1,17 +1,38 @@
 <template>
-  <button class="base-circle-button">
-    <img src="@/assets/image/products/icon-check.svg" alt="">
+  <button class="base-circle-button"
+          :class="type">
+    <svg-icon :src="srcIcon"/>
   </button>
 </template>
 
 <script>
+import SvgIcon from "@/app/common/baseWrapper/SvgIcon";
+
+const iconsMap = new Map()
+    .set('check', require('@/assets/image/base-icons/icon-check.svg'))
+    .set('edit', require('@/assets/image/base-icons/icon-edit.svg'))
+    .set('delete', require('@/assets/image/base-icons/icon-delete.svg'))
+
 export default {
-  name: "base-circle-button"
+  name: "base-circle-button",
+  components: { SvgIcon },
+  props: {
+    icon: { type: String, default: null },
+    type: { type: String, default: null }
+  },
+  computed: {
+    srcIcon() {
+      const icon = iconsMap.get(this.icon)
+      return icon ? icon : this.icon
+    }
+  }
 }
 </script>
 
 <style scoped lang="scss">
 .base-circle-button {
+  margin: 4px;
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,14 +40,22 @@ export default {
   width: 40px;
   height: 40px;
 
-  background: linear-gradient(180deg, #719DF2 0%, #1454F2 100%);
+  background: #1454F2;
   border-radius: 8px;
   border: none;
 
   cursor: pointer;
+  transition: 200ms;
+
+  &.delete {
+    background: rgba(255, 88, 88, 0.8);
+    &:hover {
+      background: rgba(255, 88, 88, 0.5);
+    }
+  }
 
   &:hover {
-    background: #1454F2;
+    background: #7AA0FF;
   }
 
 }

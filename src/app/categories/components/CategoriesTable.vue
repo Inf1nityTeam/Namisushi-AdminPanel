@@ -8,13 +8,18 @@
       <el-table-column
           label="Наименование"
           prop="title"
-          width="auto">
-      </el-table-column>
+          width="auto"/>
 
       <el-table-column
           label="Действия"
           width="120">
-        <base-circle-button/>
+        <div class="categories__table--actions">
+          <base-circle-button
+              icon="edit"/>
+          <base-circle-button
+              icon="delete"
+              type="delete"/>
+        </div>
       </el-table-column>
 
     </el-table>
@@ -37,5 +42,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.categories {
 
+  &__table {
+
+    &--actions {
+      display: flex;
+    }
+
+  }
+
+}
 </style>
