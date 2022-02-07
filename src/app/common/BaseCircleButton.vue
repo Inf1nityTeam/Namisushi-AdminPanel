@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import SvgIcon from "@/app/common/baseWrapper/SvgIcon";
+import SvgIcon from "@/app/common/SvgIcon";
 
 const iconsMap = new Map()
     .set('check', require('@/assets/image/base-icons/icon-check.svg'))

@@ -1,23 +1,44 @@
 import CategoriesService from "@/app/categories/categories.service";
+import {categoriesState} from "@/app/categories/categories.state";
 
 class CategoriesController {
 
     #service = new CategoriesService()
 
     async getCategories() {
-        return await this.#service.getCategories()
+        try {
+            categoriesState.loading = true
+            return await this.#service.getCategories()
+        } finally {
+            categoriesState.loading = false
+        }
     }
 
     async createCategory(category) {
-        return await this.#service.createCategory(category)
+        try {
+            categoriesState.loading = true
+            return await this.#service.createCategory(category)
+        } finally {
+            categoriesState.loading = false
+        }
     }
 
     async updateCategory(category) {
-        return await this.#service.updateCategory(category)
+        try {
+            categoriesState.loading = true
+            return await this.#service.updateCategory(category)
+        } finally {
+            categoriesState.loading = false
+        }
     }
 
     async deleteCategory(categoryId) {
-        return await this.#service.deleteCategory(categoryId)
+        try {
+            categoriesState.loading = true
+            return await this.#service.deleteCategory(categoryId)
+        } finally {
+            categoriesState.loading = false
+        }
     }
 
 }

@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import SvgIcon from "@/app/common/baseWrapper/SvgIcon";
+import SvgIcon from "@/app/common/SvgIcon";
 import { categoriesState } from "@/app/products/category.state";
 import { imgToSvgByRef } from "@/helpers/imgToSvg";
 

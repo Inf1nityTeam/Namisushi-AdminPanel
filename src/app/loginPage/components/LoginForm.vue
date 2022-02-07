@@ -25,7 +25,7 @@
 
 <script>
 import LoginInput from "@/app/loginPage/components/LoginInput";
-import SvgIcon from "@/app/common/baseWrapper/SvgIcon";
+import SvgIcon from "@/app/common/SvgIcon";
 import {userInstanceController} from "@/app/userInstance/user-instance.controller";
 
 export default {

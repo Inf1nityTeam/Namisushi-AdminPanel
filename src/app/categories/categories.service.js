@@ -15,6 +15,7 @@ export default class CategoriesService {
     async createCategory(category) {
         try {
             const data = await this.#repository.createCategory(category)
+            categoriesState.categories.push(data)
             notificationsHelper.success({ message: 'Категория успешно создана' })
             return data
         } catch (error) {

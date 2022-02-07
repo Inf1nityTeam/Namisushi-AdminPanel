@@ -9,7 +9,7 @@ export default class CategoriesRepository {
 
     async createCategory(category) {
         const response = await http.post('/api/admin/product/category', category)
-        return response.data
+        return response.data.category
     }
 
     async updateCategory(category) {

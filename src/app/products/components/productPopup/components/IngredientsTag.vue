@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import SvgIcon from "@/app/common/baseWrapper/SvgIcon";
+import SvgIcon from "@/app/common/SvgIcon";
 export default {
   name: "IngredientsTag",
   methods: {

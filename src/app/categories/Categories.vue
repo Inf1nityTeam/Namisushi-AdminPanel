@@ -1,5 +1,6 @@
 <template>
-  <div class="categories">
+  <div class="categories"
+       v-loading="loading">
 
     <div class="categories__header">
       <div class="categories__header--button">
@@ -14,7 +15,6 @@
     </div>
 
     <category-popup ref="popup"/>
-
   </div>
 </template>
 
@@ -22,10 +22,16 @@
 import CategoriesTable from "@/app/categories/components/CategoriesTable";
 import CategoryPopup from "@/app/categories/components/CategoryPopup";
 import BaseButton from "@/app/common/BaseButton";
+import {categoriesState} from "@/app/categories/categories.state";
 
 export default {
   name: "categories",
   components: { CategoriesTable, CategoryPopup, BaseButton },
+  computed: {
+    loading() {
+      return categoriesState.loading
+    }
+  },
   methods: {
     createCategory() {
       this.$refs.popup.open(null)
