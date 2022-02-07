@@ -68,9 +68,9 @@
 </template>
 
 <script>
-import { baseSidebarState } from "@/app/common/baseWrapper/components/baseSidebar/baseSidebar.state";
-import BaseSidebarToggle from "@/app/common/baseWrapper/components/baseSidebar/BaseSidebarToggle";
-import { sidebarMenu } from "@/app/common/baseWrapper/components/baseSidebar/baseSidebar.config";
+import { baseSidebarState } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
+import BaseSidebarToggle from "@/app/common/baseWrapper/baseSidebar/BaseSidebarToggle";
+import { sidebarMenu } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.config";
 
 export default {
   name: "base-sidebar",

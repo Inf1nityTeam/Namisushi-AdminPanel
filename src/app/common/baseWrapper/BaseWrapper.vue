@@ -26,9 +26,9 @@
 
 <script>
 import GroupWrapper from "@/app/product_&_category/GroupWrapper.vue";
-import BaseHeader from "./components/baseHeader/BaseHeader";
-import BaseSidebar from "./components/baseSidebar/BaseSidebar";
-import { baseSidebarState } from "@/app/common/baseWrapper/components/baseSidebar/baseSidebar.state";
+import BaseHeader from "./baseHeader/BaseHeader";
+import BaseSidebar from "./baseSidebar/BaseSidebar";
+import { baseSidebarState } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
 import {categoriesController} from "@/app/categories/categories.controller";
 
 export default {

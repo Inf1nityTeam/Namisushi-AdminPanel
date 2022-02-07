@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import {baseSidebarState} from "@/app/common/baseWrapper/components/baseSidebar/baseSidebar.state";
+import {baseSidebarState} from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
 
 export default {
   name: "BaseSidebarToggle",
