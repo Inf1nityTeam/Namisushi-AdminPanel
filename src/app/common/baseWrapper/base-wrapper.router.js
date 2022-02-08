@@ -1,7 +1,7 @@
 export const baseWrapperRoutes = [{
     path: '/users',
     name: 'users',
-    component: () => import('@/app/users')
+    component: () => import('@/app/users/Users')
 }, {
     path: '/products',
     name: 'products',

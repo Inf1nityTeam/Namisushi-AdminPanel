@@ -1,5 +1,7 @@
 <template>
-  <div class="users">users</div>
+  <div class="users">
+    users
+  </div>
 </template>
 
 <script>
@@ -10,8 +12,8 @@ export default {
 
 <style scoped lang="scss">
 .users {
-  width: 100px;
-  height: 100px;
-  background: palevioletred;
+  //width: 100px;
+  //height: 100px;
+  //background: palevioletred;
 }
 </style>

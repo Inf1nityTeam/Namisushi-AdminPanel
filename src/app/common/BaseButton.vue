@@ -22,7 +22,7 @@ export default {
   width: 100%;
   height: 50px;
 
-  background: linear-gradient(180deg, #719DF2 0%, #1454F2 100%);
+  background: #2662f3;
   border-radius: 8px;
   border: none;
 

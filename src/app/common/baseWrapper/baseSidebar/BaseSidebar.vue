@@ -1,7 +1,7 @@
 <template>
   <header
-    class="base-sidebar"
-    :class="isCollapsed ? 'base-sidebar--open' : 'base-sidebar--close'"
+      class="base-sidebar"
+      :class="isCollapsed ? 'base-sidebar--open' : 'base-sidebar--close'"
   >
     <div class="base-sidebar__logo">
       <a href="#">
@@ -9,58 +9,54 @@
       </a>
     </div>
 
-    <BaseSidebarToggle />
+    <BaseSidebarToggle/>
 
-    <hr class="base-sidebar__hr base-sidebar__hr--top" />
+    <hr class="base-sidebar__hr base-sidebar__hr--top"/>
 
     <div class="base-sidebar__menu base-sidebar__menu--top">
-      <template v-for="el of menuList" :key="el.id">
-        <el-tooltip
+      <el-tooltip
           effect="dark"
-          :content="el.title"
+          content="Пользователи"
           placement="right"
-          :disabled="isCollapsed"
-        >
-          <router-link
-            :to="el.path"
-            :class="
-              $route.path === el.path ||
-              ($route.path === '/categories' && el.path === '/products')
-                ? 'active'
-                : ''
-            "
-          >
-            <img :src="require(`@/assets/image/sidebar/${el.img}`)" />
-            <span>{{ el.title }}</span>
-          </router-link>
-        </el-tooltip>
-      </template>
+          :disabled="isCollapsed">
+        <router-link
+            to="/users"
+            :class="{'active': route === 'users'}">
+          <img :src="require(`@/assets/image/sidebar/icon-user-management.svg`)" alt="">
+          <span>Пользователи</span>
+        </router-link>
+      </el-tooltip>
+      <el-tooltip
+          effect="dark"
+          content="Продукты"
+          placement="right"
+          :disabled="isCollapsed">
+        <router-link
+            to="/products"
+            :class="{'active': route === 'products'}">
+          <img :src="require(`@/assets/image/sidebar/icon-product.svg`)" alt="">
+          <span>Продукты</span>
+        </router-link>
+      </el-tooltip>
+      <el-tooltip
+          effect="dark"
+          content="Категории"
+          placement="right"
+          :disabled="isCollapsed">
+        <router-link
+            to="/categories"
+            :class="{'active': route === 'categories'}">
+          <img :src="require(`@/assets/image/sidebar/icon-category.svg`)" alt="">
+          <span>Категории</span>
+        </router-link>
+      </el-tooltip>
     </div>
 
-<!--    <hr class="base-sidebar__hr base-sidebar__hr&#45;&#45;center" />-->
-
-<!--    <div class="base-sidebar__menu base-sidebar__menu&#45;&#45;center">-->
-<!--      <el-tooltip-->
-<!--        effect="dark"-->
-<!--        :content="notificationEl.title"-->
-<!--        placement="right"-->
-<!--        :disabled="isCollapsed"-->
-<!--      >-->
-<!--        <router-link-->
-<!--          :to="notificationEl.path"-->
-<!--          :class="$route.path === '/' ? 'active' : ''"-->
-<!--        >-->
-<!--          <img :src="require(`@/assets/image/sidebar/${notificationEl.img}`)" />-->
-<!--          <span>{{ notificationEl.title }}</span>-->
-<!--        </router-link>-->
-<!--      </el-tooltip>-->
-<!--    </div>-->
-
-    <hr class="base-sidebar__hr base-sidebar__hr--last" />
+    <hr class="base-sidebar__hr base-sidebar__hr--last"/>
 
     <div class="base-sidebar__menu">
       <router-link :to="logoutEl.path">
-        <img :src="require(`@/assets/image/sidebar/${logoutEl.img}`)" />
+        <img :src="require(`@/assets/image/sidebar/${logoutEl.img}`)" alt=""/>
         <span>{{ logoutEl.title }}</span>
       </router-link>
     </div>
@@ -68,14 +64,17 @@
 </template>
 
 <script>
-import { baseSidebarState } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
+import {baseSidebarState} from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
 import BaseSidebarToggle from "@/app/common/baseWrapper/baseSidebar/BaseSidebarToggle";
-import { sidebarMenu } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.config";
+import {sidebarMenu} from "@/app/common/baseWrapper/baseSidebar/baseSidebar.config";
 
 export default {
   name: "base-sidebar",
-  components: { BaseSidebarToggle },
+  components: {BaseSidebarToggle},
   computed: {
+    route() {
+      return this.$route.name
+    },
     isCollapsed() {
       return baseSidebarState.isCollapsed;
     },
@@ -105,6 +104,7 @@ export default {
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   }
+
   &__logo {
     transition: all 350ms ease-in-out;
 
@@ -139,13 +139,15 @@ export default {
     transition: all 350ms ease-in-out;
 
     > a {
-      margin: auto;
-      padding: 12px 16px;
-      height: 52px;
-      border-radius: 10px;
       display: flex;
       align-items: center;
+
+      margin: 10px auto;
+      padding: 12px 16px;
       box-sizing: border-box;
+
+      height: 52px;
+      border-radius: 10px;
       transition: all 350ms ease-in-out;
 
       > img {
@@ -153,8 +155,7 @@ export default {
       }
 
       > span {
-        margin-top: 6px;
-        font-family: Ubuntu;
+        font-family: Ubuntu, sans-serif;
         font-style: normal;
         font-weight: normal;
         font-size: 14px;
@@ -162,9 +163,9 @@ export default {
         color: rgba(255, 255, 255, 0.9);
       }
 
-      &.active {
-      background-image: linear-gradient(180deg, #7ea8fc 0%, #2662f3 100%);
-    }
+      &.active, &:hover {
+        background: #2662f3;
+      }
     }
 
     &:nth-last-child(1) {
@@ -174,7 +175,6 @@ export default {
         height: 46px;
 
         &:hover {
-          //background: rgba(21, 21, 21, 0.7);
           background: linear-gradient(180deg, #7ea8fc 0%, #2662f3 100%);
         }
       }
@@ -219,7 +219,6 @@ export default {
 
         &--center {
           top: calc(208px + 77px + 25px);
-          //bottom: 10px;
         }
 
         > a {
@@ -263,7 +262,6 @@ export default {
 
         &--center {
           top: calc(208px + 119px + 25px);
-          //bottom: 10px;
         }
 
         > a {

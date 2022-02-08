@@ -18,10 +18,17 @@
             <base-circle-button
                 icon="edit"
                 @click="$emit('edit', scope.row)"/>
-            <base-circle-button
-                icon="delete"
-                type="delete"
-                @click="deleteCategory(scope.row._id)"/>
+            <el-popconfirm
+                title="Вы уверены что хотите удалить категорию?"
+                confirm-button-text="Да"
+                cancel-button-text="Нет"
+                @confirm="deleteCategory(scope.row._id)">
+              <template #reference>
+                <base-circle-button
+                    icon="delete"
+                    type="delete"/>
+              </template>
+            </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -36,7 +43,7 @@ import {categoriesState} from "@/app/categories/categories.state";
 import {categoriesController} from "@/app/categories/categories.controller";
 
 export default {
-  name: "products-table",
+  name: "categories-table",
   components: { BaseCircleButton },
   computed: {
     categories() {

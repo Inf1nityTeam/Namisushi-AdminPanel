@@ -10,8 +10,7 @@
 
     <div class="categories__content">
       <categories-table
-          @edit="editCategory"
-          @delete="deleteCategory"/>
+          @edit="openPopup"/>
     </div>
 
     <category-popup ref="popup"/>
@@ -36,7 +35,7 @@ export default {
     createCategory() {
       this.$refs.popup.open(null)
     },
-    editCategory(category) {
+    openPopup(category) {
       this.$refs.popup.open(category)
     }
   }

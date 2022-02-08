@@ -8,8 +8,9 @@
         ref="popup">
       <form action="">
         <base-input
+            v-model="category.title"
             label="Наименование"
-            v-model="category.title"/>
+            placeholder="Введите наименование"/>
       </form>
     </base-popup>
   </div>
