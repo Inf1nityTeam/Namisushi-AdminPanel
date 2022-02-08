@@ -1,6 +1,6 @@
 <template>
   <button class="base-button">
-    <svg-icon :src="require('@/assets/image/products/icon-check.svg')"/>
+    <svg-icon v-if="iconSrc" :src="iconSrc"/>
     <span>
       <slot/>
     </span>
@@ -9,7 +9,10 @@
 
 <script>
 export default {
-  name: "base-button"
+  name: "base-button",
+  props: {
+    iconSrc: {type: String, default: null}
+  }
 }
 </script>
 

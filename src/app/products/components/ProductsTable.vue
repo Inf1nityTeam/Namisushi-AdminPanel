@@ -2,7 +2,7 @@
   <el-table
       class="general-table"
       v-loading="loading"
-      :data="products"
+      :data="filteredProducts"
       :total="total"
       style="min-height: calc(100vh - 363px); width: 100%">
 
@@ -58,8 +58,8 @@
       <template #default="scope">
         <el-switch
             :value="scope.row.show"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
+            active-color="#F90D0D"
+            inactive-color="#D7D7D7"
             :width="28"
             :active-value="true"
             :inactive-value="false"/>
@@ -69,6 +69,17 @@
     <el-table-column
         label="Действия"
         prop="show">
+      <template #default="scope">
+        <div class="general-table--actions">
+          <base-circle-button
+              icon="edit"
+              @click="$emit('edit', scope.row)"/>
+          <base-circle-button
+              icon="delete"
+              type="delete"
+              @click="deleteProduct(scope.row._id, scope.$index)"/>
+        </div>
+      </template>
 
     </el-table-column>
 
@@ -77,30 +88,79 @@
 
 <script>
 import {productsController} from "@/app/products/products.controller";
+import BaseCircleButton from "@/app/common/BaseCircleButton";
 
 export default {
   name: "products-table",
+  components: {BaseCircleButton},
   data() {
     return {
       loading: false,
       products: [],
-      total: 0
+      total: 0,
+      searchProductTitle: ""
     }
   },
   created() {
     this.getProducts()
   },
   methods: {
+    searchProduct(title) {
+      this.searchProductTitle = title
+    },
     async getProducts() {
       const data = await productsController.getProducts()
-      console.log(data)
+
       this.products = data.products
       this.total = data.total
+    },
+    async deleteProduct(id, index) {
+      await productsController.deleteProduct(id)
+      this.products.splice(index, 1)
+    }
+  },
+  computed: {
+    filteredProducts() {
+      if (this.searchProductTitle) {
+        return this.products.filter(product => product.title.toLowerCase().includes(this.searchProductTitle.toLowerCase()))
+      } else {
+        return this.products
+      }
     }
   }
+
 }
 </script>
 
 <style scoped lang="scss">
+.general-table {
+  &--actions {
+    display: flex;
+  }
+}
+</style>
 
+<style lang="scss">
+.general-table {
+  &--actions {
+    display: flex;
+  }
+  .el-switch {
+    height: 16px;
+    &__action {
+      width: 12px;
+      height: 12px;
+      top: 1px;
+      left: 2px;
+
+    }
+    &__core {
+      border-radius: 28px;
+      height: 16px;
+    }
+    &.is-checked .el-switch__action {
+      margin-left: -14px;
+    }
+  }
+}
 </style>

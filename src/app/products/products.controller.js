@@ -7,7 +7,9 @@ class ProductsController {
     async getProducts() {
         return await this.#service.getProducts()
     }
-
+    async deleteProduct(id) {
+        await this.#service.deleteProduct(id)
+    }
 }
 
 export const productsController = new ProductsController()

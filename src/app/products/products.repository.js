@@ -6,5 +6,9 @@ export default class ProductsRepository {
         const response = await http.get('/api/admin/products')
         return response.data
     }
+    async deleteProduct(id) {
 
+        const response = await http.delete('/api/admin/product/' + id)
+        return response.data
+    }
 }

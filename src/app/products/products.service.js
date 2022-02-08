@@ -7,7 +7,6 @@ export default class ProductsService {
     async getProducts() {
 
         const data = await this.#repository.getProducts()
-
         return {
             ...data,
             products: data.products.map(product => ({
@@ -15,7 +14,10 @@ export default class ProductsService {
                 images: product.images?.map(image => 'https://dev.namisushi.dn.ua' + image)
             }))
         }
+    }
 
+    async deleteProduct(id) {
+        return await this.#repository.deleteProduct(id)
     }
 
 

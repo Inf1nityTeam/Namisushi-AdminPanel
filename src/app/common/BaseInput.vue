@@ -8,7 +8,7 @@
     </div>
 
     <input
-        :type="type || 'text'"
+        :type="type"
         :value="modelValue"
         :placeholder="placeholder"
         :disabled="disabled"
@@ -25,7 +25,7 @@ export default {
     label: { type: String },
     placeholder: { type: String, default: 'Please input' },
     disabled: { type: Boolean, default: false },
-    type: { type: String },
+    type: { type: String, default: 'text' },
     error: { type: [Boolean, String], default: false }
   }
 }

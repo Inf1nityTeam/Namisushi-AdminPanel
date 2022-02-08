@@ -17,6 +17,7 @@ export async function GET_PRODUCTS() {
     if (productsState.activeCategoryId) payload.category = productsState.activeCategoryId
     await axios.get('/api/admin/products', { params: payload })
         .then(response => {
+            console.log(response)
             productsState.productsList = JSON.parse(JSON.stringify(response.data.products))
             productsState.productsCount = response.data.total
             console.log(productsState.productsList);

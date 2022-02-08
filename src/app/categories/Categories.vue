@@ -4,7 +4,7 @@
 
     <div class="categories__header">
       <div class="categories__header--button">
-        <base-button @click="createCategory">Добавить категорию</base-button>
+        <base-button :icon-src="require('@/assets/image/products/icon-check.svg')" @click="createCategory">Добавить категорию</base-button>
       </div>
     </div>
 

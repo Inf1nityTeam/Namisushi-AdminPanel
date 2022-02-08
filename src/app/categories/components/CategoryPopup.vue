@@ -56,6 +56,7 @@ export default {
     open(category = null) {
       if (category) {
         this.category = copyDeep(category)
+        debugger; // eslint-disable-line no-debugger
       }
       this.$refs.popup.open()
     },

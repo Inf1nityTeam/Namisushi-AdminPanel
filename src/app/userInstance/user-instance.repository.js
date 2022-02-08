@@ -15,7 +15,7 @@ export default class UserInstanceRepository {
         let config = null
         if (process.env.NODE_ENV === 'development') {
             config = {
-                headers: { 'x-localhost': 'true' } // добавляю дев-хедер для прохождения авторизации с localhost
+                headers: { 'x-real-host': 'localhost' } // добавляю дев-хедер для прохождения авторизации с localhost
             }
         }
         const response = await http.post(`/api/signin`, credentials, config)
