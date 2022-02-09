@@ -1,6 +1,6 @@
 <template>
   <div class="product-popup">
-    <base-popup>
+    <base-popup :title="title" ref="popup">
 
       <div>
         <add-product-photo/>
@@ -30,8 +30,24 @@ export default {
   components: { BasePopup, AddProductPhoto, IngredientsTag, ProductTag },
   data() {
     return {
+      isEdit: false
     }
   },
+
+  methods: {
+    open(product = null) {
+      if (product) {
+        this.isEdit = true
+      }
+
+      this.$refs.popup.open()
+    }
+  },
+  computed: {
+    title() {
+      return this.isEdit ? "Редактировать продукт" : "Добавить продукт"
+    }
+  }
 }
 </script>
 

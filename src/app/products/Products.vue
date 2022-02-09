@@ -1,6 +1,11 @@
 <template>
   <div class="products">
     <div class="products__header">
+      <div class="products__header--top">
+        <div class="products__header--top-add-btn">
+          <base-button @click="openProductPopup">Добавить продукт</base-button>
+        </div>
+      </div>
       <div class="products__header--bottom">
         <div class="products__header--bottom-item">
           <search-input @update:modelValue="searchProduct" :model-value="searchProductTitle" />
@@ -9,7 +14,7 @@
       </div>
 
     </div>
-    <products-table ref="productsTable" @edit="editProduct"/>
+    <products-table ref="productsTable" />
 
 
     <product-popup ref="productPopup" />
@@ -21,18 +26,19 @@
 import ProductsTable from "@/app/products/components/ProductsTable";
 import ProductPopup from "@/app/products/components/productPopup/ProductPopup";
 import SearchInput from "@/app/products/components/productPopup/components/SearchInput";
+import BaseButton from "@/app/common/BaseButton";
 
 export default {
   name: "products",
-  components: {SearchInput, ProductsTable, ProductPopup },
+  components: {BaseButton, SearchInput, ProductsTable, ProductPopup },
   data() {
     return {
       searchProductTitle: ""
     }
   },
   methods: {
-    editProduct(product) {
-      this.$refs.productPopup.open(product)
+    openProductPopup() {
+      this.$refs.productPopup.open()
     },
     searchProduct(title) {
       this.$refs.productsTable.searchProduct(title)
@@ -44,6 +50,12 @@ export default {
 <style scoped lang="scss">
 .products {
   &__header {
+    &--top {
+      margin-bottom: 27px;
+    }
+    &--top-add-btn {
+      max-width: 216px;
+    }
     &:not(:last-child) {
       margin-bottom: 20px;
     }

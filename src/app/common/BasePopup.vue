@@ -34,7 +34,7 @@ export default {
   components: { BaseButton },
   props: {
     title: { type: String },
-    loading: { type: Boolean, default: true }
+    loading: { type: Boolean, default: false } //Todo change value to true
   },
   data() {
     return {
