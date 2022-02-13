@@ -25,7 +25,7 @@
 <script>
 import ProductsTable from "@/app/products/components/ProductsTable";
 import ProductPopup from "@/app/products/components/productPopup/ProductPopup";
-import SearchInput from "@/app/products/components/productPopup/components/SearchInput";
+import SearchInput from "@/app/products/components/SearchInput";
 import BaseButton from "@/app/common/BaseButton";
 
 export default {

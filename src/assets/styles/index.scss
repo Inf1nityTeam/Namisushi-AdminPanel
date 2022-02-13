@@ -1,9 +1,15 @@
 @import "fonts";
 //
-//* {
-//  margin: 0;
-//  padding: 0;
-//}
+* {
+  margin: 0;
+  padding: 0;
+}
+* {
+  box-sizing: border-box;
+}
+li {
+  list-style: none;
+}
 //
 //.general-btn {
 //  background: linear-gradient(180deg, #6c9af3 0%, #1f5cf3 100%);

@@ -20,5 +20,7 @@ export default class ProductsService {
         return await this.#repository.deleteProduct(id)
     }
 
-
+    getTags() {
+        return this.#repository.getTags()
+    }
 }

@@ -10,6 +10,9 @@ class ProductsController {
     async deleteProduct(id) {
         await this.#service.deleteProduct(id)
     }
+    getTags() {
+        return this.#service.getTags()
+    }
 }
 
 export const productsController = new ProductsController()

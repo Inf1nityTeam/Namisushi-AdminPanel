@@ -3,15 +3,14 @@
     <base-popup :title="title" ref="popup">
 
       <div>
-        <add-product-photo/>
+        <add-product-image />
+      </div>
+      <div>
+        <set-product-description @update:productType="productType = $event" v-model:productType="productType" />
       </div>
 
       <div>
-        <ingredients-tag/>
-      </div>
-
-      <div>
-        <product-tag/>
+        <product-tags  @update:modelValue="selectedTags = $event" :selectedTags="selectedTags"/>
       </div>
 
     </base-popup>
@@ -20,17 +19,19 @@
 
 <script>
 import BasePopup from "@/app/common/BasePopup";
-import AddProductPhoto from "@/app/products/components/productPopup/components/AddProductPhoto";
-// Cat select
-import IngredientsTag from "@/app/products/components/productPopup/components/IngredientsTag";
-import ProductTag from "@/app/products/components/productPopup/components/ProductTag";
+import AddProductImage from "@/app/products/components/productPopup/components/AddProductImage";
+
+import ProductTags from "@/app/products/components/productPopup/components/ProductTags";
+import SetProductDescription from "@/app/products/components/productPopup/components/SetProductDescription";
 
 export default {
   name: "product-popup",
-  components: { BasePopup, AddProductPhoto, IngredientsTag, ProductTag },
+  components: {SetProductDescription, BasePopup, AddProductImage, ProductTags },
   data() {
     return {
-      isEdit: false
+      isEdit: false,
+      productType: "variousFillings",
+      selectedTags: [],
     }
   },
 
@@ -41,7 +42,7 @@ export default {
       }
 
       this.$refs.popup.open()
-    }
+    },
   },
   computed: {
     title() {
