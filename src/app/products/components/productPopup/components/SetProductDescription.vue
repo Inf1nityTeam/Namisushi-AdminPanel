@@ -30,6 +30,7 @@ export default {
 
 <style lang="scss">
 .el-radio {
+  height: auto;
   &__input.is-checked {
     & + .el-radio__label {
       color: #1454F2;
