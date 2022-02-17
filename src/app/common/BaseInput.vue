@@ -2,17 +2,19 @@
   <label class="base-input"
          :class="{'base-input__error': error}">
 
-    <div v-if="label" class="base-input__label">
-      <div class="label">{{label}}</div>
-      <div v-if="error && typeof error === 'string'" class="error">{{error}}</div>
-    </div>
+    <span v-if="label" class="base-input__label">
+      <span>{{label}}</span>
+    </span>
 
-    <input
+    <component
+        :is="tag"
         :type="type"
         :value="modelValue"
         :placeholder="placeholder"
         :disabled="disabled"
-        @input="$emit('update:modelValue', $event.target.value)">
+        @input="$emit('update:modelValue', $event.target.value)"
+    ></component>
+    <span v-if="error && typeof error === 'string'" class="error">{{error}}</span>
   </label>
 </template>
 
@@ -26,7 +28,8 @@ export default {
     placeholder: { type: String, default: 'Please input' },
     disabled: { type: Boolean, default: false },
     type: { type: String, default: 'text' },
-    error: { type: [Boolean, String], default: false }
+    error: { type: [Boolean, String], default: false },
+    tag: { type: String, default: 'input'}
   }
 }
 </script>
@@ -34,8 +37,11 @@ export default {
 <style scoped lang="scss">
 .base-input {
   display: block;
-  margin-top: 12px;
-  margin-bottom: 12px;
+  position: relative;
+
+  &:not(:last-child) {
+    margin-bottom: 26px;
+  }
 
   &__error {
     .label, .error {
@@ -47,22 +53,24 @@ export default {
   }
 
   &__label {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    display: block;
+    margin-bottom: -8px;
+    padding-left: 13px;
+    position: relative;
+    z-index: 3;
 
-    display: flex;
-    width: 100%;
-
-    font-family: Rubik, sans-serif;
+    font-family: Manrope, sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
     line-height: 16px;
 
-    color: #7B7B7B;
+    color: #585858;
 
-    .error {
-      margin-left: auto;
+    span {
+      display: inline-block;
+      padding: 0 3px;
+      background-color: #fff;
     }
   }
 
@@ -76,40 +84,42 @@ export default {
     color: #7B7B7B;
   }
 
-  input {
-    padding-left: 20px;
-    padding-right: 20px;
-
+  input,
+  textarea {
     width: 100%;
-    height: 56px;
 
-    border: 1px solid #E7E7E7;
+    border: 1px solid #E8E8E8;
+    outline: none;
     box-sizing: border-box;
-    border-radius: 4px;
+    border-radius: 8px;
 
-    font-family: Rubik, sans-serif;
+    font-family: Manrope, sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 14px;
-    line-height: 24px;
 
-    color: #3D3D3D;
+    color: #585858;
 
     &::placeholder {
-      font-family: Rubik, sans-serif;
+      font-family: Manrope, sans-serif;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
-      line-height: 24px;
 
-      color: #BDBCC8;
+      color: #C4C4C4;
     }
-
     &:focus {
-      border-color: #0AB258;
+      border-color: #1454F2;
     }
-
   }
-
+  input {
+    height: 50px;
+    padding: 0 16px;
+  }
+  textarea {
+    height: 120px;
+    padding: 16px;
+    resize: none;
+  }
 }
 </style>

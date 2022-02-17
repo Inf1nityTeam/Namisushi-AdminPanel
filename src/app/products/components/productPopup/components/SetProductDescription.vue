@@ -14,14 +14,30 @@
         С различными начинками
       </el-radio>
     </div>
+    <categories-select />
+    <base-input
+        :model-value="title"
+        label="Наименование продукта"
+        placeholder="Введите название продукта"
+    />
+    <base-input
+        :model-value="title"
+        label="Описание"
+        placeholder="Введите описание продукта"
+        tag="textarea"
+    />
   </div>
 </template>
 
 <script>
+import BaseInput from "@/app/common/BaseInput";
+import CategoriesSelect from "@/app/products/components/productPopup/components/CategoriesSelect";
 export default {
   name: "set-product-description",
+  components: {CategoriesSelect, BaseInput},
   props: {
-    productType: {type: String}
+    productType: {type: String},
+    title: {type: String}
   },
   emits: ['update:productType']
 }

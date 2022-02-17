@@ -100,14 +100,19 @@ export default {
 
   &:before {
     content: "";
+
     position: absolute;
+    z-index: 3;
+
     top: 0;
     left: 0;
+
     width: 100%;
     height: 100%;
+
     border: 1px solid #E8E8E8;
-    z-index: 3;
     border-radius: 8px;
+
     pointer-events: none;
   }
 
@@ -134,7 +139,7 @@ export default {
   &__item {
     padding: 0 12px;
     width: 100%;
-    height: 48px;
+    height: 50px;
     display: flex;
 
     input {

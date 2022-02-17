@@ -7,7 +7,10 @@
       <div class="product-popup__base-desc">
         <set-product-description
             @update:productType="productType = $event"
-            v-model:productType="productType"/>
+            v-model:productType="productType"
+            :title="productTitle"
+            :description="productDescription"
+        />
       </div>
       <div class="product-popup__input-numbers">
         <base-input-number
@@ -44,7 +47,9 @@ export default {
       isEdit: false,
       productType: "variousFillings",
       selectedTags: [],
-      price: 0
+      price: 0,
+      productTitle: "",
+      productDescription: ""
     }
   },
 
