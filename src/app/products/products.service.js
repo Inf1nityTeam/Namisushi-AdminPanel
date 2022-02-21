@@ -23,4 +23,7 @@ export default class ProductsService {
     getTags() {
         return this.#repository.getTags()
     }
+    getProductTypes() {
+        return this.#repository.getProductTypes()
+    }
 }

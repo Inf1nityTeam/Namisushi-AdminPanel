@@ -1,15 +1,20 @@
 <template>
-  <el-select
-      model-value="test"
-      no-data-text="Нет доступных категорий"
-  >
-    <el-option
-        v-for="item in categories"
-        :key="item._id"
-        :label="item.title"
-        :value="item.title"
-    />
-  </el-select>
+  <div class="categories-select">
+    <span class="categories-select__label"><span>Категория</span></span>
+    <el-select
+        :model-value="category"
+        no-data-text="Нет доступных категорий"
+        placeholder="Выберите категорию"
+        @change="$emit('update:modelValue', $event)"
+    >
+      <el-option
+          v-for="item in categories"
+          :key="item._id"
+          :label="item.title"
+          :value="item.title"
+      />
+    </el-select>
+  </div>
 </template>
 
 <script>
@@ -32,13 +37,38 @@ export default {
   methods: {
     async getCategories() {
       this.categories = await categoriesController.getCategories()
-      console.log(this.categories)
     }
   }
 }
 </script>
 
+<style scoped lang="scss">
+.categories-select {
+  &__label {
+    display: block;
 
+    margin-bottom: -8px;
+    padding-left: 13px;
+
+    position: relative;
+    z-index: 3;
+
+    font-family: Manrope, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+
+    color: #585858;
+
+    span {
+      display: inline-block;
+      padding: 0 3px;
+      background-color: #fff;
+    }
+  }
+}
+</style>
 <style lang="scss">
 .el-select {
   width: 100%;
@@ -77,6 +107,10 @@ export default {
     &:hover {
       border-color: #1454F2;
     }
+    &::placeholder {
+      font-weight: 400;
+      color: #C4C4C4;
+    }
   }
 }
 .el-select-dropdown {
@@ -105,6 +139,12 @@ export default {
     padding: 0 14px;
     &:hover {
       background-color: #F4F7FE;
+      color: #1454F2;
+    }
+    &.hover {
+      background-color: #F4F7FE;
+    }
+    &.selected {
       color: #1454F2;
     }
   }

@@ -5,7 +5,6 @@
     <span v-if="label" class="base-input__label">
       <span>{{label}}</span>
     </span>
-
     <component
         :is="tag"
         :type="type"
@@ -54,16 +53,9 @@ export default {
 
   &__label {
     display: block;
+
     margin-bottom: -8px;
     padding-left: 13px;
-    position: relative;
-    z-index: 3;
-
-    font-family: Manrope, sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 16px;
 
     color: #585858;
 
@@ -71,6 +63,13 @@ export default {
       display: inline-block;
       padding: 0 3px;
       background-color: #fff;
+
+      font-size: 12px;
+      color: #585858;
+      font-family: Manrope, sans-serif;
+
+      position: relative;
+      z-index: 3;
     }
   }
 
@@ -114,7 +113,8 @@ export default {
   }
   input {
     height: 50px;
-    padding: 0 16px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
   textarea {
     height: 120px;

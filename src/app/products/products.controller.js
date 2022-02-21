@@ -13,6 +13,9 @@ class ProductsController {
     getTags() {
         return this.#service.getTags()
     }
+    getProductTypes() {
+        return this.#service.getProductTypes()
+    }
 }
 
 export const productsController = new ProductsController()

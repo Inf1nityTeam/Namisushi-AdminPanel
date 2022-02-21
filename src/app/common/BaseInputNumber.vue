@@ -94,42 +94,23 @@ export default {
   }
 
   width: 204px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-
-  &:before {
-    content: "";
-
-    position: absolute;
-    z-index: 3;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 100%;
-
-    border: 1px solid #E8E8E8;
-    border-radius: 8px;
-
-    pointer-events: none;
-  }
 
   &__label {
-    margin-top: -9px;
-    padding: 0 8px;
+    display: block;
+    margin-bottom: -8px;
+    padding-left: 13px;
+    position: relative;
+    z-index: 3;
 
     span {
       display: inline-block;
-      padding: 0 4px;
+      padding: 0 3px;
 
       background-color: #fff;
 
       position: relative;
       z-index: 5;
 
-      line-height: 18px;
       font-size: 12px;
       color: #585858;
       font-family: Manrope, sans-serif;
@@ -142,6 +123,7 @@ export default {
     height: 50px;
     display: flex;
 
+    border: 1px solid #E8E8E8;
     input {
       height: 100%;
       width: 100%;

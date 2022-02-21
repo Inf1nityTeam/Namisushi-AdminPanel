@@ -12,7 +12,12 @@
             :preview-src-list="imagesUrl"
             :hide-on-click-modal="true"
         />
-        <el-icon @click="deleteImage"><close/></el-icon>
+        <button
+            class="product-images__delete-btn"
+            @click="$emit('delete-image', $event)"
+        >
+          <el-icon><close/></el-icon>
+        </button>
       </li>
       <li class="product-images__list--item">
         <button @click="addImages" type="button" class="product-images__add-image-btn">
@@ -26,7 +31,7 @@
     <input
         type="file"
         style="display: none;"
-        @change="selectImages"
+        @change="$emit('select-images', $event)"
         multiple
         accept="image/*"
         ref="file"
@@ -40,27 +45,13 @@ import {Plus, Close} from "@element-plus/icons-vue";
 export default {
   name: "add-product-image",
   components: {Plus, Close},
-  data() {
-    return {
-      imagesUrl: []
-    }
+  emits: ['delete-image', 'select-images'],
+  props: {
+    imagesUrl: {type: Array, required: true}
   },
   methods: {
     addImages() {
       this.$refs.file.click()
-    },
-    selectImages($event) {
-      const images = $event.target.files
-
-      Array.from(images).forEach(file => {
-        const imageUrl = URL.createObjectURL(file)
-        this.imagesUrl.push(imageUrl)
-      })
-
-      $event.target.value = null
-    },
-    deleteImage(url) {
-      this.imagesUrl.splice(this.imagesUrl.indexOf(url), 1)
     }
   },
 }
@@ -112,7 +103,19 @@ export default {
       &:not(:last-child) {
         margin-right: 8px;
       }
+
     }
+  }
+  &__delete-btn {
+    position: absolute;
+
+    top: 5px;
+    right: 5px;
+
+    background-color: transparent;
+    border: none;
+
+    cursor: pointer;
   }
 }
 </style>
@@ -127,40 +130,31 @@ export default {
     border-radius: 8px;
     border: 1px solid #E8E8E8;
   }
-
-  &__list--item {
-    .el-image + .el-icon {
-      position: absolute;
-
-      top: 5px;
-      right: 5px;
-
+  &__delete-btn {
+    .el-icon {
       width: 20px;
       height: 20px;
 
-
-
       background-color: #F92C23;
       color: #fff;
+      transition: all 0.3s ease 0s;
 
       border-radius: 4px;
 
       display: inline-flex;
       justify-content: center;
       align-items: center;
+
+      opacity: 0;
+      visibility: hidden;
       svg {
         width: 12px;
         height: 12px;
       }
-      @media (any-hover: hover) {
-        transition: all 0.3s ease 0s;
-        opacity: 0;
-        visibility: hidden;
-      }
     }
     @media (any-hover: hover) {
       &:hover {
-        .el-image + .el-icon {
+        .el-icon {
           opacity: 1;
           visibility: visible;
         }

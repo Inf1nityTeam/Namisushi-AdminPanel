@@ -21,4 +21,10 @@ export default class ProductsRepository {
             {img: "icon-new.svg", label: "new", title: "Новый", bg: "#2864F3"}
         ]
     }
+    getProductTypes() {
+        return [
+            {label: "variousFillings", title: "С различными начинками"},
+            {label: "default", title: "Обычный"}
+        ]
+    }
 }

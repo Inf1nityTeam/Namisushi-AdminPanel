@@ -2,7 +2,20 @@
   <div class="product-popup">
     <base-popup :title="title" ref="popup">
       <div class="product-popup__images">
-        <add-product-image />
+        <add-product-image
+            @select-images="selectImages"
+            @delete-image="deleteImage"
+            :imagesUrl="imagesUrl" />
+      </div>
+      <div class="product-popup__type">
+        <product-type
+            :product-type="productType"
+            @update:modelValue="productType = $event" />
+      </div>
+      <div class="product-popup__category">
+        <categories-select
+            :category="productCategory"
+            @update:modelValue="productCategory = $event" />
       </div>
       <div class="product-popup__base-desc">
         <set-product-description
@@ -19,7 +32,14 @@
             label="Стоимость"
             :min="0"
             :max="100"
-            @update:modelValue="price = $event" />
+            @update:modelValue="price = $event"/>
+      </div>
+      <div class="product-popup__ingredients">
+        <product-ingredients
+            :ingredient-list="ingredientList"
+            @add-ingredient="addIngredient"
+            @delete-ingredient="deleteIngredient"
+        />
       </div>
       <div class="product-popup__tags">
         <product-tags
@@ -38,18 +58,27 @@ import AddProductImage from "@/app/products/components/productPopup/components/A
 import ProductTags from "@/app/products/components/productPopup/components/ProductTags";
 import SetProductDescription from "@/app/products/components/productPopup/components/SetProductDescription";
 import BaseInputNumber from "@/app/common/BaseInputNumber";
+import CategoriesSelect from "@/app/products/components/productPopup/components/CategoriesSelect";
+import ProductType from "@/app/products/components/productPopup/components/ProductType";
+import ProductIngredients from "@/app/products/components/productPopup/components/ProductIngredients";
 
 export default {
   name: "product-popup",
-  components: {BaseInputNumber, SetProductDescription, BasePopup, AddProductImage, ProductTags },
+  components: {
+    ProductIngredients,
+    ProductType,
+    CategoriesSelect, BaseInputNumber, SetProductDescription, BasePopup, AddProductImage, ProductTags},
   data() {
     return {
       isEdit: false,
+      imagesUrl: [],
       productType: "variousFillings",
       selectedTags: [],
       price: 0,
       productTitle: "",
-      productDescription: ""
+      productDescription: "",
+      productCategory: "",
+      ingredientList: ["Рис"],
     }
   },
 
@@ -60,6 +89,25 @@ export default {
       }
       this.$refs.popup.open()
     },
+    addIngredient(ingredient) {
+      this.ingredientList.push(ingredient)
+    },
+    deleteIngredient(ingredientIndex) {
+      this.ingredientList.splice(ingredientIndex, 1)
+    },
+    selectImages($event) {
+      const images = $event.target.files
+
+      Array.from(images).forEach(file => {
+        const imageUrl = URL.createObjectURL(file)
+        this.imagesUrl.push(imageUrl)
+      })
+
+      $event.target.value = null
+    },
+    deleteImage(url) {
+      this.imagesUrl.splice(this.imagesUrl.indexOf(url), 1)
+    }
   },
   computed: {
     title() {
@@ -92,6 +140,19 @@ export default {
   &__tags {
     &:not(:last-child) {
       margin-bottom: 32px;
+    }
+  }
+  &__type {
+    &:not(:last-child) {
+      margin-bottom: 26px;
+    }
+  }
+  &__ingredients {
+    margin-bottom: 26px;
+  }
+  &__category {
+    &:not(:last-child) {
+      margin-bottom: 26px;
     }
   }
 }
