@@ -36,6 +36,7 @@ export default {
   overflow: hidden;
 
   background-color: #1454F2;
+  padding: 0 47px;
   &::after {
     content: "";
     position: absolute;

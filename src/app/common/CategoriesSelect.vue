@@ -1,6 +1,6 @@
 <template>
   <div class="categories-select">
-    <span class="categories-select__label"><span>Категория</span></span>
+    <span v-if="label" class="categories-select__label"><span>{{label}}</span></span>
     <el-select
         :model-value="category"
         no-data-text="Нет доступных категорий"
@@ -25,7 +25,9 @@ export default {
   model: {event: "change", prop: "category"},
   props: {
     category: {type: String},
+    label: {type: String}
   },
+  emits: ['update:modelValue'],
   async created() {
     await this.getCategories()
   },
@@ -104,6 +106,8 @@ export default {
     font-family: Manrope, sans-serif;
     color: #1454F2;
     font-weight: 600;
+    border: 1px solid #E8E8E8;
+    border-radius: 8px;
     &:hover {
       border-color: #1454F2;
     }

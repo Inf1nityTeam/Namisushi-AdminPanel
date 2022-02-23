@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import GroupWrapper from "@/app/product_&_category/GroupWrapper.vue";
 import BaseHeader from "./baseHeader/BaseHeader";
 import BaseSidebar from "./baseSidebar/BaseSidebar";
 import { baseSidebarState } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
@@ -33,7 +32,7 @@ import {categoriesController} from "@/app/categories/categories.controller";
 
 export default {
   name: "base-wrapper",
-  components: { BaseHeader, BaseSidebar, GroupWrapper },
+  components: { BaseHeader, BaseSidebar },
   computed: {
     isCollapsed() {
       return baseSidebarState.isCollapsed;

@@ -14,6 +14,7 @@
       </div>
       <div class="product-popup__category">
         <categories-select
+            label="Категория"
             :category="productCategory"
             @update:modelValue="productCategory = $event" />
       </div>
@@ -58,7 +59,7 @@ import AddProductImage from "@/app/products/components/productPopup/components/A
 import ProductTags from "@/app/products/components/productPopup/components/ProductTags";
 import SetProductDescription from "@/app/products/components/productPopup/components/SetProductDescription";
 import BaseInputNumber from "@/app/common/BaseInputNumber";
-import CategoriesSelect from "@/app/products/components/productPopup/components/CategoriesSelect";
+import CategoriesSelect from "@/app/common/CategoriesSelect";
 import ProductType from "@/app/products/components/productPopup/components/ProductType";
 import ProductIngredients from "@/app/products/components/productPopup/components/ProductIngredients";
 
@@ -78,7 +79,7 @@ export default {
       productTitle: "",
       productDescription: "",
       productCategory: "",
-      ingredientList: ["Рис"],
+      ingredientList: [],
     }
   },
 

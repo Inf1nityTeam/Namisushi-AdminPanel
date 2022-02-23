@@ -89,6 +89,7 @@
 <script>
 import {productsController} from "@/app/products/products.controller";
 import BaseCircleButton from "@/app/common/BaseCircleButton";
+import {copyDeep} from "@/utils/copy-deep";
 
 export default {
   name: "products-table",
@@ -98,15 +99,17 @@ export default {
       loading: false,
       products: [],
       total: 0,
-      searchProductTitle: ""
+      searchProductTitle: "",
+      searchProductCategory: ""
     }
   },
   created() {
     this.getProducts()
   },
   methods: {
-    searchProduct(title) {
+    updateSearchProductData({title, category}) {
       this.searchProductTitle = title
+      this.searchProductCategory = category
     },
     async getProducts() {
       const data = await productsController.getProducts()
@@ -121,14 +124,28 @@ export default {
   },
   computed: {
     filteredProducts() {
-      if (this.searchProductTitle) {
-        return this.products.filter(product => product.title.toLowerCase().includes(this.searchProductTitle.toLowerCase()))
-      } else {
-        return this.products
+      let filteredProducts = copyDeep(this.products)
+
+      if (this.searchProductCategory) {
+        filteredProducts = filteredProducts.filter(product => {
+
+          if (product.categories.length === 0) return false
+
+          return product.categories.some(category => {
+            return category.title.toLowerCase() === this.searchProductCategory.toLowerCase()
+          })
+        })
       }
+
+      if (this.searchProductTitle) {
+        filteredProducts = filteredProducts.filter(product => {
+          return product.title.toLowerCase().includes(this.searchProductTitle.toLowerCase())
+        })
+      }
+
+      return filteredProducts
     }
   }
-
 }
 </script>
 
