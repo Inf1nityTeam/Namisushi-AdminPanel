@@ -12,7 +12,10 @@ export default class ProductsRepository {
         const response = await http.delete('/api/admin/product/' + id)
         return response.data
     }
-
+    async createProduct(product) {
+        const response = await http.post('/api/admin/product', product)
+        return response.data
+    }
     getTags() {
         return [
             {img: "icon-vegan.svg", label: "vegan", title: "Вегетарианский", bg: "#54B508"},

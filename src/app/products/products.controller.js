@@ -10,6 +10,9 @@ class ProductsController {
     async deleteProduct(id) {
         await this.#service.deleteProduct(id)
     }
+    async createProduct(product) {
+        await this.#service.createProduct(product)
+    }
     getTags() {
         return this.#service.getTags()
     }

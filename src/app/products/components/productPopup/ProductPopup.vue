@@ -1,51 +1,65 @@
 <template>
   <div class="product-popup">
-    <base-popup :title="title" ref="popup">
+    <base-popup @submit="createProduct" :title="title" ref="popup">
       <div class="product-popup__images">
         <add-product-image
             @select-images="selectImages"
             @delete-image="deleteImage"
-            :imagesUrl="imagesUrl" />
+            :imagesUrl="product.images"/>
       </div>
       <div class="product-popup__type">
         <product-type
-            :product-type="productType"
-            @update:modelValue="productType = $event" />
+            :product-type="product.type"
+            @update:modelValue="product.type = $event"/>
       </div>
       <div class="product-popup__category">
         <categories-select
             label="Категория"
-            :category="productCategory"
-            @update:modelValue="productCategory = $event" />
+            :category="product.categories"
+            @update:modelValue="product.categories = $event"/>
       </div>
       <div class="product-popup__base-desc">
-        <set-product-description
-            @update:productType="productType = $event"
-            v-model:productType="productType"
-            :title="productTitle"
-            :description="productDescription"
+        <base-input
+            :model-value="product.title"
+            @update:modelValue = "product.title = $event"
+            label="Наименование продукта"
+            placeholder="Введите название продукта"
+        />
+        <base-input
+            :model-value="product.description"
+            @update:modelValue = "product.description = $event"
+            label="Описание"
+            placeholder="Введите описание продукта"
+            tag="textarea"
         />
       </div>
       <div class="product-popup__input-numbers">
         <base-input-number
-            :model-value="price"
+            :model-value="product.cost"
             :step="50"
             label="Стоимость"
             :min="0"
-            :max="100"
-            @update:modelValue="price = $event"/>
+            :max="1000000"
+            @update:modelValue="product.cost = $event"/>
+        <base-input-number
+            :model-value="product.weight"
+            :step="100"
+            label="Вес (граммы)"
+            :min="0"
+            :max="1000000"
+            @update:modelValue="product.weight = $event"/>
       </div>
       <div class="product-popup__ingredients">
         <product-ingredients
-            :ingredient-list="ingredientList"
+            :ingredient-list="product.ingredients"
             @add-ingredient="addIngredient"
             @delete-ingredient="deleteIngredient"
         />
       </div>
       <div class="product-popup__tags">
         <product-tags
-            @update:modelValue="selectedTags = $event"
-            :selectedTags="selectedTags"/>
+            @update:modelValue="product.tags = $event"
+            :selectedTags="product.tags"/>
       </div>
 
     </base-popup>
@@ -55,34 +69,62 @@
 <script>
 import BasePopup from "@/app/common/BasePopup";
 import AddProductImage from "@/app/products/components/productPopup/components/AddProductImage";
-
 import ProductTags from "@/app/products/components/productPopup/components/ProductTags";
-import SetProductDescription from "@/app/products/components/productPopup/components/SetProductDescription";
 import BaseInputNumber from "@/app/common/BaseInputNumber";
 import CategoriesSelect from "@/app/common/CategoriesSelect";
 import ProductType from "@/app/products/components/productPopup/components/ProductType";
 import ProductIngredients from "@/app/products/components/productPopup/components/ProductIngredients";
+import BaseInput from "@/app/common/BaseInput";
+
+import useVuelidate from '@vuelidate/core';
+import {minLength, maxLength, required} from '@vuelidate/validators';
+import {productsController} from "@/app/products/products.controller";
 
 export default {
   name: "product-popup",
   components: {
+    BaseInput,
     ProductIngredients,
     ProductType,
-    CategoriesSelect, BaseInputNumber, SetProductDescription, BasePopup, AddProductImage, ProductTags},
+    CategoriesSelect, BaseInputNumber, BasePopup, AddProductImage, ProductTags
+  },
+  setup: () => ({v$: useVuelidate()}),
   data() {
     return {
       isEdit: false,
-      imagesUrl: [],
-      productType: "variousFillings",
-      selectedTags: [],
-      price: 0,
-      productTitle: "",
-      productDescription: "",
-      productCategory: "",
-      ingredientList: [],
+      product: {
+        images: [],
+        title: "",
+        description: "",
+        ingredients: [],
+        cost: 0,
+        weight: 0,
+        categories: "", // api требует массив; дизайн противоречит api
+        type: "variousFillings",
+        tags: []
+      }
     }
   },
+  validations() {
+    return {
+      product: {
+        description: {
+          minLength: minLength(3),
+          maxLength: maxLength(1024)
+        },
+        title: {
+          minLength: minLength(3),
+          maxLength: maxLength(64),
+          required
+        },
+        cost: {required},
+        ingredients: {
+          maxLength: maxLength(100)
+        }
+      }
 
+    }
+  },
   methods: {
     open(product = null) {
       if (product) {
@@ -91,23 +133,38 @@ export default {
       this.$refs.popup.open()
     },
     addIngredient(ingredient) {
-      this.ingredientList.push(ingredient)
+      this.product.ingredients.push(ingredient)
     },
     deleteIngredient(ingredientIndex) {
-      this.ingredientList.splice(ingredientIndex, 1)
+      this.product.ingredients.splice(ingredientIndex, 1)
     },
     selectImages($event) {
       const images = $event.target.files
 
       Array.from(images).forEach(file => {
         const imageUrl = URL.createObjectURL(file)
-        this.imagesUrl.push(imageUrl)
+        this.product.images.push(imageUrl)
       })
 
       $event.target.value = null
     },
     deleteImage(url) {
-      this.imagesUrl.splice(this.imagesUrl.indexOf(url), 1)
+      this.product.images.splice(this.product.images.indexOf(url), 1)
+    },
+    async createProduct() {
+      // в API нету images, tags, type при создании продукта
+      //TODO: убрать две последующие инструкции
+      const self = this
+      const product = {
+        title: self.product.title,
+        description: self.product.description,
+        cost: self.product.cost,
+        ingredients: self.product.ingredients,
+        weight: self.product.weight,
+        // categories: self.product.categories TODO: поменять тип данных на массив
+      }
+
+      await productsController.createProduct(product)
     }
   },
   computed: {
@@ -133,6 +190,13 @@ export default {
   }
 
   &__input-numbers {
+    display: flex;
+
+    @supports (column-gap: 24px)  {
+      column-gap: 24px;
+      padding: 0;
+    }
+
     &:not(:last-child) {
       margin-bottom: 26px;
     }
@@ -143,18 +207,68 @@ export default {
       margin-bottom: 32px;
     }
   }
+
   &__type {
     &:not(:last-child) {
       margin-bottom: 26px;
     }
   }
+
   &__ingredients {
     margin-bottom: 26px;
   }
+
   &__category {
     &:not(:last-child) {
       margin-bottom: 26px;
     }
+  }
+}
+</style>
+
+<style lang="scss">
+.el-dialog {
+  overflow: hidden;
+
+  &__headerbtn {
+    &::before {
+      content: "";
+
+      position: absolute;
+      top: -105px;
+      left: -40px;
+
+      border-radius: 50%;
+      transition: all 0.3s ease 0s;
+
+      width: 150px;
+      height: 150px;
+
+      visibility: hidden;
+      opacity: 0;
+      background-color: #7DA2FE;
+    }
+
+    @media (any-hover: hover) {
+      &:hover {
+        .el-dialog__close {
+          color: #fff !important;
+        }
+
+        &:before {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  &__close {
+    position: relative;
+    z-index: 3;
+
+    color: #000000 !important;
+    transition: color 0.3s ease 0s;
   }
 }
 </style>
