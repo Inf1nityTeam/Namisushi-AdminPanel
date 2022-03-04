@@ -1,10 +1,20 @@
 <template>
   <div class="products">
-    <products-header
-        @open-popup="openProductPopup"
-        @update-search-product = "updateSearchProductData"
+    <products-search @update-search-products="updateSearchProductsData" />
+    <base-pagination
+        :model-value="page"
+        :total="totalProductsCount"
+        :pages="pagesCount"
+        @update:modelValue="page = $event"
     />
-    <products-table ref="productsTable" />
+
+    <products-table
+        ref="productsTable"
+        :current-page="page"
+        :limit="limit"
+        @edit="editProduct"
+        @set-products-count="setProductsCount"
+    />
 
     <product-popup ref="productPopup" />
 
@@ -14,23 +24,34 @@
 <script>
 import ProductsTable from "@/app/products/components/ProductsTable";
 import ProductPopup from "@/app/products/components/productPopup/ProductPopup";
-import ProductsHeader from "@/app/products/components/ProductsHeader";
+import BasePagination from "@/app/common/BasePagination";
+import ProductsSearch from "@/app/products/components/ProductsSearch";
 
 export default {
   name: "products",
-  components: {ProductsHeader, ProductsTable, ProductPopup },
-
+  components: {ProductsSearch, BasePagination, ProductsTable, ProductPopup },
+  data() {
+    return {
+      page: 1,
+      totalProductsCount: 0,
+      limit: 5
+    }
+  },
   methods: {
-    openProductPopup() {
-      this.$refs.productPopup.open()
+    updateSearchProductsData(productsInfo) {
+      this.$refs.productsTable.updateSearchProductsData(productsInfo)
     },
-    updateSearchProductData(productInfo) {
-      this.$refs.productsTable.updateSearchProductData(productInfo)
+    setProductsCount(productsCount) {
+      this.totalProductsCount = productsCount
     },
+    editProduct(product) {
+      this.$refs.productPopup.open(product)
+    }
+  },
+  computed: {
+    pagesCount() {
+      return Math.ceil(this.totalProductsCount / this.limit)
+    }
   }
 }
 </script>
-
-<style scoped lang="scss">
-
-</style>

@@ -48,13 +48,26 @@ export default {
     }
   }
   > button {
-
+    height: 50px;
+    width: 52px;
     background-color: #fff;
     cursor: pointer;
     border: none;
 
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
+
+    path {
+      transition: fill 0.3s ease 0s;
+    }
+    @media (any-hover: hover) {
+      &:hover {
+        path {
+          fill: #1454F2;
+        }
+
+      }
+    }
   }
 }
 </style>

@@ -4,9 +4,10 @@ export default class ProductsService {
 
     #repository = new ProductsRepository()
 
-    async getProducts() {
+    async getProducts(page, limit) {
 
-        const data = await this.#repository.getProducts()
+        const data = await this.#repository.getProducts(page, limit)
+
         return {
             ...data,
             products: data.products.map(product => ({
@@ -22,6 +23,10 @@ export default class ProductsService {
 
     async createProduct(product) {
         await this.#repository.createProduct(product)
+    }
+
+    async editProduct(id, product) {
+        await this.#repository.editProduct(id, product)
     }
 
     getTags() {

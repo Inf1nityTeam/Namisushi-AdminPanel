@@ -2,8 +2,10 @@ import http from "@/axiosConfig/base-axios-config";
 
 export default class ProductsRepository {
 
-    async getProducts() {
-        const response = await http.get('/api/admin/products')
+    async getProducts(page, limit) {
+        const response = await http.get('/api/admin/products', {
+            params: {page, limit}
+        })
         return response.data
     }
 
@@ -16,6 +18,13 @@ export default class ProductsRepository {
         const response = await http.post('/api/admin/product', product)
         return response.data
     }
+
+    async editProduct(id, product) {
+        console.log(product)
+        const response = await http.patch(`/api/admin/product/${id}`, product)
+        return response.data
+    }
+
     getTags() {
         return [
             {img: "icon-vegan.svg", label: "vegan", title: "Вегетарианский", bg: "#54B508"},

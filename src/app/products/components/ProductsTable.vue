@@ -3,7 +3,7 @@
       class="general-table"
       v-loading="loading"
       :data="filteredProducts"
-      :total="total"
+      :total="limit"
       style="min-height: calc(100vh - 363px); width: 100%">
 
     <el-table-column prop="images" width="120">
@@ -94,28 +94,36 @@ import {copyDeep} from "@/utils/copy-deep";
 export default {
   name: "products-table",
   components: {BaseCircleButton},
+  emits: ['set-products-count', 'edit'],
+  props: {
+    currentPage: { type: Number, required: true},
+    limit: { type: Number, required: true}
+  },
   data() {
     return {
       loading: false,
       products: [],
-      total: 0,
-      searchProductTitle: "",
-      searchProductCategory: ""
+      searchProductsTitle: "",
+      searchProductsCategory: ""
     }
   },
   created() {
-    this.getProducts()
+    this.getProducts(this.currentPage, this.limit)
   },
   methods: {
-    updateSearchProductData({title, category}) {
-      this.searchProductTitle = title
-      this.searchProductCategory = category
+    updateSearchProductsData({title, category}) {
+      this.searchProductsTitle = title
+      this.searchProductsCategory = category
     },
-    async getProducts() {
-      const data = await productsController.getProducts()
+    async getProducts(page, limit) {
+      this.loading = true
+
+      const data = await productsController.getProducts(page, limit)
 
       this.products = data.products
-      this.total = data.total
+      this.$emit('set-products-count', data.total)
+
+      this.loading = false
     },
     async deleteProduct(id, index) {
       await productsController.deleteProduct(id)
@@ -126,24 +134,29 @@ export default {
     filteredProducts() {
       let filteredProducts = copyDeep(this.products)
 
-      if (this.searchProductCategory) {
+      if (this.searchProductsCategory) {
         filteredProducts = filteredProducts.filter(product => {
 
           if (product.categories.length === 0) return false
 
           return product.categories.some(category => {
-            return category.title.toLowerCase() === this.searchProductCategory.toLowerCase()
+            return category.title.toLowerCase() === this.searchProductsCategory.toLowerCase()
           })
         })
       }
 
-      if (this.searchProductTitle) {
+      if (this.searchProductsTitle) {
         filteredProducts = filteredProducts.filter(product => {
-          return product.title.toLowerCase().includes(this.searchProductTitle.toLowerCase())
+          return product.title.toLowerCase().includes(this.searchProductsTitle.toLowerCase())
         })
       }
 
       return filteredProducts
+    }
+  },
+  watch: {
+    async currentPage(newPage) {
+      await this.getProducts(newPage, this.limit)
     }
   }
 }
@@ -167,7 +180,8 @@ export default {
     &__action {
       width: 12px;
       height: 12px;
-      top: 1px;
+      top: 50%;
+      transform: translate(0, -50%);
       left: 2px;
 
     }
@@ -176,8 +190,37 @@ export default {
       height: 16px;
     }
     &.is-checked .el-switch__action {
-      margin-left: -14px;
+      margin-left: -13px;
     }
   }
+  &.el-table {
+    th {
+      border-bottom: 1px solid rgba(29, 91, 243, 0.39) !important;
+
+      font-family: Manrope, sans-serif;
+      color: #6A6A6A;
+      font-weight: 400;
+    }
+    tr {
+      font-family: Manrope, sans-serif;
+      color: #212121;
+      font-weight: 400;
+      line-height: calc(18 / 14 * 100%);
+    }
+    td.el-table__cell {
+      > .cell {
+        transition: all 0.3s ease 0s;
+
+        word-break: normal;
+        line-height: calc(18 / 14 * 100%);
+      }
+    }
+    &.el-table--enable-row-hover .el-table__body tr:hover>td.el-table__cell {
+      color: #757575;
+      background: none;
+    }
+
+  }
 }
+
 </style>

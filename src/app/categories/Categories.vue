@@ -1,32 +1,20 @@
 <template>
   <div class="categories"
-       v-loading="loading">
-
-    <div class="categories__header">
-      <div class="categories__header--button">
-        <base-button :icon-src="require('@/assets/image/products/icon-check.svg')" @click="createCategory">Добавить категорию</base-button>
-      </div>
-    </div>
-
-    <div class="categories__content">
+       v-loading="loading"
+  >
       <categories-table
           @edit="editCategory"
           @delete="deleteCategory"/>
-    </div>
-
-    <category-popup ref="popup"/>
   </div>
 </template>
 
 <script>
 import CategoriesTable from "@/app/categories/components/CategoriesTable";
-import CategoryPopup from "@/app/categories/components/CategoryPopup";
-import BaseButton from "@/app/common/BaseButton";
 import {categoriesState} from "@/app/categories/categories.state";
 
 export default {
   name: "categories",
-  components: { CategoriesTable, CategoryPopup, BaseButton },
+  components: { CategoriesTable },
   computed: {
     loading() {
       return categoriesState.loading

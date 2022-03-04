@@ -18,17 +18,12 @@
         <el-tooltip
           effect="dark"
           :content="el.title"
+          :enterable="false"
           placement="right"
           :disabled="isCollapsed"
         >
           <router-link
             :to="el.path"
-            :class="
-              $route.path === el.path ||
-              ($route.path === '/categories' && el.path === '/products')
-                ? 'active'
-                : ''
-            "
           >
             <img :src="require(`@/assets/image/sidebar/${el.img}`)" />
             <span>{{ el.title }}</span>
@@ -153,6 +148,7 @@ export default {
       }
 
       > span {
+        pointer-events: none;
         margin-top: 6px;
         font-family: Ubuntu;
         font-style: normal;
@@ -162,7 +158,7 @@ export default {
         color: rgba(255, 255, 255, 0.9);
       }
 
-      &.active {
+      &.router-link-exact-active {
       background-image: linear-gradient(180deg, #7ea8fc 0%, #2662f3 100%);
     }
     }

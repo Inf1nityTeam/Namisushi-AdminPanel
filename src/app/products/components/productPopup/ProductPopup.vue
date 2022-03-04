@@ -1,6 +1,11 @@
 <template>
   <div class="product-popup">
-    <base-popup @submit="createProduct" :title="title" ref="popup">
+    <base-popup
+        @submit="submit"
+        :title="title"
+        :loading="loading"
+        ref="popup"
+    >
       <div class="product-popup__images">
         <add-product-image
             @select-images="selectImages"
@@ -21,13 +26,13 @@
       <div class="product-popup__base-desc">
         <base-input
             :model-value="product.title"
-            @update:modelValue = "product.title = $event"
+            @update:modelValue="product.title = $event"
             label="Наименование продукта"
             placeholder="Введите название продукта"
         />
         <base-input
             :model-value="product.description"
-            @update:modelValue = "product.description = $event"
+            @update:modelValue="product.description = $event"
             label="Описание"
             placeholder="Введите описание продукта"
             tag="textarea"
@@ -91,7 +96,8 @@ export default {
   setup: () => ({v$: useVuelidate()}),
   data() {
     return {
-      isEdit: false,
+      isEditMode: false,
+      loading: false,
       product: {
         images: [],
         title: "",
@@ -101,7 +107,8 @@ export default {
         weight: 0,
         categories: "", // api требует массив; дизайн противоречит api
         type: "variousFillings",
-        tags: []
+        tags: [],
+        _id: null
       }
     }
   },
@@ -128,9 +135,36 @@ export default {
   methods: {
     open(product = null) {
       if (product) {
-        this.isEdit = true
+        this.isEditMode = true
+        // this.product = copyDeep(product) TODO: (в будущем расскоментировать)
+
+        // TODO: т.к некоторых данных недостает (type, tags), то делаю такой костыль; в будущем удалить две последующие инструкции:
+        const self = this
+        this.product = {
+          ...self.product,
+          _id: product._id,
+          images: product.images,
+          title: product.title,
+          description: product.description,
+          ingredients: product.ingredients,
+          cost: product.cost,
+          weight: product.weight,
+          categories: product.categories, // !!! Несоответсвующий тип данных, могут быть ошибки в консоли (api требует массив; дизайн противоречит api)
+        }
       }
+
       this.$refs.popup.open()
+    },
+    submit() {
+      if (this.isEditMode) {
+        this.editProduct()
+      } else {
+        this.createProduct()
+      }
+      this.close()
+    },
+    close() {
+      this.$refs.popup.close()
     },
     addIngredient(ingredient) {
       this.product.ingredients.push(ingredient)
@@ -165,11 +199,29 @@ export default {
       }
 
       await productsController.createProduct(product)
+    },
+    editProduct(product) {
+      this.loading = true
+      // TODO: т.к некоторых данных недостает (type, tags), то делаю такой костыль; в будущем удалить следующие инструкции:
+      const id = this.product._id
+      const self = this
+      product = {
+        images: self.product.images,
+        title: self.product.title,
+        description: self.product.description,
+        ingredients: self.product.ingredients,
+        cost: self.product.cost,
+        weight: self.product.weight,
+      }
+      console.log(product)
+      productsController.editProduct(id, product)
+      .then(() => this.close())
+      .finally(() => this.loading = false)
     }
   },
   computed: {
     title() {
-      return this.isEdit ? "Редактировать продукт" : "Добавить продукт"
+      return this.isEditMode ? "Редактировать продукт" : "Добавить продукт"
     }
   }
 }
@@ -191,8 +243,7 @@ export default {
 
   &__input-numbers {
     display: flex;
-
-    @supports (column-gap: 24px)  {
+    @supports (column-gap: 24px) {
       column-gap: 24px;
       padding: 0;
     }

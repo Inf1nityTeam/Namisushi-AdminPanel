@@ -4,14 +4,17 @@ class ProductsController {
 
     #service = new ProductsService()
 
-    async getProducts() {
-        return await this.#service.getProducts()
+    async getProducts(page, limit) {
+        return await this.#service.getProducts(page, limit)
     }
     async deleteProduct(id) {
         await this.#service.deleteProduct(id)
     }
     async createProduct(product) {
         await this.#service.createProduct(product)
+    }
+    async editProduct(id, product) {
+        await this.#service.editProduct(id, product)
     }
     getTags() {
         return this.#service.getTags()

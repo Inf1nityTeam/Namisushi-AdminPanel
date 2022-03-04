@@ -86,7 +86,7 @@ export default {
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
-    line-height: 24px;
+    line-height: 18px;
 
     text-align: center;
     transition: color 0.3s ease 0s;
