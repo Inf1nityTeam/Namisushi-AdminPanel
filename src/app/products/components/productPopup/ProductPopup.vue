@@ -29,6 +29,8 @@
             @update:modelValue="product.title = $event"
             label="Наименование продукта"
             placeholder="Введите название продукта"
+            :hasError="v$.product.title.$error"
+            :error="v$.product.title.$errors?.[0]?.$message"
         />
         <base-input
             :model-value="product.description"
@@ -36,6 +38,8 @@
             label="Описание"
             placeholder="Введите описание продукта"
             tag="textarea"
+            :hasError="v$.product.description.$error"
+            :error="v$.product.description.$errors?.[0]?.$message"
         />
       </div>
       <div class="product-popup__input-numbers">
@@ -59,6 +63,7 @@
             :ingredient-list="product.ingredients"
             @add-ingredient="addIngredient"
             @delete-ingredient="deleteIngredient"
+            :error="v$.product.ingredients.$errors?.[0]?.$message"
         />
       </div>
       <div class="product-popup__tags">
@@ -82,7 +87,7 @@ import ProductIngredients from "@/app/products/components/productPopup/component
 import BaseInput from "@/app/common/BaseInput";
 
 import useVuelidate from '@vuelidate/core';
-import {minLength, maxLength, required} from '@vuelidate/validators';
+import {minLength, maxLength, required, helpers} from '@vuelidate/validators';
 import {productsController} from "@/app/products/products.controller";
 
 export default {
@@ -116,17 +121,16 @@ export default {
     return {
       product: {
         description: {
-          minLength: minLength(3),
-          maxLength: maxLength(1024)
+          minLength: helpers.withMessage("Минимальная длина поля - 3 символа", minLength(3)),
+          maxLength: helpers.withMessage("Максимальная длина поля - 1024 символа", maxLength(1024)),
         },
         title: {
-          minLength: minLength(3),
-          maxLength: maxLength(64),
-          required
+          minLength: helpers.withMessage("Минимальная длина поля - 3 символа", minLength(3)),
+          maxLength: helpers.withMessage("Максимальная длина поля - 64 символа", maxLength(64)),
+          required: helpers.withMessage("Это обязательное поле", required)
         },
-        cost: {required},
         ingredients: {
-          maxLength: maxLength(100)
+          maxLength: helpers.withMessage('Вы не можете указать больше, чем 100 продуктов', maxLength(100))
         }
       }
 
@@ -156,12 +160,18 @@ export default {
       this.$refs.popup.open()
     },
     submit() {
-      if (this.isEditMode) {
-        this.editProduct()
-      } else {
-        this.createProduct()
-      }
+      this.v$.product.$touch()
+      console.log(this.v$.product.description.$errors?.[0]?.$message)
+      debugger; // eslint-disable-line no-debugger
+      if (this.v$.product.$invalid) return
+
+      // if (this.isEditMode) {
+      //   this.editProduct()
+      // } else {
+      //   this.createProduct()
+      // }
       this.close()
+      this.v$.$reset()
     },
     close() {
       this.$refs.popup.close()

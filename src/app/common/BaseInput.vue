@@ -1,7 +1,5 @@
 <template>
-  <label class="base-input"
-         :class="{'base-input__error': error}">
-
+  <label class="base-input" :class="{error: hasError}">
     <span v-if="label" class="base-input__label">
       <span>{{label}}</span>
     </span>
@@ -13,7 +11,7 @@
         :disabled="disabled"
         @input="$emit('update:modelValue', $event.target.value)"
     ></component>
-    <span v-if="error && typeof error === 'string'" class="error">{{error}}</span>
+    <span v-if="error" class="error-message">{{error}}</span>
   </label>
 </template>
 
@@ -27,7 +25,8 @@ export default {
     placeholder: { type: String, default: 'Please input' },
     disabled: { type: Boolean, default: false },
     type: { type: String, default: 'text' },
-    error: { type: [Boolean, String], default: false },
+    hasError: { type: Boolean, default: false },
+    error: { type: String },
     tag: { type: String, default: 'input'}
   }
 }
@@ -41,16 +40,6 @@ export default {
   &:not(:last-child) {
     margin-bottom: 26px;
   }
-
-  &__error {
-    .label, .error {
-      color: #F32B2A!important;
-    }
-    input {
-      border-color: #F32B2A!important;
-    }
-  }
-
   &__label {
     display: block;
 
@@ -74,7 +63,7 @@ export default {
   }
 
   > span {
-    font-family: Rubik, sans-serif;
+    font-family: Manrope, sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -110,6 +99,8 @@ export default {
     &:focus {
       border-color: #1454F2;
     }
+
+
   }
   input {
     height: 50px;
@@ -121,5 +112,27 @@ export default {
     padding: 16px;
     resize: none;
   }
+
+  &.error {
+    .base-input__label {
+      span {
+        color: #F90D0D;
+      }
+    }
+    input,
+    textarea {
+      border-color: #F90D0D;
+    }
+  }
+}
+
+.error-message {
+  position: absolute;
+
+  bottom: -18px;
+  left: 0;
+
+  color: #F90D0D !important;
+  padding-left: 16px;
 }
 </style>

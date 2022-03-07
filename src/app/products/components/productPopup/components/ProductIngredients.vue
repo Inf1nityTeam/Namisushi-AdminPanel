@@ -1,5 +1,6 @@
 <template>
   <div class="product-ingredients">
+    <span v-if="error" class="error-message">{{error}}</span>
     <div class="product-ingredients__label" v-if="showIngredientList"><span>Ингридиенты</span></div>
     <ul v-if="showIngredientList" class="product-ingredients__list">
       <li
@@ -15,6 +16,7 @@
           :model-value="newIngredient"
           placeholder="Название ингридиента"
           @update:modelValue="newIngredient = $event"
+          @keyup.enter="addIngredient"
       />
       <button @click="hideInput" type="button">
         <el-icon><delete-filled /></el-icon>
@@ -37,7 +39,8 @@ export default {
   name: "product-ingredients",
   components: {BaseButton, BaseInput, Plus, DeleteFilled},
   props: {
-    ingredientList: {type: Array}
+    ingredientList: {type: Array},
+    error: {type: String}
   },
   data() {
     return {
@@ -74,6 +77,7 @@ export default {
 
 <style scoped lang="scss">
 .product-ingredients {
+  position: relative;
   &__input {
     position: relative;
     &:not(:last-child) {
@@ -175,6 +179,19 @@ export default {
 
     }
   }
+}
+
+.error-message {
+  font-size: 12px;
+  font-family: Manrope, sans-serif;
+  line-height: 16px;
+
+  position: absolute;
+  top: -18px;
+  left: 0;
+
+  color: #F90D0D !important;
+  padding-left: 16px;
 }
 </style>
 
