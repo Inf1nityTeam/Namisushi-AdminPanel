@@ -11,10 +11,10 @@ class ProductsController {
         await this.#service.deleteProduct(id)
     }
     async createProduct(product) {
-        await this.#service.createProduct(product)
+        return await this.#service.createProduct(product)
     }
-    async editProduct(id, product) {
-        await this.#service.editProduct(id, product)
+    async editProduct(product, id) {
+        return await this.#service.editProduct(product, id)
     }
     getTags() {
         return this.#service.getTags()

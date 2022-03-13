@@ -4,7 +4,7 @@
     <router-view />
 
     <product-popup ref="productPopup" />
-    <categories-popup ref="categoriesPopup" />
+    <categories-popup ref="categoriesPopup" add- />
   </div>
 </template>
 
@@ -15,7 +15,7 @@ import ViewHeader from "@/app/productsAndCategories/components/ViewHeader";
 
 export default {
   name: "products-and-categories",
-  components: {ViewHeader, CategoriesPopup, ProductPopup},
+  components: {ViewHeader, ProductPopup, CategoriesPopup},
   methods: {
     openPopup() {
       if (this.$route.path === '/products') {

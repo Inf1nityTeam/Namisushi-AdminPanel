@@ -10,7 +10,7 @@
         <add-product-image
             @select-images="selectImages"
             @delete-image="deleteImage"
-            :imagesUrl="product.images"/>
+            :imagesUrl="imagesUrl"/>
       </div>
       <div class="product-popup__type">
         <product-type
@@ -20,7 +20,7 @@
       <div class="product-popup__category">
         <categories-select
             label="Категория"
-            :category="product.categories"
+            :model-value="product.categories"
             @update:modelValue="product.categories = $event"/>
       </div>
       <div class="product-popup__base-desc">
@@ -66,11 +66,11 @@
             :error="v$.product.ingredients.$errors?.[0]?.$message"
         />
       </div>
-      <div class="product-popup__tags">
-        <product-tags
-            @update:modelValue="product.tags = $event"
-            :selectedTags="product.tags"/>
-      </div>
+<!--      <div class="product-popup__tags">-->
+<!--        <product-tags-->
+<!--            @update:modelValue="product.tags = $event"-->
+<!--            :selectedTags="product.tags"/>-->
+<!--      </div>-->
 
     </base-popup>
   </div>
@@ -79,7 +79,7 @@
 <script>
 import BasePopup from "@/app/common/BasePopup";
 import AddProductImage from "@/app/products/components/productPopup/components/AddProductImage";
-import ProductTags from "@/app/products/components/productPopup/components/ProductTags";
+// import ProductTags from "@/app/products/components/productPopup/components/ProductTags";
 import BaseInputNumber from "@/app/common/BaseInputNumber";
 import CategoriesSelect from "@/app/common/CategoriesSelect";
 import ProductType from "@/app/products/components/productPopup/components/ProductType";
@@ -96,7 +96,7 @@ export default {
     BaseInput,
     ProductIngredients,
     ProductType,
-    CategoriesSelect, BaseInputNumber, BasePopup, AddProductImage, ProductTags
+    CategoriesSelect, BaseInputNumber, BasePopup, AddProductImage,
   },
   setup: () => ({v$: useVuelidate()}),
   data() {
@@ -104,15 +104,16 @@ export default {
       isEditMode: false,
       loading: false,
       product: {
-        images: [],
-        title: "",
+        show: true,
+        title: "test",
         description: "",
         ingredients: [],
         cost: 0,
         weight: 0,
-        categories: "", // api требует массив; дизайн противоречит api
-        type: "variousFillings",
-        tags: [],
+        categories: [],
+        images: [],
+        // type: "variousFillings",
+        // tags: [],
         _id: null
       }
     }
@@ -138,40 +139,26 @@ export default {
   },
   methods: {
     open(product = null) {
+      this.isEditMode = true
       if (product) {
+        console.log('open')
         this.isEditMode = true
-        // this.product = copyDeep(product) TODO: (в будущем расскоментировать)
-
-        // TODO: т.к некоторых данных недостает (type, tags), то делаю такой костыль; в будущем удалить две последующие инструкции:
-        const self = this
-        this.product = {
-          ...self.product,
-          _id: product._id,
-          images: product.images,
-          title: product.title,
-          description: product.description,
-          ingredients: product.ingredients,
-          cost: product.cost,
-          weight: product.weight,
-          categories: product.categories, // !!! Несоответсвующий тип данных, могут быть ошибки в консоли (api требует массив; дизайн противоречит api)
-        }
+        this.product = product
       }
 
       this.$refs.popup.open()
     },
     submit() {
       this.v$.product.$touch()
-      console.log(this.v$.product.description.$errors?.[0]?.$message)
-      debugger; // eslint-disable-line no-debugger
-      if (this.v$.product.$invalid) return
 
+      if (this.v$.product.$invalid) return
       // if (this.isEditMode) {
-      //   this.editProduct()
+      //   console.log('edit')
       // } else {
-      //   this.createProduct()
+      //   console.log('create')
       // }
-      this.close()
-      this.v$.$reset()
+      this.$emit('update', 123)
+      // this.v$.$reset()
     },
     close() {
       this.$refs.popup.close()
@@ -185,9 +172,8 @@ export default {
     selectImages($event) {
       const images = $event.target.files
 
-      Array.from(images).forEach(file => {
-        const imageUrl = URL.createObjectURL(file)
-        this.product.images.push(imageUrl)
+      Array.from(images).forEach(image => {
+        this.product.images.push(image)
       })
 
       $event.target.value = null
@@ -195,43 +181,57 @@ export default {
     deleteImage(url) {
       this.product.images.splice(this.product.images.indexOf(url), 1)
     },
-    async createProduct() {
-      // в API нету images, tags, type при создании продукта
-      //TODO: убрать две последующие инструкции
-      const self = this
-      const product = {
-        title: self.product.title,
-        description: self.product.description,
-        cost: self.product.cost,
-        ingredients: self.product.ingredients,
-        weight: self.product.weight,
-        // categories: self.product.categories TODO: поменять тип данных на массив
-      }
-
-      await productsController.createProduct(product)
-    },
-    editProduct(product) {
+    // createProduct() {
+    //   this.loading = true
+    //
+    //   productsController.createProduct(this.product)
+    //       .then(newProduct => {
+    //         this.$emit('add-product', newProduct)
+    //         debugger; // eslint-disable-line no-debugger
+    //         console.log(newProduct)
+    //         this.close()
+    //         this.clearProduct()
+    //       })
+    //       .finally(() => this.loading = false)
+    // },
+    editProduct() {
       this.loading = true
-      // TODO: т.к некоторых данных недостает (type, tags), то делаю такой костыль; в будущем удалить следующие инструкции:
-      const id = this.product._id
-      const self = this
-      product = {
-        images: self.product.images,
-        title: self.product.title,
-        description: self.product.description,
-        ingredients: self.product.ingredients,
-        cost: self.product.cost,
-        weight: self.product.weight,
-      }
-      console.log(product)
-      productsController.editProduct(id, product)
-      .then(() => this.close())
+
+      productsController.editProduct(this.product, this.product._id)
+      .then(updatedProduct => {
+        this.$emit('update-table', updatedProduct)
+        this.close()
+        this.clearProduct()
+      })
       .finally(() => this.loading = false)
+    },
+    clearProduct() {
+      this.product = {
+        show: true,
+        title: "",
+        description: "",
+        ingredients: [],
+        cost: 0,
+        weight: 0,
+        categories: [],
+        images: [],
+        // type: "variousFillings",
+        // tags: [],
+        _id: null
+      }
     }
   },
   computed: {
     title() {
       return this.isEditMode ? "Редактировать продукт" : "Добавить продукт"
+    },
+    imagesUrl() {
+      return this.product.images.map(file => {
+        if (typeof file !== 'string') {
+          return URL.createObjectURL(file)
+        }
+        return file
+      })
     }
   }
 }

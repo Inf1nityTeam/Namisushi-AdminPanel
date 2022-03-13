@@ -1,10 +1,10 @@
 <template>
   <div class="products-search">
     <div class="products-search__item">
-      <search-input @update:modelValue="updateSearchProductsTitle" :model-value="searchProductsTitle"/>
+      <search-input @update:modelValue="updateTitle" :model-value="title"/>
     </div>
     <div class="products-search__item">
-      <categories-select :category="searchProductsCategory" @update:modelValue="updateSearchProductsCategory"/>
+      <categories-select @update:modelValue="updateCategories" :model-value="categories"/>
     </div>
   </div>
 </template>
@@ -19,22 +19,22 @@ export default {
   emits: ['update-search-products'],
   data() {
     return {
-      searchProductsTitle: "",
-      searchProductsCategory: ""
+      title: "",
+      categories: []
     }
   },
   methods: {
-    updateSearchProductsTitle(text) {
-      this.searchProductsTitle = text
+    updateTitle(text) {
+      this.title = text
 
-      const {searchProductsTitle, searchProductsCategory} = this
-      this.$emit('update-search-products', {title: searchProductsTitle, category: searchProductsCategory})
+      const {title, categories} = this
+      this.$emit('update-search-products', {title, categories})
     },
-    updateSearchProductsCategory(category) {
-      this.searchProductsCategory = category
+    updateCategories(items) {
+      this.categories = items
 
-      const {searchProductsTitle, searchProductsCategory} = this
-      this.$emit('update-search-products', {title: searchProductsTitle, category: searchProductsCategory})
+      const {title, categories} = this
+      this.$emit('update-search-products', {title, categories})
     }
   },
 }
@@ -62,6 +62,9 @@ export default {
         border: none;
       }
     }
+  }
+  .el-tag {
+    margin: 5px 0 5px 11px !important;
   }
 }
 </style>

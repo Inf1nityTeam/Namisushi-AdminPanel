@@ -2,7 +2,8 @@
   <div class="categories-select">
     <span v-if="label" class="categories-select__label"><span>{{label}}</span></span>
     <el-select
-        :model-value="category"
+        multiple
+        :model-value="modelValue"
         no-data-text="Нет доступных категорий"
         placeholder="Выберите категорию"
         @change="$emit('update:modelValue', $event)"
@@ -11,7 +12,7 @@
           v-for="item in categories"
           :key="item._id"
           :label="item.title"
-          :value="item.title"
+          :value="JSON.stringify(item)"
       />
     </el-select>
   </div>
@@ -22,9 +23,9 @@ import {categoriesController} from '@/app/categories/categories.controller.js'
 
 export default {
   name: "categories-select",
-  model: {event: "change", prop: "category"},
+  model: {event: "change", prop: "modelValue"},
   props: {
-    category: {type: String},
+    modelValue: {type: Array},
     label: {type: String}
   },
   emits: ['update:modelValue'],
@@ -74,10 +75,18 @@ export default {
 <style lang="scss">
 .el-select {
   width: 100%;
+  line-height: 50px !important;
   &__popper.el-popper[role=tooltip] {
     box-shadow: none;
     border-radius: 9px;
     border: 1px solid #E8E8E8;
+  }
+  &__tags {
+    left: 5px;
+  }
+  &__tags-text {
+    overflow: hidden;
+    margin-right: 5px;
   }
   &:hover {
     .el-input__inner {
@@ -101,13 +110,14 @@ export default {
 }
 .el-input {
   &__inner {
-    height: 50px;
+    min-height: 50px;
 
     font-family: Manrope, sans-serif;
     color: #1454F2;
     font-weight: 600;
     border: 1px solid #E8E8E8;
     border-radius: 8px;
+    padding: 0 16px;
     &:hover {
       border-color: #1454F2;
     }
@@ -146,16 +156,56 @@ export default {
       color: #1454F2;
     }
     &.hover {
-      background-color: #F4F7FE;
+      background-color: transparent;
     }
     &.selected {
-      color: #1454F2;
+      color: #1454F2 !important;
+      background-color: #F4F7FE !important;
     }
   }
 }
 .el-popper {
   &__arrow {
     display: none;
+  }
+}
+
+.el-tag {
+  margin: 8px 0 3px 11px !important;
+
+  background-color: #fff !important;
+  border: 1px solid #E8E8E8 !important;
+
+  font-size: 14px;
+  font-family: Manrope, sans-serif;
+  color: #585858;
+
+  &--small {
+    height: 33px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__close {
+    height: 20px !important;
+    width: 20px !important;
+
+    line-height: 20px !important;
+    position: static !important;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease 0s;
+    @media (any-hover: hover) {
+      &:hover {
+        background-color: #1454F2 !important;
+      }
+    }
+    svg {
+      margin: 0 !important;
+    }
   }
 }
 </style>

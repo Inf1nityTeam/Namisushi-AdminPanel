@@ -11,7 +11,7 @@ export default class ProductsRepository {
 
     async deleteProduct(id) {
 
-        const response = await http.delete('/api/admin/product/' + id)
+        const response = await http.delete(`/api/admin/product/${id}`)
         return response.data
     }
     async createProduct(product) {
@@ -19,8 +19,7 @@ export default class ProductsRepository {
         return response.data
     }
 
-    async editProduct(id, product) {
-        console.log(product)
+    async editProduct(product, id) {
         const response = await http.patch(`/api/admin/product/${id}`, product)
         return response.data
     }

@@ -26,8 +26,9 @@
         label="Категория"
         prop="categories">
       <template #default="scope">
-        <div v-for="category in scope.row.categories" :key="category._id">
+        <div v-for="(category, index) in scope.row.categories" :key="category._id">
           {{category.title}}
+          <template v-if="index !== scope.row.ingredients.length - 1">, </template>
         </div>
       </template>
     </el-table-column>
@@ -36,8 +37,9 @@
         label="Список ингридиентов"
         prop="ingredients">
       <template #default="scope">
-        <span v-for="item in scope.row.ingredients" :key="item">
-          {{ item }},
+        <span v-for="(item, index) in scope.row.ingredients" :key="item">
+          {{ item }}
+          <template v-if="index !== scope.row.ingredients.length - 1">, </template>
         </span>
       </template>
     </el-table-column>
@@ -94,7 +96,7 @@ import {copyDeep} from "@/utils/copy-deep";
 export default {
   name: "products-table",
   components: {BaseCircleButton},
-  emits: ['set-products-count', 'edit'],
+  emits: ['edit'],
   props: {
     currentPage: { type: Number, required: true},
     limit: { type: Number, required: true}
@@ -103,17 +105,21 @@ export default {
     return {
       loading: false,
       products: [],
-      searchProductsTitle: "",
-      searchProductsCategory: ""
     }
   },
   created() {
     this.getProducts(this.currentPage, this.limit)
   },
   methods: {
-    updateSearchProductsData({title, category}) {
-      this.searchProductsTitle = title
-      this.searchProductsCategory = category
+    updateSearchProductsData({title, categories}) {
+      this.searchData.title = title
+      this.searchData.categories = categories
+    },
+    updateTable(product) {
+      // this.products.pop()
+      // this.products.unshift(product)
+      console.log(product)
+      console.log(this.products)
     },
     async getProducts(page, limit) {
       this.loading = true
@@ -134,20 +140,35 @@ export default {
     filteredProducts() {
       let filteredProducts = copyDeep(this.products)
 
-      if (this.searchProductsCategory) {
+      if (this.searchData.categories.length > 0) {
+        const categories = this.searchData.categories
+
         filteredProducts = filteredProducts.filter(product => {
 
           if (product.categories.length === 0) return false
 
-          return product.categories.some(category => {
-            return category.title.toLowerCase() === this.searchProductsCategory.toLowerCase()
-          })
+          let isTruthyValue = true
+
+          for (let i = 0; i < categories.length; ++i) {
+            const category = categories[i]
+
+            const isFalsyValue = !product.categories.some(productCategory => productCategory._id === JSON.parse(category)._id)
+
+            if (isFalsyValue) {
+              isTruthyValue = false
+            }
+          }
+
+          return isTruthyValue
         })
       }
 
-      if (this.searchProductsTitle) {
+
+      if (this.searchData.title) {
+        const title = this.searchData.title
+
         filteredProducts = filteredProducts.filter(product => {
-          return product.title.toLowerCase().includes(this.searchProductsTitle.toLowerCase())
+          return product.title.toLowerCase().includes(title.toLowerCase())
         })
       }
 
@@ -224,3 +245,31 @@ export default {
 }
 
 </style>
+
+
+<!--filteredProducts() {-->
+<!--let filteredProducts = copyDeep(this.products)-->
+
+<!--if (this.searchData.categories.length > 0) {-->
+<!--const categories = this.searchData.categories-->
+
+<!--filteredProducts = filteredProducts.filter(product => {-->
+
+<!--if (product.categories.length === 0) return false-->
+
+<!--let isTruthyValue = true-->
+
+<!--const result = categories.filter(category => {-->
+
+<!--const isFalsyValue = !product.categories.some(productCategory => productCategory._id === JSON.parse(category)._id)-->
+
+<!--if (isFalsyValue) {-->
+<!--isTruthyValue = false-->
+<!--}-->
+<!--return isFalsyValue-->
+<!--})-->
+<!--console.log(isTruthyValue)-->
+<!--console.log('result: ', result)-->
+<!--return isTruthyValue-->
+<!--})-->
+<!--}-->

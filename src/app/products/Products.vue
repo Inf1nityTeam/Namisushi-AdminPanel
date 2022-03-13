@@ -13,10 +13,9 @@
         :current-page="page"
         :limit="limit"
         @edit="editProduct"
-        @set-products-count="setProductsCount"
     />
 
-    <product-popup ref="productPopup" />
+    <product-popup ref="productPopup" @update="updateTable" />
 
   </div>
 </template>
@@ -29,28 +28,31 @@ import ProductsSearch from "@/app/products/components/ProductsSearch";
 
 export default {
   name: "products",
-  components: {ProductsSearch, BasePagination, ProductsTable, ProductPopup },
+  components: {BasePagination, ProductsTable, ProductPopup, ProductsSearch },
   data() {
     return {
       page: 1,
-      totalProductsCount: 0,
       limit: 5
     }
   },
   methods: {
-    updateSearchProductsData(productsInfo) {
-      this.$refs.productsTable.updateSearchProductsData(productsInfo)
-    },
-    setProductsCount(productsCount) {
-      this.totalProductsCount = productsCount
+    updateSearchProductsData(data) {
+      this.$refs.productsTable.updateSearchProductsData(data)
     },
     editProduct(product) {
       this.$refs.productPopup.open(product)
+    },
+    updateTable() {
+      // this.$refs.productsTable.updateTable(product)
+      console.log('lke')
     }
   },
   computed: {
     pagesCount() {
       return Math.ceil(this.totalProductsCount / this.limit)
+    },
+    totalProductsCount() {
+
     }
   }
 }

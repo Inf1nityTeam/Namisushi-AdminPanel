@@ -1,9 +1,42 @@
 import ProductsRepository from "@/app/products/products.repository";
+import {copyDeep} from "@/utils/copy-deep";
+import {notificationsHelper} from "@/helpers/notifications.helper";
+// import http from "@/axiosConfig/base-axios-config";
 
 export default class ProductsService {
 
     #repository = new ProductsRepository()
 
+    _sanitizeProduct(product) {
+        const formData = new FormData()
+        const productCopy = copyDeep(product)
+
+        productCopy.categories = productCopy.categories.map(category => {
+            if (typeof category === 'string') {
+                return JSON.parse(category)._id
+            }
+            return category._id
+        })
+
+        for (let i = 0; i < productCopy.images.length; ++i) {
+            const image = productCopy.images[i]
+
+            if (typeof image !== 'string') {
+                formData.append('images', image)
+            }
+        }
+
+        delete productCopy.images
+        delete productCopy._id
+
+        if (!productCopy.description) {
+            delete productCopy.description
+        }
+
+        formData.append('data', JSON.stringify(productCopy))
+
+        return formData
+    }
     async getProducts(page, limit) {
 
         const data = await this.#repository.getProducts(page, limit)
@@ -22,11 +55,30 @@ export default class ProductsService {
     }
 
     async createProduct(product) {
-        await this.#repository.createProduct(product)
-    }
+        try {
+            const sanitizedProduct = this._sanitizeProduct(product)
 
-    async editProduct(id, product) {
-        await this.#repository.editProduct(id, product)
+            const data = await this.#repository.createProduct(sanitizedProduct)
+            notificationsHelper.success({message: "Продукт успешно создан"})
+
+            return data
+        } catch (error) {
+            notificationsHelper.fromHttpError(error)
+            throw error
+        }
+    }
+    async editProduct(product, id) {
+        try {
+            const sanitizedProduct = this._sanitizeProduct(product)
+
+            const data = await this.#repository.editProduct(sanitizedProduct, id)
+            notificationsHelper.success({message: "Продукт успешно обновлен"})
+
+            return data
+        } catch(error) {
+            notificationsHelper.fromHttpError(error)
+            throw error
+        }
     }
 
     getTags() {
@@ -35,4 +87,36 @@ export default class ProductsService {
     getProductTypes() {
         return this.#repository.getProductTypes()
     }
+
+    // async createOrUpdateProduct(product) {
+    //     const formData = new FormData()
+    //     const productCopy = copyDeep(product)
+    //     const id = productCopy._id
+    //
+    //     productCopy.categories = productCopy.categories.map(category => {
+    //         if (typeof category === 'string') {
+    //             return JSON.parse(category)._id
+    //         }
+    //         return category._id
+    //     })
+    //
+    //     for (let i = 0; i < productCopy.images.length; ++i) {
+    //         const image = productCopy.images[i]
+    //
+    //         if (typeof image !== 'string') {
+    //             formData.append('images', image)
+    //         }
+    //     }
+    //
+    //     delete productCopy.images
+    //     delete productCopy._id
+    //
+    //     formData.append('data', JSON.stringify(productCopy))
+    //
+    //     if (id) {
+    //         await this.#repository.updateProduct(formData, id)
+    //     } else {
+    //         await this.#repository.createProduct(formData)
+    //     }
+    // }
 }

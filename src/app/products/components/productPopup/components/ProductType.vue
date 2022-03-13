@@ -1,6 +1,7 @@
 <template>
   <div class="product-type">
     <el-radio
+        disabled
         v-for="type in types"
         :key="type.label"
         :model-value="productType"
@@ -18,7 +19,7 @@ export default {
   name: "product-type",
   model: { event: "change", prop: "productType"},
   props: {
-    productType: {type: String},
+    productType: {type: String, default: "variousFillings"},
   },
 
   data() {
