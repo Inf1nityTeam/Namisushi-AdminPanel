@@ -136,7 +136,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
+  padding-top: 25px;
+  padding-bottom: 20px;
+  border-top: 1px solid #F0F0F0;
   &__list {
     display: inline-flex;
   }

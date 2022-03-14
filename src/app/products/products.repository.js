@@ -24,6 +24,11 @@ export default class ProductsRepository {
         return response.data
     }
 
+    async toggleBan(value, id) {
+        const response = await http.patch(`/api/admin/product/${id}`, value)
+        return response.data
+    }
+
     getTags() {
         return [
             {img: "icon-vegan.svg", label: "vegan", title: "Вегетарианский", bg: "#54B508"},

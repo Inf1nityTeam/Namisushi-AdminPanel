@@ -31,6 +31,7 @@ export default {
 
   border-radius: 8px;
   border: none;
+  outline: none;
 
   cursor: pointer;
   overflow: hidden;

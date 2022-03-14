@@ -28,7 +28,7 @@
       <template #default="scope">
         <div v-for="(category, index) in scope.row.categories" :key="category._id">
           {{category.title}}
-          <template v-if="index !== scope.row.ingredients.length - 1">, </template>
+          <template v-if="index !== scope.row.categories.length - 1">, </template>
         </div>
       </template>
     </el-table-column>
@@ -59,6 +59,7 @@
         prop="show">
       <template #default="scope">
         <el-switch
+            @change="toggleBan($event, scope.row._id, scope.$index)"
             :value="scope.row.show"
             active-color="#F90D0D"
             inactive-color="#D7D7D7"
@@ -76,10 +77,16 @@
           <base-circle-button
               icon="edit"
               @click="$emit('edit', scope.row)"/>
-          <base-circle-button
-              icon="delete"
-              type="delete"
-              @click="deleteProduct(scope.row._id, scope.$index)"/>
+          <el-popconfirm
+              title="Вы уверены что хотите удалить этот продукт?"
+              confirm-button-text="Да"
+              cancel-button-text="Нет"
+              @confirm="deleteProduct(scope.row._id, scope.$index)"
+          >
+            <template #reference>
+              <base-circle-button icon="delete" type="delete"/>
+            </template>
+          </el-popconfirm>
         </div>
       </template>
 
@@ -92,6 +99,7 @@
 import {productsController} from "@/app/products/products.controller";
 import BaseCircleButton from "@/app/common/BaseCircleButton";
 import {copyDeep} from "@/utils/copy-deep";
+import {productsState} from "@/app/products/products.state";
 
 export default {
   name: "products-table",
@@ -101,39 +109,32 @@ export default {
     currentPage: { type: Number, required: true},
     limit: { type: Number, required: true}
   },
-  data() {
-    return {
-      loading: false,
-      products: [],
-    }
-  },
   created() {
     this.getProducts(this.currentPage, this.limit)
   },
   methods: {
-    updateSearchProductsData({title, categories}) {
-      this.searchData.title = title
-      this.searchData.categories = categories
-    },
-    updateTable(product) {
-      // this.products.pop()
-      // this.products.unshift(product)
-      console.log(product)
-      console.log(this.products)
-    },
-    async getProducts(page, limit) {
-      this.loading = true
+    getProducts(page, limit) {
+      productsState.loading = true
 
-      const data = await productsController.getProducts(page, limit)
-
-      this.products = data.products
-      this.$emit('set-products-count', data.total)
-
-      this.loading = false
+      productsController.getProducts(page, limit)
+      .then(data => {
+        productsState.products = data.products
+        productsState.totalProductsCount = data.total
+        productsState.loading = false
+      })
     },
-    async deleteProduct(id, index) {
-      await productsController.deleteProduct(id)
-      this.products.splice(index, 1)
+    deleteProduct(id, index) {
+      productsController.deleteProduct(id)
+      .then(() => {
+        productsState.products.splice(index, 1)
+        productsState.totalProductsCount -= 1
+      })
+    },
+    toggleBan(value, id, index) {
+      productsController.toggleBan({show: value}, id)
+      .then(data => {
+        productsState.products[index].show = data.product.show
+      })
     }
   },
   computed: {
@@ -173,6 +174,15 @@ export default {
       }
 
       return filteredProducts
+    },
+    searchData() {
+      return productsState.searchData
+    },
+    products() {
+      return productsState.products
+    },
+    loading() {
+      return productsState.loading
     }
   },
   watch: {
@@ -243,33 +253,4 @@ export default {
 
   }
 }
-
 </style>
-
-
-<!--filteredProducts() {-->
-<!--let filteredProducts = copyDeep(this.products)-->
-
-<!--if (this.searchData.categories.length > 0) {-->
-<!--const categories = this.searchData.categories-->
-
-<!--filteredProducts = filteredProducts.filter(product => {-->
-
-<!--if (product.categories.length === 0) return false-->
-
-<!--let isTruthyValue = true-->
-
-<!--const result = categories.filter(category => {-->
-
-<!--const isFalsyValue = !product.categories.some(productCategory => productCategory._id === JSON.parse(category)._id)-->
-
-<!--if (isFalsyValue) {-->
-<!--isTruthyValue = false-->
-<!--}-->
-<!--return isFalsyValue-->
-<!--})-->
-<!--console.log(isTruthyValue)-->
-<!--console.log('result: ', result)-->
-<!--return isTruthyValue-->
-<!--})-->
-<!--}-->

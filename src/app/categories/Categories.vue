@@ -4,7 +4,7 @@
   >
       <categories-table
           @edit="editCategory"
-          @delete="deleteCategory"/>
+      />
   </div>
 </template>
 

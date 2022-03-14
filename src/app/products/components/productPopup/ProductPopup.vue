@@ -8,9 +8,10 @@
     >
       <div class="product-popup__images">
         <add-product-image
-            @select-images="selectImages"
+            @add-image="addImage"
             @delete-image="deleteImage"
-            :imagesUrl="imagesUrl"/>
+            :images="product.images"
+        />
       </div>
       <div class="product-popup__type">
         <product-type
@@ -89,6 +90,10 @@ import BaseInput from "@/app/common/BaseInput";
 import useVuelidate from '@vuelidate/core';
 import {minLength, maxLength, required, helpers} from '@vuelidate/validators';
 import {productsController} from "@/app/products/products.controller";
+import {productsState} from "@/app/products/products.state";
+import {copyDeep} from "@/utils/copy-deep";
+
+import {v4 as uuidv4} from "uuid";
 
 export default {
   name: "product-popup",
@@ -104,8 +109,8 @@ export default {
       isEditMode: false,
       loading: false,
       product: {
-        show: true,
-        title: "test",
+        show: false,
+        title: "",
         description: "",
         ingredients: [],
         cost: 0,
@@ -139,29 +144,65 @@ export default {
   },
   methods: {
     open(product = null) {
-      this.isEditMode = true
+
       if (product) {
-        console.log('open')
         this.isEditMode = true
-        this.product = product
+        this.product = {
+          ...copyDeep(product),
+          images: product.images?.map(image => ({_id: uuidv4(), image}))
+        }
       }
 
       this.$refs.popup.open()
     },
     submit() {
       this.v$.product.$touch()
-
       if (this.v$.product.$invalid) return
-      // if (this.isEditMode) {
-      //   console.log('edit')
-      // } else {
-      //   console.log('create')
-      // }
-      this.$emit('update', 123)
-      // this.v$.$reset()
+
+      if (this.isEditMode) {
+        this.loading = true
+
+        productsController.editProduct(this.product, this.product._id)
+            .then(data => {
+              this.editProduct(data.product)
+              this.close()
+              this.clearProduct()
+            })
+            .finally(() => this.loading = false)
+      } else {
+        this.loading = true
+
+        productsController.createProduct(this.product)
+            .then(data => {
+              this.createProduct(data.product)
+              this.close()
+              this.clearProduct()
+            })
+            .finally(() => this.loading = false)
+      }
+
+      this.v$.$reset()
+    },
+    createProduct(product) {
+      product.images = product.images.map(item => 'https://dev.namisushi.dn.ua' + item)
+
+      if (productsState.products.length === productsState.limit) {
+        productsState.products.pop()
+      }
+
+      productsState.products.unshift(product)
+      productsState.totalProductsCount += 1
+    },
+    editProduct(product) {
+      product.images = product.images.map(item => 'https://dev.namisushi.dn.ua' + item)
+      const index = productsState.products.findIndex(item => item._id === product._id)
+      productsState.products[index] = product
     },
     close() {
       this.$refs.popup.close()
+    },
+    addImage(image) {
+      this.product.images.push(image)
     },
     addIngredient(ingredient) {
       this.product.ingredients.push(ingredient)
@@ -169,41 +210,9 @@ export default {
     deleteIngredient(ingredientIndex) {
       this.product.ingredients.splice(ingredientIndex, 1)
     },
-    selectImages($event) {
-      const images = $event.target.files
-
-      Array.from(images).forEach(image => {
-        this.product.images.push(image)
-      })
-
-      $event.target.value = null
-    },
-    deleteImage(url) {
-      this.product.images.splice(this.product.images.indexOf(url), 1)
-    },
-    // createProduct() {
-    //   this.loading = true
-    //
-    //   productsController.createProduct(this.product)
-    //       .then(newProduct => {
-    //         this.$emit('add-product', newProduct)
-    //         debugger; // eslint-disable-line no-debugger
-    //         console.log(newProduct)
-    //         this.close()
-    //         this.clearProduct()
-    //       })
-    //       .finally(() => this.loading = false)
-    // },
-    editProduct() {
-      this.loading = true
-
-      productsController.editProduct(this.product, this.product._id)
-      .then(updatedProduct => {
-        this.$emit('update-table', updatedProduct)
-        this.close()
-        this.clearProduct()
-      })
-      .finally(() => this.loading = false)
+    deleteImage(imageUrl, index) {
+      this.product.images.splice(index, 1)
+      URL.revokeObjectURL(imageUrl)
     },
     clearProduct() {
       this.product = {
@@ -224,14 +233,6 @@ export default {
   computed: {
     title() {
       return this.isEditMode ? "Редактировать продукт" : "Добавить продукт"
-    },
-    imagesUrl() {
-      return this.product.images.map(file => {
-        if (typeof file !== 'string') {
-          return URL.createObjectURL(file)
-        }
-        return file
-      })
     }
   }
 }

@@ -38,19 +38,19 @@ class NotificationsHelper {
         const backendMessage = this._getBackendErrorMessage(error)
 
         if (typeof error.code === 'string') {
-            ElNotification.error({title: 'Error', message: 'Internet connection error'})
+            ElNotification.error({title: 'Ошибка', message: 'Ошибка подключения к интернету'})
             console.error(error)
         } else if (options.backend && backendMessage) {
             if (typeof options.backend === 'object' && options.backend.find === backendMessage) {
-                ElNotification.error({title: 'Error', message: options.backend.set})
+                ElNotification.error({title: 'Ошибка', message: options.backend.set})
             } else {
-                ElNotification.error({title: 'Error', message: backendMessage})
+                ElNotification.error({title: 'Ошибка', message: backendMessage})
             }
         } else if (options.base) {
             if (typeof options.base === 'string') {
-                ElNotification.error({title: 'Error', message: options.base})
+                ElNotification.error({title: 'Ошибка', message: options.base})
             } else {
-                ElNotification.error({title: 'Error', message: 'Something went wrong'})
+                ElNotification.error({title: 'Ошибка', message: 'Что-то пошло не так...'})
             }
         }
     }

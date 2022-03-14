@@ -4,7 +4,7 @@
     <router-view />
 
     <product-popup ref="productPopup" />
-    <categories-popup ref="categoriesPopup" add- />
+    <categories-popup ref="categoriesPopup" />
   </div>
 </template>
 

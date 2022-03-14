@@ -19,13 +19,12 @@ export default class ProductsService {
         })
 
         for (let i = 0; i < productCopy.images.length; ++i) {
-            const image = productCopy.images[i]
+            const image = productCopy.images[i].image
 
             if (typeof image !== 'string') {
                 formData.append('images', image)
             }
         }
-
         delete productCopy.images
         delete productCopy._id
 
@@ -51,13 +50,17 @@ export default class ProductsService {
     }
 
     async deleteProduct(id) {
-        return await this.#repository.deleteProduct(id)
+        try {
+            return await this.#repository.deleteProduct(id)
+        } catch (error) {
+            notificationsHelper.fromHttpError(error)
+            throw error
+        }
     }
 
     async createProduct(product) {
         try {
             const sanitizedProduct = this._sanitizeProduct(product)
-
             const data = await this.#repository.createProduct(sanitizedProduct)
             notificationsHelper.success({message: "Продукт успешно создан"})
 
@@ -81,6 +84,15 @@ export default class ProductsService {
         }
     }
 
+    async toggleBan(value, id) {
+        try {
+            return await this.#repository.toggleBan(value, id)
+        } catch(error) {
+            notificationsHelper.fromHttpError(error)
+            throw error
+        }
+    }
+
     getTags() {
         return this.#repository.getTags()
     }
@@ -88,35 +100,4 @@ export default class ProductsService {
         return this.#repository.getProductTypes()
     }
 
-    // async createOrUpdateProduct(product) {
-    //     const formData = new FormData()
-    //     const productCopy = copyDeep(product)
-    //     const id = productCopy._id
-    //
-    //     productCopy.categories = productCopy.categories.map(category => {
-    //         if (typeof category === 'string') {
-    //             return JSON.parse(category)._id
-    //         }
-    //         return category._id
-    //     })
-    //
-    //     for (let i = 0; i < productCopy.images.length; ++i) {
-    //         const image = productCopy.images[i]
-    //
-    //         if (typeof image !== 'string') {
-    //             formData.append('images', image)
-    //         }
-    //     }
-    //
-    //     delete productCopy.images
-    //     delete productCopy._id
-    //
-    //     formData.append('data', JSON.stringify(productCopy))
-    //
-    //     if (id) {
-    //         await this.#repository.updateProduct(formData, id)
-    //     } else {
-    //         await this.#repository.createProduct(formData)
-    //     }
-    // }
 }

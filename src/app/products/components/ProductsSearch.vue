@@ -12,11 +12,11 @@
 <script>
 import SearchInput from "@/app/common/SearchInput";
 import CategoriesSelect from "@/app/common/CategoriesSelect";
+import {productsState} from "@/app/products/products.state";
 
 export default {
   name: "products-search",
   components: {CategoriesSelect, SearchInput},
-  emits: ['update-search-products'],
   data() {
     return {
       title: "",
@@ -24,17 +24,14 @@ export default {
     }
   },
   methods: {
-    updateTitle(text) {
-      this.title = text
+    updateTitle(title) {
+      this.title = title
 
-      const {title, categories} = this
-      this.$emit('update-search-products', {title, categories})
+      productsState.searchData.title = title
     },
-    updateCategories(items) {
-      this.categories = items
-
-      const {title, categories} = this
-      this.$emit('update-search-products', {title, categories})
+    updateCategories(categories) {
+      this.categories = categories
+      productsState.searchData.categories = categories
     }
   },
 }

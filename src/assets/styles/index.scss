@@ -10,6 +10,42 @@
 li {
   list-style: none;
 }
+.el-popconfirm {
+
+  &__main {
+    font-family: Manrope, sans-serif;
+    color: #6A6A6A;
+    line-height: 18px;
+    & .el-icon {
+      display: none;
+    }
+  }
+  &__action {
+    margin-top: 10px !important;
+  }
+  .el-button {
+    font-family: Manrope, sans-serif !important;
+    border: none !important;
+    &--primary {
+      background-color: #1454F2 !important;
+      transition: background-color 0.3s ease 0s;
+      @media (any-hover: hover) {
+        &:hover {
+          background-color: #7AA0FF !important;
+        }
+      }
+    }
+    &--text {
+      color: #6A6A6A;
+      transition: color 0.3s ease 0s;
+      @media (any-hover: hover) {
+        &:hover {
+          color: #1454F2 !important;
+        }
+      }
+    }
+  }
+}
 //
 //.general-btn {
 //  background: linear-gradient(180deg, #6c9af3 0%, #1f5cf3 100%);
