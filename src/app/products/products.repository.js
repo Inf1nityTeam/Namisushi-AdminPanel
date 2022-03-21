@@ -2,10 +2,8 @@ import http from "@/axiosConfig/base-axios-config";
 
 export default class ProductsRepository {
 
-    async getProducts(page, limit) {
-        const response = await http.get('/api/admin/products', {
-            params: {page, limit}
-        })
+    async getProducts(params) {
+        const response = await http.get('/api/admin/products', {params})
         return response.data
     }
 

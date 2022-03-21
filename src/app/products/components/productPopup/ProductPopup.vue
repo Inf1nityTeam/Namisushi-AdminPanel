@@ -79,7 +79,7 @@
 
 <script>
 import BasePopup from "@/app/common/BasePopup";
-import AddProductImage from "@/app/products/components/productPopup/components/AddProductImage";
+import AddProductImage from "@/app/products/components/productPopup/components/AddProductImages";
 // import ProductTags from "@/app/products/components/productPopup/components/ProductTags";
 import BaseInputNumber from "@/app/common/BaseInputNumber";
 import CategoriesSelect from "@/app/common/CategoriesSelect";
@@ -90,7 +90,6 @@ import BaseInput from "@/app/common/BaseInput";
 import useVuelidate from '@vuelidate/core';
 import {minLength, maxLength, required, helpers} from '@vuelidate/validators';
 import {productsController} from "@/app/products/products.controller";
-import {productsState} from "@/app/products/products.state";
 import {copyDeep} from "@/utils/copy-deep";
 
 import {v4 as uuidv4} from "uuid";
@@ -144,12 +143,12 @@ export default {
   },
   methods: {
     open(product = null) {
-
       if (product) {
         this.isEditMode = true
         this.product = {
           ...copyDeep(product),
-          images: product.images?.map(image => ({_id: uuidv4(), image}))
+          images: product.images?.map(image => ({_id: uuidv4(), image})),
+          categories: product.categories?.map(category => category._id)
         }
       }
 
@@ -163,8 +162,7 @@ export default {
         this.loading = true
 
         productsController.editProduct(this.product, this.product._id)
-            .then(data => {
-              this.editProduct(data.product)
+            .then(() => {
               this.close()
               this.clearProduct()
             })
@@ -173,8 +171,7 @@ export default {
         this.loading = true
 
         productsController.createProduct(this.product)
-            .then(data => {
-              this.createProduct(data.product)
+            .then(() => {
               this.close()
               this.clearProduct()
             })
@@ -182,21 +179,6 @@ export default {
       }
 
       this.v$.$reset()
-    },
-    createProduct(product) {
-      product.images = product.images.map(item => 'https://dev.namisushi.dn.ua' + item)
-
-      if (productsState.products.length === productsState.limit) {
-        productsState.products.pop()
-      }
-
-      productsState.products.unshift(product)
-      productsState.totalProductsCount += 1
-    },
-    editProduct(product) {
-      product.images = product.images.map(item => 'https://dev.namisushi.dn.ua' + item)
-      const index = productsState.products.findIndex(item => item._id === product._id)
-      productsState.products[index] = product
     },
     close() {
       this.$refs.popup.close()

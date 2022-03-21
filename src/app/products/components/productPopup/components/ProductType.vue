@@ -1,7 +1,7 @@
 <template>
   <div class="product-type">
     <el-radio
-        disabled
+        :disabled="isDisabled(type)"
         v-for="type in types"
         :key="type.label"
         :model-value="productType"
@@ -19,7 +19,7 @@ export default {
   name: "product-type",
   model: { event: "change", prop: "productType"},
   props: {
-    productType: {type: String, default: "variousFillings"},
+    productType: {type: String, default: "default"},
   },
 
   data() {
@@ -33,8 +33,11 @@ export default {
   methods: {
     getProductTypes() {
       this.types = productsController.getProductTypes()
+    },
+    isDisabled(type) {
+      return type.label !== 'default'
     }
-  }
+  },
 }
 </script>
 

@@ -1,7 +1,7 @@
 import ProductsRepository from "@/app/products/products.repository";
 import {copyDeep} from "@/utils/copy-deep";
 import {notificationsHelper} from "@/helpers/notifications.helper";
-// import http from "@/axiosConfig/base-axios-config";
+import {productsState} from "@/app/products/products.state";
 
 export default class ProductsService {
 
@@ -11,13 +11,6 @@ export default class ProductsService {
         const formData = new FormData()
         const productCopy = copyDeep(product)
 
-        productCopy.categories = productCopy.categories.map(category => {
-            if (typeof category === 'string') {
-                return JSON.parse(category)._id
-            }
-            return category._id
-        })
-
         for (let i = 0; i < productCopy.images.length; ++i) {
             const image = productCopy.images[i].image
 
@@ -25,6 +18,7 @@ export default class ProductsService {
                 formData.append('images', image)
             }
         }
+
         delete productCopy.images
         delete productCopy._id
 
@@ -36,17 +30,22 @@ export default class ProductsService {
 
         return formData
     }
-    async getProducts(page, limit) {
 
-        const data = await this.#repository.getProducts(page, limit)
-
-        return {
-            ...data,
-            products: data.products.map(product => ({
-                ...product,
-                images: product.images?.map(image => 'https://dev.namisushi.dn.ua' + image)
-            }))
+    async getProducts(params) {
+        const paramsCopy = copyDeep(params)
+        for (let key in paramsCopy) {
+            if (!paramsCopy[key]) delete paramsCopy[key]
         }
+
+        const data = await this.#repository.getProducts(paramsCopy)
+
+        productsState.products = data.products.map(product => ({
+            ...product,
+            images: product.images?.map(image => 'https://dev.namisushi.dn.ua' + image),
+        }))
+
+        productsState.totalProductsCount = data.total
+
     }
 
     async deleteProduct(id) {
@@ -64,12 +63,28 @@ export default class ProductsService {
             const data = await this.#repository.createProduct(sanitizedProduct)
             notificationsHelper.success({message: "Продукт успешно создан"})
 
-            return data
+            const createdProduct = data.product
+            createdProduct.images = createdProduct.images.map(item => 'https://dev.namisushi.dn.ua' + item)
+
+
+            const isTruthyValue = !productsState.searchData.category
+                || createdProduct.categories.some(category => category._id === productsState.searchData.category)
+
+            if (!isTruthyValue) return createdProduct
+
+            if (productsState.products.length === productsState.pagination.limit) {
+                productsState.products.pop()
+            }
+
+            productsState.products.unshift(createdProduct)
+            productsState.totalProductsCount += 1
+            return createdProduct
         } catch (error) {
             notificationsHelper.fromHttpError(error)
             throw error
         }
     }
+
     async editProduct(product, id) {
         try {
             const sanitizedProduct = this._sanitizeProduct(product)
@@ -77,8 +92,12 @@ export default class ProductsService {
             const data = await this.#repository.editProduct(sanitizedProduct, id)
             notificationsHelper.success({message: "Продукт успешно обновлен"})
 
-            return data
-        } catch(error) {
+            const updatedProduct = data.product
+            updatedProduct.images = updatedProduct.images.map(item => 'https://dev.namisushi.dn.ua' + item)
+            const index = productsState.products.findIndex(item => item._id === product._id)
+            productsState.products[index] = updatedProduct
+            return updatedProduct
+        } catch (error) {
             notificationsHelper.fromHttpError(error)
             throw error
         }
@@ -87,7 +106,7 @@ export default class ProductsService {
     async toggleBan(value, id) {
         try {
             return await this.#repository.toggleBan(value, id)
-        } catch(error) {
+        } catch (error) {
             notificationsHelper.fromHttpError(error)
             throw error
         }
@@ -96,6 +115,7 @@ export default class ProductsService {
     getTags() {
         return this.#repository.getTags()
     }
+
     getProductTypes() {
         return this.#repository.getProductTypes()
     }

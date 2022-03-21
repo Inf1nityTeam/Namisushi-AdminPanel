@@ -118,6 +118,7 @@ export default {
 
     border: 1px dashed #E8E8E8;
     border-radius: 8px;
+    outline: none;
 
     background-color: #fff;
 

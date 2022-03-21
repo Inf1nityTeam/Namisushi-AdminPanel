@@ -2,7 +2,8 @@
   <div class="categories-select">
     <span v-if="label" class="categories-select__label"><span>{{label}}</span></span>
     <el-select
-        multiple
+        :multiple="isMultipleMode"
+        :clearable="!isMultipleMode"
         :model-value="modelValue"
         no-data-text="Нет доступных категорий"
         placeholder="Выберите категорию"
@@ -12,7 +13,7 @@
           v-for="item in categories"
           :key="item._id"
           :label="item.title"
-          :value="JSON.stringify(item)"
+          :value="item._id"
       />
     </el-select>
   </div>
@@ -25,8 +26,9 @@ export default {
   name: "categories-select",
   model: {event: "change", prop: "modelValue"},
   props: {
-    modelValue: {type: Array},
-    label: {type: String}
+    modelValue: {type: [Array, String]},
+    label: {type: String},
+    isMultipleMode: {type: Boolean, default: true}
   },
   emits: ['update:modelValue'],
   async created() {
@@ -39,6 +41,7 @@ export default {
   },
   methods: {
     async getCategories() {
+
       this.categories = await categoriesController.getCategories()
     }
   }
@@ -79,10 +82,20 @@ export default {
   &__popper.el-popper[role=tooltip] {
     box-shadow: none;
     border-radius: 9px;
+    overflow: hidden;
     border: 1px solid #E8E8E8;
   }
   &__tags {
     left: 5px;
+  }
+  &__caret {
+    path {
+      fill: #585858;
+    }
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
   &__tags-text {
     overflow: hidden;

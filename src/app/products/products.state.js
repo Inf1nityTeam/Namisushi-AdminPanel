@@ -4,9 +4,12 @@ export const productsState = reactive({
     loading: false,
     products: [],
     totalProductsCount: 0,
-    limit: 5,
+    pagination: {
+        limit: 5,
+        currentPage: 1
+    },
     searchData: {
         title: "",
-        categories: []
+        category: ""
     }
 })

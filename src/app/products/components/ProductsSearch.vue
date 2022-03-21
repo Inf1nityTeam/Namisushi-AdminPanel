@@ -4,7 +4,11 @@
       <search-input @update:modelValue="updateTitle" :model-value="title"/>
     </div>
     <div class="products-search__item">
-      <categories-select @update:modelValue="updateCategories" :model-value="categories"/>
+      <categories-select
+          @update:modelValue="updateCategories"
+          :model-value="category"
+          :is-multiple-mode="false"
+      />
     </div>
   </div>
 </template>
@@ -13,27 +17,39 @@
 import SearchInput from "@/app/common/SearchInput";
 import CategoriesSelect from "@/app/common/CategoriesSelect";
 import {productsState} from "@/app/products/products.state";
+import {productsController} from "@/app/products/products.controller";
 
 export default {
   name: "products-search",
   components: {CategoriesSelect, SearchInput},
-  data() {
-    return {
-      title: "",
-      categories: []
-    }
-  },
   methods: {
     updateTitle(title) {
-      this.title = title
-
       productsState.searchData.title = title
     },
-    updateCategories(categories) {
-      this.categories = categories
-      productsState.searchData.categories = categories
+    async updateCategories(category) {
+      productsState.searchData.category = category
+      await this.updateTableByCategory(category)
+    },
+    async updateTableByCategory(category) {
+      productsState.loading = true
+      productsState.pagination.currentPage = 1
+
+      const {currentPage: page, limit} = productsState.pagination
+
+      await productsController.getProducts({category, limit, page})
+          .then(() => {
+            productsState.loading = false
+          })
     }
   },
+  computed: {
+    title() {
+      return productsState.searchData.title
+    },
+    category() {
+      return productsState.searchData.category
+    }
+  }
 }
 </script>
 
@@ -60,6 +76,7 @@ export default {
       }
     }
   }
+
   .el-tag {
     margin: 5px 0 5px 11px !important;
   }
