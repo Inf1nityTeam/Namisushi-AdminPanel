@@ -11,6 +11,7 @@
     <div class="login-page-form__input">
       <login-input
           v-model="credentials.password"
+          type="password"
           placeholder="Пароль">
         <svg-icon :icon="require('@/assets/image/login/locked-padlock.svg')"/>
       </login-input>
@@ -30,7 +31,7 @@ import {userInstanceController} from "@/app/userInstance/user-instance.controlle
 
 export default {
   name: "login-form",
-  components: { LoginInput, SvgIcon },
+  components: {LoginInput, SvgIcon},
   data() {
     return {
       credentials: {
@@ -47,8 +48,6 @@ export default {
           .then(data => {
             console.log(data)
           })
-
-      console.log('submit')
     }
   }
 }
@@ -75,14 +74,17 @@ export default {
     color: #fff;
     cursor: pointer;
   }
+
   &__actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     &:not(:last-child) {
       margin-bottom: 61px;
     }
   }
+
   &__forgot {
     font-family: "Raleway";
     font-size: 18px;
@@ -100,16 +102,19 @@ export default {
       font-size: 18px;
       color: #676767;
     }
+
     &__input {
       &.is-checked {
         .el-checkbox__inner {
           background-color: #384673;
           border: 1px solid #384673;
         }
-        & +.el-checkbox__label {
+
+        & + .el-checkbox__label {
           color: #384673;
         }
       }
+
       &.is-focus {
         .el-checkbox__inner {
           border: 1px solid #384673;

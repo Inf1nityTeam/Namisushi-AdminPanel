@@ -21,10 +21,12 @@ export default class UserInstanceRepository {
         const response = await http.post(`/api/signin`, credentials, config)
         return response.data
     }
-
+    async signOut() {
+        await http.put(`/api/signout`)
+    }
     async getMe() {
         const response = await http.get('/api/user')
         return response.data.user
     }
-    
+
 }

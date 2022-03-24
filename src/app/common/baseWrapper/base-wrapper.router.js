@@ -17,13 +17,4 @@ export const baseWrapperRoutes = [{
             component: () => import('@/app/categories/Categories')
         }]
     }))
-//     {
-//     path: '/products',
-//     name: 'products',
-//     component: () => import('@/app/products/Products')
-// }, {
-//     path: '/categories',
-//     name: 'categories',
-//     component: () => import('@/app/categories/Categories')
-// }
 ]

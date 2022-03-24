@@ -54,10 +54,10 @@
     <hr class="base-sidebar__hr base-sidebar__hr--last" />
 
     <div class="base-sidebar__menu">
-      <router-link :to="logoutEl.path">
+      <a @click.prevent="signOut">
         <img :src="require(`@/assets/image/sidebar/${logoutEl.img}`)" />
         <span>{{ logoutEl.title }}</span>
-      </router-link>
+      </a>
     </div>
   </header>
 </template>
@@ -66,10 +66,16 @@
 import { baseSidebarState } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
 import BaseSidebarToggle from "@/app/common/baseWrapper/baseSidebar/BaseSidebarToggle";
 import { sidebarMenu } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.config";
+import {userInstanceController} from "@/app/userInstance/user-instance.controller";
 
 export default {
   name: "base-sidebar",
   components: { BaseSidebarToggle },
+  methods: {
+    signOut() {
+      userInstanceController.signOut()
+    }
+  },
   computed: {
     isCollapsed() {
       return baseSidebarState.isCollapsed;

@@ -11,7 +11,7 @@
  * Экземпляр сервиса является приватным полем контроллера, вызывать методы сервиса может только контроллер.
  */
 import UserInstanceRepository from "@/app/userInstance/user-instance.repository";
-import {userInstanceState} from "@/app/userInstance/user-instance.state";
+import {setIsLoggedIn, userInstanceState} from "@/app/userInstance/user-instance.state";
 import {notificationsHelper} from "@/helpers/notifications.helper";
 
 export default class UserInstanceService {
@@ -21,13 +21,20 @@ export default class UserInstanceService {
     async signIn(credentials) {
         try {
             const data = await this.#repository.signIn(credentials)
-            notificationsHelper.success({ message: 'Авторизация прошла успешно' })
+            notificationsHelper.success({message: 'Авторизация прошла успешно'})
+            setIsLoggedIn(true)
             return data
         } catch (error) {
-            console.log(error)
-            notificationsHelper.error()
+            notificationsHelper.fromHttpError(error)
             throw error
         }
+    }
+
+
+    async signOut() {
+        await this.#repository.signOut()
+        setIsLoggedIn(false)
+        sessionStorage.clear()
     }
 
     async getMe() {
@@ -36,8 +43,9 @@ export default class UserInstanceService {
             userInstanceState.info = data
             return data
         } catch (error) {
-            console.log(error)
+            notificationsHelper.fromHttpError(error)
+            throw error
         }
     }
-    
+
 }

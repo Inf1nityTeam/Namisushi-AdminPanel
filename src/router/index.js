@@ -7,7 +7,7 @@ import {baseWrapperRoutes} from "../app/common/baseWrapper/base-wrapper.router";
 const routes = [{
     path: '/login',
     name: 'login-page',
-    component: LoginPage
+    component: LoginPage,
 }, {
     path: '/',
     name: 'base-wrapper',

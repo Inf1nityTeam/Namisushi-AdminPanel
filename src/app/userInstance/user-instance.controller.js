@@ -16,20 +16,23 @@ class UserInstanceController {
     #service = new UserInstanceService()
 
     async signIn(credentials) {
-        try {
-            const data = await this.#service.signIn(credentials)
-            router.push('/')
-            return data
-        } catch (error) {
-            console.log(error)
-            throw error
-        }
+        const data = await this.#service.signIn(credentials)
+        router.push('/')
+        return data
     }
 
+    async signOut() {
+        try {
+            await this.#service.signOut()
+            router.push('/login')
+        } catch (error) {
+            router.push('/login')
+        }
+    }
     async getMe() {
         return await this.#service.getMe()
     }
-    
+
 }
 
 export const userInstanceController = new UserInstanceController()

@@ -7,6 +7,7 @@
         @input="$emit('update:modelValue', $event.target.value)"
         :type="type"
         :placeholder="placeholder"
+        autocomplete="off"
         class="input"
     >
   </label>
@@ -32,7 +33,7 @@ export default {
   border-bottom: 1px solid #8A8A8A;
 
   .input {
-    font-family: "Raleway";
+    font-family: "Raleway", sans-serif;
     display: block;
     border: none;
     width: 100%;

@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import {userInstanceController} from "@/app/userInstance/user-instance.controller";
+import {userInstanceController} from "@/app/userInstance/user-instance.controller";
 
 const http = axios.create({ })
 
@@ -12,9 +12,9 @@ http.interceptors.request.use( async function (config) {
 http.interceptors.response.use((response) => {
     return response
 }, (error) => {
-    // if (error.response?.status === 401 && error.response.config.url !== '/api/user/signout') {
-        // userInstanceController.logout()
-    // }
+    if (error.response?.status === 401 && error.response.config.url !== '/api/signout') {
+        userInstanceController.signOut()
+    }
     throw error
 })
 
