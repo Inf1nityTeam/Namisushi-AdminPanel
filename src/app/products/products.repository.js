@@ -2,23 +2,8 @@ import http from "@/axiosConfig/base-axios-config";
 
 export default class ProductsRepository {
 
-    async getProducts(params) {
-        const response = await http.get('/api/admin/products', {params})
-        return response.data
-    }
-
-    async deleteProduct(id) {
-
-        const response = await http.delete(`/api/admin/product/${id}`)
-        return response.data
-    }
-    async createProduct(product) {
-        const response = await http.post('/api/admin/product', product)
-        return response.data
-    }
-
-    async editProduct(product, id) {
-        const response = await http.patch(`/api/admin/product/${id}`, product)
+    async getProducts() {
+        const response = await http.get('/api/products')
         return response.data
     }
 
@@ -27,6 +12,35 @@ export default class ProductsRepository {
         return response.data
     }
 
+
+    async addProductToCategory(productId, categoryId) {
+        const response = await http.put(`api/admin/product/${productId}/category/${categoryId}`)
+        return response.data
+    }
+    async addImagesToProduct(productId, images) {
+        const response = await http.put(`api/admin/product/${productId}/images`, images)
+        return response.data
+    }
+
+    async createProduct(product) {
+        const response = await http.post('api/admin/product/SINGLE', product)
+        return response.data
+    }
+
+    async deleteImageFromProduct(productId, imageName) {
+        const response = await http.patch(`api/admin/product/${productId}/image/${imageName}`)
+        return response.data
+    }
+
+    async updateProduct(productId, product) {
+        const response = await http.patch(`/api/admin/product/SINGLE/${productId}`, product)
+        return response.data
+    }
+
+    async deleteProduct(id) {
+        const response = await http.delete(`/api/admin/product/${id}`)
+        return response.data
+    }
     getTags() {
         return [
             {img: "icon-vegan.svg", label: "vegan", title: "Вегетарианский", bg: "#54B508"},

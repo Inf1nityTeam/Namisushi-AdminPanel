@@ -15,14 +15,14 @@ export default class UserInstanceRepository {
         let config = null
         if (process.env.NODE_ENV === 'development') {
             config = {
-                headers: { 'x-real-host': 'localhost' } // добавляю дев-хедер для прохождения авторизации с localhost
+                headers: { 'x-localhost': 'localhost' } // добавляю дев-хедер для прохождения авторизации с localhost
             }
         }
-        const response = await http.post(`/api/signin`, credentials, config)
+        const response = await http.post('/api/user/signin', credentials, config)
         return response.data
     }
     async signOut() {
-        await http.put(`/api/signout`)
+        await http.delete('/api/user/signout')
     }
     async getMe() {
         const response = await http.get('/api/user')

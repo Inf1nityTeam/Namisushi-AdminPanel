@@ -23,17 +23,17 @@
         label="Наименование"
         prop="title"/>
 
-    <el-table-column
-        label="Категория"
-        prop="categories">
-      <template #default="scope">
-        <template v-if="scope.row.categories.length === 0">-</template>
-        <div v-for="(category, index) in scope.row.categories" :key="category._id">
-          {{category.title}}
-          <template v-if="index !== scope.row.categories.length - 1">, </template>
-        </div>
-      </template>
-    </el-table-column>
+<!--    <el-table-column-->
+<!--        label="Категория"-->
+<!--        prop="categories">-->
+<!--      <template #default="scope">-->
+<!--        <template v-if="scope.row.categories.length === 0">-</template>-->
+<!--        <div v-for="(category, index) in scope.row.categories" :key="category._id">-->
+<!--          {{category.title}}-->
+<!--          <template v-if="index !== scope.row.categories.length - 1">, </template>-->
+<!--        </div>-->
+<!--      </template>-->
+<!--    </el-table-column>-->
 
     <el-table-column
         label="Список ингридиентов"
@@ -62,7 +62,6 @@
         prop="show">
       <template #default="scope">
         <el-switch
-            @change="toggleBan($event, scope.row._id, scope.$index)"
             :value="scope.row.show"
             active-color="#F90D0D"
             inactive-color="#D7D7D7"
@@ -84,7 +83,6 @@
               title="Вы уверены что хотите удалить этот продукт?"
               confirm-button-text="Да"
               cancel-button-text="Нет"
-              @confirm="deleteProduct(scope.row._id, scope.$index)"
           >
             <template #reference>
               <base-circle-button icon="delete" type="delete"/>
@@ -112,36 +110,35 @@ export default {
     this.getProducts(this.currentPage)
   },
   methods: {
-    getProducts(page) {
-      const {limit, category} = this
+    getProducts() {
       productsState.loading = true
 
-      productsController.getProducts({limit, category, page})
+      productsController.getProducts()
       .then(() => {
         productsState.loading = false
       })
     },
-    deleteProduct(id, index) {
-      productsController.deleteProduct(id)
-      .then(() => {
-        productsState.products.splice(index, 1)
-        productsState.totalProductsCount -= 1
-      })
-    },
-    toggleBan(value, id, index) {
-      productsController.toggleBan({show: value}, id)
-      .then(data => {
-        productsState.products[index].show = data.product.show
-      })
-    }
+    // deleteProduct(id, index) {
+    //   productsController.deleteProduct(id)
+    //   .then(() => {
+    //     productsState.products.splice(index, 1)
+    //     productsState.totalProductsCount -= 1
+    //   })
+    // },
+    // toggleBan(value, id, index) {
+    //   productsController.toggleBan({visible: value}, id)
+    //   .then(data => {
+    //     productsState.products[index].visible = data.product.visible
+    //   })
+    // }
   },
   computed: {
     limit() {
       return productsState.pagination.limit
     },
-    category() {
-      return productsState.searchData.category
-    },
+    // category() {
+    //   return productsState.searchData.category
+    // },
     filteredProducts() {
       let filteredProducts = copyDeep(this.products)
 
@@ -164,9 +161,9 @@ export default {
     loading() {
       return productsState.loading
     },
-    currentPage() {
-      return productsState.pagination.currentPage
-    }
+    // currentPage() {
+    //   return productsState.pagination.currentPage
+    // }
   },
 }
 </script>

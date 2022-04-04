@@ -64,7 +64,6 @@
             :ingredient-list="product.ingredients"
             @add-ingredient="addIngredient"
             @delete-ingredient="deleteIngredient"
-            :error="v$.product.ingredients.$errors?.[0]?.$message"
         />
       </div>
 <!--      <div class="product-popup__tags">-->
@@ -88,11 +87,8 @@ import ProductIngredients from "@/app/products/components/productPopup/component
 import BaseInput from "@/app/common/BaseInput";
 
 import useVuelidate from '@vuelidate/core';
-import {minLength, maxLength, required, helpers} from '@vuelidate/validators';
+import {maxLength, required, helpers} from '@vuelidate/validators';
 import {productsController} from "@/app/products/products.controller";
-import {copyDeep} from "@/utils/copy-deep";
-
-import {v4 as uuidv4} from "uuid";
 
 export default {
   name: "product-popup",
@@ -108,35 +104,34 @@ export default {
       isEditMode: false,
       loading: false,
       product: {
-        show: false,
+        _id: null,
+        categories: [],
+        images: [],
+        visible: false,
         title: "",
         description: "",
         ingredients: [],
         cost: 0,
         weight: 0,
-        categories: [],
-        images: [],
+        type: null,
+        createdAt: null,
+        updatedAt: null
         // type: "variousFillings",
         // tags: [],
-        _id: null
-      }
+      },
     }
   },
   validations() {
     return {
       product: {
         description: {
-          minLength: helpers.withMessage("Минимальная длина поля - 3 символа", minLength(3)),
-          maxLength: helpers.withMessage("Максимальная длина поля - 1024 символа", maxLength(1024)),
+          maxLength: helpers.withMessage("Максимальная длина поля - 2048 символа", maxLength(2048)),
+          required: helpers.withMessage("Это обязательное поле", required)
         },
         title: {
-          minLength: helpers.withMessage("Минимальная длина поля - 3 символа", minLength(3)),
           maxLength: helpers.withMessage("Максимальная длина поля - 64 символа", maxLength(64)),
           required: helpers.withMessage("Это обязательное поле", required)
         },
-        ingredients: {
-          maxLength: helpers.withMessage('Вы не можете указать больше, чем 100 продуктов', maxLength(100))
-        }
       }
 
     }
@@ -145,23 +140,19 @@ export default {
     open(product = null) {
       if (product) {
         this.isEditMode = true
-        this.product = {
-          ...copyDeep(product),
-          images: product.images?.map(image => ({_id: uuidv4(), image})),
-          categories: product.categories?.map(category => category._id)
-        }
+        this.product = product
       }
 
       this.$refs.popup.open()
     },
     submit() {
-      this.v$.product.$touch()
-      if (this.v$.product.$invalid) return
+      this.v$.$touch()
+      if (this.v$.$invalid) return
 
       if (this.isEditMode) {
         this.loading = true
 
-        productsController.editProduct(this.product, this.product._id)
+        productsController.updateProduct(this.product._id, this.product)
             .then(() => {
               this.close()
               this.clearProduct()
@@ -198,17 +189,20 @@ export default {
     },
     clearProduct() {
       this.product = {
-        show: true,
+        _id: null,
+        categories: [],
+        images: [],
+        visible: false,
         title: "",
         description: "",
         ingredients: [],
         cost: 0,
         weight: 0,
-        categories: [],
-        images: [],
+        type: null,
+        createdAt: null,
+        updatedAt: null
         // type: "variousFillings",
         // tags: [],
-        _id: null
       }
     }
   },

@@ -9,12 +9,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "assets/styles/index.scss";
 
-body {
-  padding: 0;
-  margin: 0;
-}
+
 
 /*#nav {*/
 /*  padding: 30px;*/

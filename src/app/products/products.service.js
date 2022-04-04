@@ -1,5 +1,4 @@
 import ProductsRepository from "@/app/products/products.repository";
-import {copyDeep} from "@/utils/copy-deep";
 import {notificationsHelper} from "@/helpers/notifications.helper";
 import {productsState} from "@/app/products/products.state";
 
@@ -7,45 +6,27 @@ export default class ProductsService {
 
     #repository = new ProductsRepository()
 
-    _sanitizeProduct(product) {
-        const formData = new FormData()
-        const productCopy = copyDeep(product)
+    async getProducts() {
 
-        for (let i = 0; i < productCopy.images.length; ++i) {
-            const image = productCopy.images[i].image
-
-            if (typeof image !== 'string') {
-                formData.append('images', image)
-            }
-        }
-
-        delete productCopy.images
-        delete productCopy._id
-
-        if (!productCopy.description) {
-            delete productCopy.description
-        }
-
-        formData.append('data', JSON.stringify(productCopy))
-
-        return formData
-    }
-
-    async getProducts(params) {
-        const paramsCopy = copyDeep(params)
-        for (let key in paramsCopy) {
-            if (!paramsCopy[key]) delete paramsCopy[key]
-        }
-
-        const data = await this.#repository.getProducts(paramsCopy)
+        const data = await this.#repository.getProducts()
 
         productsState.products = data.products.map(product => ({
             ...product,
-            images: product.images?.map(image => 'https://dev.namisushi.dn.ua' + image),
+            images: product.images?.map(image => 'https://nami.devserver.host/' + image),
         }))
 
-        productsState.totalProductsCount = data.total
+        console.log(data)
 
+        productsState.totalProductsCount = data.products.length
+    }
+
+    async toggleBan(value, id) {
+        try {
+            return await this.#repository.toggleBan(value, id)
+        } catch (error) {
+            notificationsHelper.fromHttpError(error)
+            throw error
+        }
     }
 
     async deleteProduct(id) {
@@ -59,56 +40,61 @@ export default class ProductsService {
 
     async createProduct(product) {
         try {
-            const sanitizedProduct = this._sanitizeProduct(product)
-            const data = await this.#repository.createProduct(sanitizedProduct)
-            notificationsHelper.success({message: "Продукт успешно создан"})
+            const {
+                title, description, ingredients, visible, cost, weight, images, categories
+            } = product
 
+            const data = await this.#repository.createProduct({ title, description, ingredients, visible, cost, weight })
             const createdProduct = data.product
-            createdProduct.images = createdProduct.images.map(item => 'https://dev.namisushi.dn.ua' + item)
+            const { _id } = createdProduct
 
+            if (images.length > 0) {
+                const formData = new FormData()
 
-            const isTruthyValue = !productsState.searchData.category
-                || createdProduct.categories.some(category => category._id === productsState.searchData.category)
+                images.forEach(image => {
+                    formData.append('images', image)
+                })
+                const addedImages = await this.#repository.addImagesToProduct(_id, formData)
+                createdProduct.images = addedImages.images.map(image => 'https://nami.devserver.host/' + image)
 
-            if (!isTruthyValue) return createdProduct
-
-            if (productsState.products.length === productsState.pagination.limit) {
-                productsState.products.pop()
             }
 
-            productsState.products.unshift(createdProduct)
-            productsState.totalProductsCount += 1
+            if (categories.length > 0) {
+                for (let i = 0; i < categories.length; i++) {
+                    const categoryId = categories[i]._id
+                    await this.#repository.addProductToCategory(_id, categoryId)
+                }
+            }
+
             return createdProduct
         } catch (error) {
             notificationsHelper.fromHttpError(error)
             throw error
         }
+
+
     }
 
-    async editProduct(product, id) {
-        try {
-            const sanitizedProduct = this._sanitizeProduct(product)
+    async updateProduct(product, productId) {
+        const { title, description, ingredients, visible, cost, weight } = product
+        const updatedProduct = await this.#repository.updateProduct(productId, { title, description, ingredients, visible, cost, weight })
 
-            const data = await this.#repository.editProduct(sanitizedProduct, id)
-            notificationsHelper.success({message: "Продукт успешно обновлен"})
+        const { images } = product
+        const formData = new FormData()
 
-            const updatedProduct = data.product
-            updatedProduct.images = updatedProduct.images.map(item => 'https://dev.namisushi.dn.ua' + item)
-            const index = productsState.products.findIndex(item => item._id === product._id)
-            productsState.products[index] = updatedProduct
-            return updatedProduct
-        } catch (error) {
-            notificationsHelper.fromHttpError(error)
-            throw error
-        }
-    }
+        images.forEach(image => {
+            formData.append('images', image)
+        })
 
-    async toggleBan(value, id) {
-        try {
-            return await this.#repository.toggleBan(value, id)
-        } catch (error) {
-            notificationsHelper.fromHttpError(error)
-            throw error
+        const addedImages = await this.#repository.addImagesToProduct(formData)
+        updatedProduct.images = addedImages.map(image => 'https://nami.devserver.host/' + image)
+
+        const { categories } = product
+        const { _id } = updatedProduct
+
+        for (let i = 0; i < categories.length; i++) {
+            const categoryId = categories[i]._id
+            await this.#repository.addProductToCategory(_id, categoryId)
         }
     }
 

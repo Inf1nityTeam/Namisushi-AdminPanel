@@ -11,5 +11,12 @@ module.exports = {
                 '@': resolve('src')
             }
         },
+    },
+    css: {
+        loaderOptions: {
+            sass: {
+                data: `@import "@/assets/styles/index.scss";`
+            }
+        }
     }
 }

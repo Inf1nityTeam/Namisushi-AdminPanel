@@ -12,7 +12,7 @@ http.interceptors.request.use( async function (config) {
 http.interceptors.response.use((response) => {
     return response
 }, (error) => {
-    if (error.response?.status === 401 && error.response.config.url !== '/api/signout') {
+    if (error.response?.status === 401 && error.response.config.url !== '/api/user/signout') {
         userInstanceController.signOut()
     }
     throw error

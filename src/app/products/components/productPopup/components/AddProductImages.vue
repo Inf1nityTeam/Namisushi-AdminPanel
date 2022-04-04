@@ -49,7 +49,6 @@
 <script>
 import {Plus, Close} from "@element-plus/icons-vue";
 import {notificationsHelper} from "@/helpers/notifications.helper";
-import {v4 as uuidv4} from "uuid";
 
 export default {
   name: "add-product-image",
@@ -61,7 +60,7 @@ export default {
   data() {
     return {
       maxImageSize: 10485760,
-      maxImageCount: 20,
+      maxImageCount: 10,
     }
   },
   methods: {
@@ -84,10 +83,9 @@ export default {
           continue
         }
 
-        if (this.images.length >= 20) return
+        if (this.images.length >= this.maxImageCount) return
 
-        const _id = uuidv4()
-        this.$emit('add-image', {_id, image})
+        this.$emit('add-image', image)
 
       }
 
@@ -96,11 +94,11 @@ export default {
   },
   computed: {
     imagesUrl() {
-      return this.images.map(item => {
-        if (typeof item.image !== 'string') {
-          return URL.createObjectURL(item.image)
+      return this.images.map(image => {
+        if (typeof image !== 'string') {
+          return URL.createObjectURL(image)
         }
-        return item.image
+        return image
       })
     },
     isHiddenBtn() {

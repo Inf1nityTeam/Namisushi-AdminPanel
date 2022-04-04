@@ -1,26 +1,28 @@
 <template>
-  <form class="login-page__form login-page-form"
+  <form class="login-form"
         @submit.prevent="submitForm">
-    <div class="login-page-form__input">
+    <div class="login-form__input">
       <login-input
-          v-model="credentials.email"
-          placeholder="Адрес электронной почты">
-        <svg-icon :icon="require('@/assets/image/login/email.svg')"/>
+          v-model="credentials.login"
+          @update:modelValue="updateLogin"
+          :hasError="v$.credentials.login.$error"
+          :error="v$.credentials.login.$errors?.[0]?.$message"
+          placeholder="Логин">
+        <svg-icon :icon="require('@/assets/image/login/user.svg')"/>
       </login-input>
     </div>
-    <div class="login-page-form__input">
+    <div class="login-form__input">
       <login-input
           v-model="credentials.password"
+          @update:modelValue="updatePassword"
+          :hasError="v$.credentials.password.$error"
+          :error="v$.credentials.password.$errors?.[0]?.$message"
           type="password"
           placeholder="Пароль">
         <svg-icon :icon="require('@/assets/image/login/locked-padlock.svg')"/>
       </login-input>
     </div>
-    <div class="login-page-form__actions">
-      <el-checkbox v-model="rememberMe" label="Запомнить меня"></el-checkbox>
-      <router-link to="/" class="login-page-form__forgot">Забыли пароль?</router-link>
-    </div>
-    <button class="login-page-form__button">Войти в систему</button>
+    <button class="login-form__button">Войти в систему</button>
   </form>
 </template>
 
@@ -28,6 +30,8 @@
 import LoginInput from "@/app/loginPage/components/LoginInput";
 import SvgIcon from "@/app/common/SvgIcon";
 import {userInstanceController} from "@/app/userInstance/user-instance.controller";
+import useVuelidate from "@vuelidate/core";
+import {helpers, required} from "@vuelidate/validators";
 
 export default {
   name: "login-form",
@@ -35,105 +39,88 @@ export default {
   data() {
     return {
       credentials: {
-        email: null,
+        login: null,
         password: null
-      },
-      rememberMe: null
+      }
+    }
+  },
+  setup: () => ({ v$: useVuelidate() }),
+  validations() {
+    return {
+      credentials: {
+        login: {
+          required: helpers.withMessage('Обязательное поле', required),
+        },
+        password: {
+          required: helpers.withMessage('Обязательное поле', required),
+        }
+      }
     }
   },
   methods: {
     submitForm() {
+      this.v$.credentials.$touch()
+      if (this.v$.credentials.$invalid) return
 
       userInstanceController.signIn(this.credentials)
           .then(data => {
             console.log(data)
           })
+    },
+    updatePassword(value) {
+      if (this.v$.credentials.password.$error) {
+        this.v$.credentials.password.$reset()
+      }
+      this.credentials.password = value
+    },
+    updateLogin(value) {
+      if (this.v$.credentials.login.$error) {
+        this.v$.credentials.login.$reset()
+      }
+      this.credentials.login = value
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.login-page-form {
+.login-form {
   &__input {
     margin-bottom: 37px;
   }
 
   &__button {
     font-size: 20px;
-    font-family: "Raleway";
+    font-family: "Raleway", sans-serif;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     min-height: 72px;
     width: 100%;
+
     border: none;
     border-radius: 8px;
+
     background-color: #384673;
     font-weight: 700;
     color: #fff;
+
     cursor: pointer;
-  }
+    transition: background-color 0.3s ease 0s;
 
-  &__actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    &:not(:last-child) {
-      margin-bottom: 61px;
-    }
-  }
-
-  &__forgot {
-    font-family: "Raleway";
-    font-size: 18px;
-    color: #676767;
-    text-decoration: none;
-  }
-}
-</style>
-
-<style lang="scss">
-.login-page-form {
-  .el-checkbox {
-    &__label {
-      font-family: "Raleway";
-      font-size: 18px;
-      color: #676767;
+    @media (max-width: $md1+px) {
+      font-size: 16px;
+      min-height: 60px;
     }
 
-    &__input {
-      &.is-checked {
-        .el-checkbox__inner {
-          background-color: #384673;
-          border: 1px solid #384673;
-        }
-
-        & + .el-checkbox__label {
-          color: #384673;
-        }
-      }
-
-      &.is-focus {
-        .el-checkbox__inner {
-          border: 1px solid #384673;
-        }
-      }
-    }
-
-    &__inner {
-      width: 32px;
-      height: 32px;
-      border-radius: 4px;
-      border: 1px solid #C0C0C0;
-
-      &::after {
-        left: 10px;
-        width: 10px;
-        height: 19px;
+    @media (any-hover: hover) {
+      &:hover {
+          background-color: #011627;
       }
     }
   }
+
 }
 </style>

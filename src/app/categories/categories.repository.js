@@ -3,7 +3,7 @@ import http from "@/axiosConfig/base-axios-config";
 export default class CategoriesRepository {
 
     async getCategories() {
-        const response = await http.get('/api/categories')
+        const response = await http.get('/api/admin/product/categories')
         return response.data.categories
     }
 
