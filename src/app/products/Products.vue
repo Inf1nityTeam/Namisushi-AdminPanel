@@ -8,7 +8,7 @@
           @edit="editProduct"
       />
     </div>
-<!--    <products-pagination />-->
+    <!--    <products-pagination />-->
     <product-popup ref="productPopup" />
 
   </div>
@@ -18,7 +18,6 @@
 import ProductsTable from "@/app/products/components/ProductsTable";
 import ProductPopup from "@/app/products/components/productPopup/ProductPopup";
 import ProductsSearch from "@/app/products/components/ProductsSearch";
-
 export default {
   name: "products",
   components: {ProductsTable, ProductPopup, ProductsSearch },

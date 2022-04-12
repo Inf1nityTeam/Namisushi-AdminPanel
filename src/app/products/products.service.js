@@ -12,7 +12,7 @@ export default class ProductsService {
 
         productsState.products = data.products.map(product => ({
             ...product,
-            images: product.images?.map(image => 'https://nami.devserver.host/' + image),
+            images: product.images?.map(image => 'https://nami.devserver.host/api/product/image/' + image),
         }))
 
         console.log(data)
