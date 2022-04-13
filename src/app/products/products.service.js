@@ -75,7 +75,7 @@ export default class ProductsService {
 
     }
 
-    async updateProduct(product, productId) {
+    async updateProduct(productId, product) {
         const { title, description, ingredients, visible, cost, weight } = product
         const updatedProduct = await this.#repository.updateProduct(productId, { title, description, ingredients, visible, cost, weight })
 
@@ -83,10 +83,12 @@ export default class ProductsService {
         const formData = new FormData()
 
         images.forEach(image => {
-            formData.append('images', image)
+            if (typeof image === 'string') {
+                formData.append('images', image)
+            }
         })
-
-        const addedImages = await this.#repository.addImagesToProduct(formData)
+        console.log(productId)
+        const addedImages = await this.#repository.addImagesToProduct(productId, formData)
         updatedProduct.images = addedImages.map(image => 'https://nami.devserver.host/' + image)
 
         const { categories } = product

@@ -3,12 +3,12 @@ import http from "@/axiosConfig/base-axios-config";
 export default class ProductsRepository {
 
     async getProducts() {
-        const response = await http.get('/api/products')
+        const response = await http.get('api/products')
         return response.data
     }
 
     async toggleBan(value, id) {
-        const response = await http.patch(`/api/admin/product/${id}`, value)
+        const response = await http.patch(`api/admin/product/${id}`, value)
         return response.data
     }
 
@@ -33,12 +33,12 @@ export default class ProductsRepository {
     }
 
     async updateProduct(productId, product) {
-        const response = await http.patch(`/api/admin/product/SINGLE/${productId}`, product)
+        const response = await http.patch(`api/admin/product/SINGLE/${productId}`, product)
         return response.data
     }
 
     async deleteProduct(id) {
-        const response = await http.delete(`/api/admin/product/${id}`)
+        const response = await http.delete(`api/admin/product/${id}`)
         return response.data
     }
     getTags() {
