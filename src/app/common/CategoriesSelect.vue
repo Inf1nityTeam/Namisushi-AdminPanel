@@ -10,6 +10,12 @@
         @change="$emit('update:modelValue', $event)"
     >
       <el-option
+          v-if="!hideEmptyValue"
+          selected
+          label="Без категории"
+          value=""
+      />
+      <el-option
           v-for="item in categories"
           :key="item._id"
           :label="item.title"
@@ -28,7 +34,8 @@ export default {
   props: {
     modelValue: {type: [Array, String]},
     label: {type: String},
-    isMultipleMode: {type: Boolean, default: true}
+    isMultipleMode: {type: Boolean, default: true},
+    hideEmptyValue: {type: Boolean, default: false}
   },
   emits: ['update:modelValue'],
   async created() {

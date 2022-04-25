@@ -20,6 +20,7 @@
       </div>
       <div class="product-popup__category">
         <categories-select
+            hide-empty-value
             label="Категория"
             :model-value="product.categories"
             @update:modelValue="product.categories = $event"/>

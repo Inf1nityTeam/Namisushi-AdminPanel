@@ -1,5 +1,5 @@
 <template>
-  <div class="table" v-if="products.length !== 0">
+  <div class="table" v-if="filteredProducts.length !== 0">
       <div class="table__title"></div>
       <div class="table__title">Наименование</div>
       <div class="table__title">Описание</div>
@@ -9,7 +9,7 @@
       <div class="table__title">Стоимость, ₽</div>
       <div class="table__title">Статус</div>
       <div class="table__title"></div>
-    <template v-for="product in products" :key="product._id">
+    <template v-for="product in filteredProducts" :key="product._id">
       <div class="table__image">
         <el-image
             v-if="product.images?.[0]"
@@ -22,12 +22,10 @@
       <div class="table__text">{{ product.title }}</div>
       <div class="table__text">{{ product.description }}</div>
       <div class="table__text">
-        -
-<!--        <template v-if="product.categories.length === 0">-</template>-->
-<!--        <div v-for="(category, index) in product.categories" :key="category._id">-->
-<!--          {{category.title}}<template v-if="index !== product.categories.length - 1">, </template>-->
-<!--        </div>-->
-<!--        {{ product.category }}-->
+        <template v-if="product.categories.length === 0">-</template>
+        <div v-for="(category, index) in product.categories" :key="category._id">
+          {{category.title}}<template v-if="index !== product.categories.length - 1">, </template>
+        </div>
       </div>
       <div class="table__text">
         <template v-if="product.ingredients.length === 0">-</template>
@@ -67,7 +65,6 @@
 <script>
 import {productsController} from "@/app/products/products.controller";
 import BaseCircleButton from "@/app/common/BaseCircleButton";
-import {copyDeep} from "@/utils/copy-deep";
 import {productsState} from "@/app/products/products.state";
 
 export default {
@@ -75,12 +72,12 @@ export default {
   components: {BaseCircleButton},
   emits: ['edit'],
   created() {
-    this.getProducts(this.currentPage)
+    this.getProducts()
   },
   methods: {
     getProducts() {
       productsState.loading = true
-
+      // debugger; // eslint-disable-line no-debugger
       productsController.getProducts()
           .then(() => {
             productsState.loading = false
@@ -101,37 +98,15 @@ export default {
     // }
   },
   computed: {
-    limit() {
-      return productsState.pagination.limit
+    allProducts() {
+      return productsState.products.allProducts
     },
-    // category() {
-    //   return productsState.searchData.category
-    // },
     filteredProducts() {
-      let filteredProducts = copyDeep(this.products)
-
-      if (this.searchTitle) {
-        const title = this.searchTitle
-
-        filteredProducts = filteredProducts.filter(product => {
-          return product.title.toLowerCase().includes(title.toLowerCase())
-        })
-      }
-
-      return filteredProducts
-    },
-    searchTitle() {
-      return productsState.searchData.title
-    },
-    products() {
-      return productsState.products
+      return productsState.products.filteredProducts
     },
     loading() {
       return productsState.loading
     },
-    // currentPage() {
-    //   return productsState.pagination.currentPage
-    // }
   },
 }
 </script>
@@ -192,6 +167,10 @@ export default {
     &.is-checked .el-switch__action {
       margin-left: -13px;
     }
+  }
+  .el-loading-spinner {
+    top: 0 !important;
+    margin: 0 !important;
   }
 }
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div class="products-search">
     <div class="products-search__item">
-      <search-input @update:modelValue="updateTitle" :model-value="title"/>
+      <search-input @update:modelValue="searchByTitle" :model-value="title"/>
     </div>
     <div class="products-search__item">
       <categories-select
-          @update:modelValue="updateCategories"
+          @update:modelValue="searchByCategory"
           :model-value="category"
           :is-multiple-mode="false"
       />
@@ -17,32 +17,44 @@
 import SearchInput from "@/app/common/SearchInput";
 import CategoriesSelect from "@/app/common/CategoriesSelect";
 import {productsState} from "@/app/products/products.state";
-import {productsController} from "@/app/products/products.controller";
+import {debounce} from "@/utils/debounce";
 
 export default {
   name: "products-search",
   components: {CategoriesSelect, SearchInput},
   methods: {
-    updateTitle(title) {
+    searchByTitle(title) {
       productsState.searchData.title = title
+      this.changeFilteredProductByTitle(title)
     },
-    async updateCategories(category) {
+    changeFilteredProductByTitle: debounce(function(title) {
+      const products = JSON.parse(JSON.stringify(this.allProducts))
+      productsState.products.filteredProducts = products.filter(product => {
+        return product.title.toLowerCase().includes(title.toLowerCase())
+      })
+    }, 300),
+
+    searchByCategory(category) {
+      const products = JSON.parse(JSON.stringify(this.allProducts))
       productsState.searchData.category = category
-      await this.updateTableByCategory(category)
-    },
-    async updateTableByCategory(category) {
-      productsState.loading = true
-      productsState.pagination.currentPage = 1
 
-      const {currentPage: page, limit} = productsState.pagination
+      if (category === '') {
+        productsState.products.filteredProducts = JSON.parse(JSON.stringify(this.allProducts))
+        return
+      }
 
-      await productsController.getProducts({category, limit, page})
-          .then(() => {
-            productsState.loading = false
-          })
+      productsState.products.filteredProducts = products.filter(product => {
+        return product.categories.some(productCategory => productCategory._id === category)
+      })
     }
   },
+  watch: {
+
+  },
   computed: {
+    allProducts() {
+      return productsState.products.allProducts
+    },
     title() {
       return productsState.searchData.title
     },

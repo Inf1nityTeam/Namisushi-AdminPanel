@@ -86,7 +86,6 @@ export default {
         if (this.images.length >= this.maxImageCount) return
 
         this.$emit('add-image', image)
-
       }
 
       $event.target.value = null

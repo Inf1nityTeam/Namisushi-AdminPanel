@@ -7,6 +7,11 @@ export default class CategoriesRepository {
         return response.data.categories
     }
 
+    async getCategoriesById() {
+        const response = await http.get('/api/admin/product/categories')
+        return response.data.categories
+    }
+
     async createCategory(category) {
         const response = await http.post('/api/admin/product/category', category)
         return response.data.category
