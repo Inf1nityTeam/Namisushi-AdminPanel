@@ -12,6 +12,12 @@ export default class CategoriesRepository {
         return response.data.categories
     }
 
+
+    async deleteCategoryFromProduct(productId, categoryId) {
+        const response = await http.delete(`/api/admin/product/${productId}/category/${categoryId}`)
+        return response.data.category
+    }
+
     async createCategory(category) {
         const response = await http.post('/api/admin/product/category', category)
         return response.data.category

@@ -90,23 +90,48 @@ export default {
     //     productsState.totalProductsCount -= 1
     //   })
     // },
-    // toggleBan(value, id, index) {
-    //   productsController.toggleBan({visible: value}, id)
-    //   .then(data => {
-    //     productsState.products[index].visible = data.product.visible
+    toggleStatus(value, id, index) {
+      productsController.toggleStatus({visible: value}, id)
+      .then(data => {
+        productsState.products[index].visible = data.product.visible
+      })
+    },
+    // changeFilteredProductByTitle: debounce(function(title) {
+    //   return filteredProd.filter(product => {
+    //     return product.title.toLowerCase().includes(title.toLowerCase())
     //   })
-    // }
+    // }, 300),
   },
   computed: {
-    allProducts() {
-      return productsState.products.allProducts
+    products() {
+      return productsState.products
     },
     filteredProducts() {
-      return productsState.products.filteredProducts
+      let filteredProducts = JSON.parse(JSON.stringify(this.products))
+
+      if (this.category !== "") {
+        filteredProducts = filteredProducts.filter(product => {
+          return product.categories.some(productCategory => productCategory._id === this.category)
+        })
+      }
+
+      if (this.title !== "") {
+        filteredProducts = filteredProducts.filter(product => {
+          return product.title.toLowerCase().includes(this.title.toLowerCase())
+        })
+      }
+
+      return filteredProducts
     },
     loading() {
       return productsState.loading
     },
+    title() {
+      return productsState.searchData.title
+    },
+    category() {
+      return productsState.searchData.category
+    }
   },
 }
 </script>

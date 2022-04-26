@@ -16,7 +16,7 @@ export default class ProductsService {
         //Todo: свойство "categories" нужно для показа списка категорий в таблице
         //Todo: возможно есть способы оптимизировать этот код O(n^3)
         //Todo: но мне кажется, что бэкендеру следует добавить свойство "categories" непосредственно в объект продукта, а не запрашивать список категорий отдельно
-        const updatedProducts = JSON.parse(JSON.stringify(
+        productsState.products = JSON.parse(JSON.stringify(
             products.products.map(product => ({
                 ...product,
                 images: product.images?.map(image => 'https://nami.devserver.host/api/product/image/' + image),
@@ -27,24 +27,18 @@ export default class ProductsService {
 
                     for (let index = 0; index < productIds.length; index++) {
                         if (productIds[index] === product._id) {
-                            acc.push({
-                                title: category.title,
-                                _id: category._id
-                            })
+                            acc.push(category._id)
                         }
                     }
                     return acc
                 }, [])
             }))
         ))
-
-        productsState.products.filteredProducts = updatedProducts
-        productsState.products.allProducts = updatedProducts
     }
 
-    async toggleBan(value, id) {
+    async toggleStatus(value, id) {
         try {
-            return await this.#productsRepository.toggleBan(value, id)
+            return await this.#productsRepository.toggleStatus(value, id)
         } catch (error) {
             notificationsHelper.fromHttpError(error)
             throw error
@@ -77,7 +71,7 @@ export default class ProductsService {
                     formData.append('images', image)
                 })
                 const addedImages = await this.#productsRepository.addImagesToProduct(_id, formData)
-                createdProduct.images = addedImages.images.map(image => 'https://nami.devserver.host/' + image)
+                createdProduct.images = addedImages.images.map(image => 'https://nami.devserver.host/api/product/image/' + image)
 
             }
 
@@ -86,24 +80,13 @@ export default class ProductsService {
                 for (let index = 0; index < categories.length; index++) {
                     const categoryId = categories[index]
                     const newCategory = await this.#productsRepository.addProductToCategory(_id, categoryId)
-                    addedCategories.push({
-                       title: newCategory.category.title,
-                       _id: newCategory.category.id
-                    })
+                    addedCategories.push(newCategory._id)
                 }
             }
             createdProduct.categories = addedCategories
 
-            productsState.products.allProducts.push(createdProduct)
+            productsState.products.push(createdProduct)
 
-            if (productsState.searchData.category === '' && productsState.searchData.title === '') {
-                productsState.products.filteredProducts.push(createdProduct)
-            } else if (
-                categories?.some(category => category === productsState.searchData.category)
-                && title.toLowerCase().includes(productsState.searchData.title.toLowerCase())
-            ) {
-                productsState.products.filteredProducts.push(createdProduct)
-            }
             return createdProduct
         } catch (error) {
             notificationsHelper.fromHttpError(error)
@@ -114,32 +97,74 @@ export default class ProductsService {
     }
 
     async updateProduct(productId, product) {
-        const { title, description, ingredients, visible, cost, weight } = product
-        const updatedProduct = await this.#productsRepository.updateProduct(productId, { title, description, ingredients, visible, cost, weight })
+        try {
+            const { title, description, ingredients, visible, cost, weight, images, categories } = product
 
-        const { images } = product
-        const formData = new FormData()
+            const data = await this.#productsRepository.updateProduct(productId, { title, description, ingredients, visible, cost, weight })
+            const updatedProduct = data.product
 
-        if (images.length > 0) {
-            images.forEach(image => {
-                if (typeof image !== 'string') {
-                    formData.append('images', image)
+            const originalProductIndex = productsState.products.findIndex(item => item._id === product._id)
+            const originalProduct = productsState.products[originalProductIndex]
+
+            const formData = new FormData()
+
+            if (images.length > 0) {
+
+                for (let index = 0; index < images.length; index++) {
+                    const image = images[index]
+
+                    if (typeof image !== 'string') {
+                        formData.append('images', image)
+                    } else {
+                        updatedProduct.images.push(image)
+                    }
                 }
-            })
-            const addedImages = await this.#productsRepository.addImagesToProduct(productId, formData)
-            updatedProduct.images = addedImages.images.map(image => 'https://nami.devserver.host/' + image)
-        }
-
-        const { categories } = product
-        const { _id } = updatedProduct
-
-        if (categories.length > 0) {
-            for (let i = 0; i < categories.length; i++) {
-                const categoryId = categories[i]._id
-                await this.#productsRepository.addProductToCategory(_id, categoryId)
+                if (formData.entries().next().value) {
+                    const addedImages = await this.#productsRepository.addImagesToProduct(productId, formData)
+                    updatedProduct.images = addedImages.images.map(image => 'https://nami.devserver.host/api/product/image/' + image)
+                }
             }
-        }
 
+            const removedImages = originalProduct.images.filter(image => !images.includes(image));
+
+            if (removedImages.length > 0) {
+                for (let index = 0; index < removedImages.length; index++) {
+                    const removedImage = removedImages[index]
+                    const imageId = removedImage.split("/").slice(-1)
+                    await this.#productsRepository.deleteImageFromProduct(productId, imageId)
+                }
+            }
+
+
+
+            updatedProduct.categories = []
+
+            if (categories.length > 0) {
+                for (let index = 0; index < categories.length; index++) {
+                    const categoryId = categories[index]
+                    if (originalProduct.categories.some(category => category._id === categoryId)) {
+                        updatedProduct.categories.push(categoryId)
+                        continue
+                    }
+                    const newCategory = await this.#productsRepository.addProductToCategory(productId, categoryId)
+                    updatedProduct.categories.push(newCategory._id)
+                }
+            }
+
+            const removedCategories = originalProduct.categories.filter(category => !categories.includes(category._id));
+            if (removedCategories.length > 0) {
+                for (let index = 0; index < removedCategories.length; index++) {
+                    const categoryId = removedCategories[index]._id
+                    await this.#categoriesRepository.deleteCategoryFromProduct(productId, categoryId)
+                }
+            }
+
+
+            productsState.products[originalProductIndex] = updatedProduct
+        } catch (error) {
+            notificationsHelper.fromHttpError(error)
+            throw error
+        }
     }
 
     getTags() {

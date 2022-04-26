@@ -7,7 +7,7 @@ export default class ProductsRepository {
         return response.data
     }
 
-    async toggleBan(value, id) {
+    async toggleStatus(value, id) {
         const response = await http.patch(`api/admin/product/${id}`, value)
         return response.data
     }
@@ -28,7 +28,8 @@ export default class ProductsRepository {
     }
 
     async deleteImageFromProduct(productId, imageName) {
-        const response = await http.patch(`api/admin/product/${productId}/image/${imageName}`)
+        console.log(imageName)
+        const response = await http.delete(`api/admin/product/${productId}/image/${imageName}`)
         return response.data
     }
 

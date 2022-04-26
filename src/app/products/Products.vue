@@ -8,7 +8,6 @@
           @edit="editProduct"
       />
     </div>
-    <!--    <products-pagination />-->
     <product-popup ref="productPopup" />
 
   </div>

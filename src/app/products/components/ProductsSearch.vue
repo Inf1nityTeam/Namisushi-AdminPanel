@@ -22,45 +22,32 @@ import {debounce} from "@/utils/debounce";
 export default {
   name: "products-search",
   components: {CategoriesSelect, SearchInput},
-  methods: {
-    searchByTitle(title) {
-      productsState.searchData.title = title
-      this.changeFilteredProductByTitle(title)
-    },
-    changeFilteredProductByTitle: debounce(function(title) {
-      const products = JSON.parse(JSON.stringify(this.allProducts))
-      productsState.products.filteredProducts = products.filter(product => {
-        return product.title.toLowerCase().includes(title.toLowerCase())
-      })
-    }, 300),
-
-    searchByCategory(category) {
-      const products = JSON.parse(JSON.stringify(this.allProducts))
-      productsState.searchData.category = category
-
-      if (category === '') {
-        productsState.products.filteredProducts = JSON.parse(JSON.stringify(this.allProducts))
-        return
-      }
-
-      productsState.products.filteredProducts = products.filter(product => {
-        return product.categories.some(productCategory => productCategory._id === category)
-      })
+  data() {
+    return {
+      titleInput: ""
     }
   },
-  watch: {
+  methods: {
+    searchByTitle(title) {
+      this.titleInput = title
+    },
+    searchByCategory(category) {
+      productsState.searchData.category = category
+    },
 
   },
   computed: {
-    allProducts() {
-      return productsState.products.allProducts
-    },
     title() {
       return productsState.searchData.title
     },
     category() {
       return productsState.searchData.category
     }
+  },
+  watch: {
+    titleInput: debounce(function(newValue) {
+      productsState.searchData.title = newValue
+    }, 300)
   }
 }
 </script>
