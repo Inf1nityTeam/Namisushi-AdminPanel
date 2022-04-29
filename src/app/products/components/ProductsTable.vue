@@ -9,7 +9,7 @@
       <div class="table__title">Стоимость, ₽</div>
       <div class="table__title">Статус</div>
       <div class="table__title"></div>
-    <template v-for="product in filteredProducts" :key="product._id">
+    <template v-for="(product, index) in filteredProducts" :key="product._id">
       <div class="table__image">
         <el-image
             v-if="product.images?.[0]"
@@ -38,6 +38,7 @@
       <div class="table__status">
         <el-switch
             :value="product.visible"
+            @change="toggleStatus(product._id, product.visible, index)"
             active-color="#F90D0D"
             inactive-color="#D7D7D7"
             :width="28"
@@ -54,7 +55,7 @@
             cancel-button-text="Нет"
         >
           <template #reference>
-            <base-circle-button icon="delete" type="delete"/>
+            <base-circle-button @click="deleteProduct(product._id, index)" icon="delete" type="delete"/>
           </template>
         </el-popconfirm>
       </div>
@@ -77,30 +78,23 @@ export default {
   methods: {
     getProducts() {
       productsState.loading = true
-      // debugger; // eslint-disable-line no-debugger
       productsController.getProducts()
           .then(() => {
             productsState.loading = false
           })
     },
-    // deleteProduct(id, index) {
-    //   productsController.deleteProduct(id)
-    //   .then(() => {
-    //     productsState.products.splice(index, 1)
-    //     productsState.totalProductsCount -= 1
-    //   })
-    // },
-    toggleStatus(value, id, index) {
-      productsController.toggleStatus({visible: value}, id)
+    deleteProduct(id, index) {
+      productsController.deleteProduct(id)
+      .then(() => {
+        productsState.products.splice(index, 1)
+      })
+    },
+    toggleStatus(id, status, index) {
+      productsController.toggleStatus(id, {visible: !status})
       .then(data => {
         productsState.products[index].visible = data.product.visible
       })
     },
-    // changeFilteredProductByTitle: debounce(function(title) {
-    //   return filteredProd.filter(product => {
-    //     return product.title.toLowerCase().includes(title.toLowerCase())
-    //   })
-    // }, 300),
   },
   computed: {
     products() {

@@ -141,7 +141,8 @@ export default {
     open(product = null) {
       if (product) {
         this.isEditMode = true
-        this.product = product
+        this.product = JSON.parse(JSON.stringify(product))
+        this.product.categories = this.product.categories.map(category => category._id)
       }
 
       this.$refs.popup.open()

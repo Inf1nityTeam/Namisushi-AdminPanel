@@ -7,8 +7,8 @@ export default class ProductsRepository {
         return response.data
     }
 
-    async toggleStatus(value, id) {
-        const response = await http.patch(`api/admin/product/${id}`, value)
+    async toggleStatus(id, status) {
+        const response = await http.patch(`api/admin/product/SINGLE/${id}`, status)
         return response.data
     }
 

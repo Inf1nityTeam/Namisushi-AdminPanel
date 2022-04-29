@@ -12,7 +12,6 @@ export default class ProductsService {
 
         const products = await this.#productsRepository.getProducts()
         const categories = await this.#categoriesRepository.getCategories()
-
         //Todo: свойство "categories" нужно для показа списка категорий в таблице
         //Todo: возможно есть способы оптимизировать этот код O(n^3)
         //Todo: но мне кажется, что бэкендеру следует добавить свойство "categories" непосредственно в объект продукта, а не запрашивать список категорий отдельно
@@ -27,7 +26,10 @@ export default class ProductsService {
 
                     for (let index = 0; index < productIds.length; index++) {
                         if (productIds[index] === product._id) {
-                            acc.push(category._id)
+                            acc.push({
+                                title: category.title,
+                                _id: category._id
+                            })
                         }
                     }
                     return acc
@@ -36,9 +38,9 @@ export default class ProductsService {
         ))
     }
 
-    async toggleStatus(value, id) {
+    async toggleStatus(id, status) {
         try {
-            return await this.#productsRepository.toggleStatus(value, id)
+            return await this.#productsRepository.toggleStatus(id, status)
         } catch (error) {
             notificationsHelper.fromHttpError(error)
             throw error
@@ -100,9 +102,6 @@ export default class ProductsService {
         try {
             const { title, description, ingredients, visible, cost, weight, images, categories } = product
 
-            const data = await this.#productsRepository.updateProduct(productId, { title, description, ingredients, visible, cost, weight })
-            const updatedProduct = data.product
-
             const originalProductIndex = productsState.products.findIndex(item => item._id === product._id)
             const originalProduct = productsState.products[originalProductIndex]
 
@@ -115,18 +114,14 @@ export default class ProductsService {
 
                     if (typeof image !== 'string') {
                         formData.append('images', image)
-                    } else {
-                        updatedProduct.images.push(image)
                     }
                 }
                 if (formData.entries().next().value) {
-                    const addedImages = await this.#productsRepository.addImagesToProduct(productId, formData)
-                    updatedProduct.images = addedImages.images.map(image => 'https://nami.devserver.host/api/product/image/' + image)
+                    await this.#productsRepository.addImagesToProduct(productId, formData)
                 }
             }
 
             const removedImages = originalProduct.images.filter(image => !images.includes(image));
-
             if (removedImages.length > 0) {
                 for (let index = 0; index < removedImages.length; index++) {
                     const removedImage = removedImages[index]
@@ -136,22 +131,34 @@ export default class ProductsService {
             }
 
 
-
-            updatedProduct.categories = []
-
+            const updatedCategories = []
             if (categories.length > 0) {
                 for (let index = 0; index < categories.length; index++) {
                     const categoryId = categories[index]
-                    if (originalProduct.categories.some(category => category._id === categoryId)) {
-                        updatedProduct.categories.push(categoryId)
-                        continue
+
+                    if (!originalProduct.categories.some(category => categoryId === category._id)) {
+
+                        const newCategory = await this.#productsRepository.addProductToCategory(productId, categoryId)
+
+                        updatedCategories.push({
+                            _id: newCategory.category._id,
+                            title: newCategory.category.title
+                        })
+                    } else {
+                        const oldCategory = originalProduct.categories.find(category => category._id === categoryId)
+                        if (oldCategory) {
+                            updatedCategories.push({
+                                _id: oldCategory._id,
+                                title: oldCategory.title
+                            })
+                        }
                     }
-                    const newCategory = await this.#productsRepository.addProductToCategory(productId, categoryId)
-                    updatedProduct.categories.push(newCategory._id)
                 }
             }
 
-            const removedCategories = originalProduct.categories.filter(category => !categories.includes(category._id));
+            const removedCategories = originalProduct.categories.filter(productCategory => {
+                return !categories.some(category => productCategory._id === category)
+            })
             if (removedCategories.length > 0) {
                 for (let index = 0; index < removedCategories.length; index++) {
                     const categoryId = removedCategories[index]._id
@@ -159,6 +166,11 @@ export default class ProductsService {
                 }
             }
 
+            const data = await this.#productsRepository.updateProduct(productId, { title, description, ingredients, visible, cost, weight })
+            const updatedProduct = data.product
+
+            updatedProduct.images = updatedProduct.images.map(image => 'https://nami.devserver.host/api/product/image/' + image)
+            updatedProduct.categories = updatedCategories
 
             productsState.products[originalProductIndex] = updatedProduct
         } catch (error) {

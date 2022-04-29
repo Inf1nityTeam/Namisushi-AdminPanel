@@ -7,8 +7,8 @@ class ProductsController {
     async getProducts() {
         await this.#service.getProducts()
     }
-    async toggleStatus(value, id) {
-        return await this.#service.toggleStatus(value, id)
+    async toggleStatus(id, status) {
+        return await this.#service.toggleStatus(id, status)
     }
     async createProduct(product) {
         await this.#service.createProduct(product)
