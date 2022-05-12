@@ -71,7 +71,7 @@ export default {
     .el-input {
       &__inner {
         box-shadow: 5px 5px 10px rgba(0, 74, 255, 0.05), -5px -5px 10px #FAFBFF;
-        border: none;
+        border-color: transparent;
       }
     }
   }

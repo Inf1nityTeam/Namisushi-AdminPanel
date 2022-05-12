@@ -3,7 +3,6 @@ import {createRouter, createWebHistory} from 'vue-router'
 import LoginPage from "../app/loginPage/LoginPage";
 import BaseWrapper from "../app/common/baseWrapper/BaseWrapper";
 import {baseWrapperRoutes} from "../app/common/baseWrapper/base-wrapper.router";
-
 const routes = [{
     path: '/login',
     name: 'login-page',
@@ -12,7 +11,7 @@ const routes = [{
     path: '/',
     name: 'base-wrapper',
     component: BaseWrapper,
-    children: baseWrapperRoutes
+    children: baseWrapperRoutes,
 }]
 
 const router = createRouter({

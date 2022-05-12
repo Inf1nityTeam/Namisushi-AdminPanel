@@ -1,14 +1,14 @@
 <template>
   <div class="table" v-if="filteredProducts.length !== 0">
-      <div class="table__title"></div>
-      <div class="table__title">Наименование</div>
-      <div class="table__title">Описание</div>
-      <div class="table__title">Категория</div>
-      <div class="table__title">Список ингридиентов</div>
-      <div class="table__title">Вес, г</div>
-      <div class="table__title">Стоимость, ₽</div>
-      <div class="table__title">Статус</div>
-      <div class="table__title"></div>
+    <div class="table__title"></div>
+    <div class="table__title">Наименование</div>
+    <div class="table__title">Описание</div>
+    <div class="table__title">Категория</div>
+    <div class="table__title">Список ингридиентов</div>
+    <div class="table__title">Вес, г</div>
+    <div class="table__title">Стоимость, ₽</div>
+    <div class="table__title">Статус</div>
+    <div class="table__title"></div>
     <template v-for="(product, index) in filteredProducts" :key="product._id">
       <div class="table__image">
         <el-image
@@ -24,13 +24,15 @@
       <div class="table__text">
         <template v-if="product.categories.length === 0">-</template>
         <div v-for="(category, index) in product.categories" :key="category._id">
-          {{category.title}}<template v-if="index !== product.categories.length - 1">, </template>
+          {{ category.title }}
+          <template v-if="index !== product.categories.length - 1">,</template>
         </div>
       </div>
       <div class="table__text">
         <template v-if="product.ingredients.length === 0">-</template>
         <template v-for="(ingredient, index) in product.ingredients" :key="ingredient">
-          {{ ingredient }}<template v-if="index !== product.ingredients.length - 1">, </template>
+          {{ ingredient }}
+          <template v-if="index !== product.ingredients.length - 1">,</template>
         </template>
       </div>
       <div class="table__text">{{ product.weight }}</div>
@@ -46,16 +48,24 @@
             :inactive-value="false"/>
       </div>
       <div class="table__actions">
-        <base-circle-button
-            icon="edit"
-            @click="$emit('edit', product)"/>
+        <el-tooltip
+            effect="dark"
+            content="Редактировать"
+            :enterable="false"
+            placement="top"
+        >
+          <base-circle-button
+              icon="edit"
+              :isLink="true"
+              @click.prevent="goToUrl($event, product)"/>
+        </el-tooltip>
         <el-popconfirm
             title="Вы уверены что хотите удалить этот продукт?"
             confirm-button-text="Да"
             cancel-button-text="Нет"
         >
           <template #reference>
-            <base-circle-button @click="deleteProduct(product._id, index)" icon="delete" type="delete"/>
+            <base-circle-button is-link @click="deleteProduct(product._id, index)" icon="delete" type="delete"/>
           </template>
         </el-popconfirm>
       </div>
@@ -85,16 +95,21 @@ export default {
     },
     deleteProduct(id, index) {
       productsController.deleteProduct(id)
-      .then(() => {
-        productsState.products.splice(index, 1)
-      })
+          .then(() => {
+            productsState.products.splice(index, 1)
+          })
     },
     toggleStatus(id, status, index) {
       productsController.toggleStatus(id, {visible: !status})
-      .then(data => {
-        productsState.products[index].visible = data.product.visible
-      })
+          .then(data => {
+            productsState.products[index].visible = data.product.visible
+          })
     },
+    goToUrl($event, product) {
+      $event.preventDefault()
+      productsState.product = JSON.parse(JSON.stringify(product))
+      this.$router.push({name: "product"})
+    }
   },
   computed: {
     products() {
@@ -159,9 +174,11 @@ export default {
     display: flex;
     padding: 16px 14px;
   }
+
   &__image {
     padding: 26px 0 16px;
   }
+
   &__status {
     padding: 26px 14px 16px;
   }
@@ -172,6 +189,7 @@ export default {
 .table {
   .el-switch {
     height: 16px;
+
     &__action {
       width: 12px;
       height: 12px;
@@ -179,14 +197,17 @@ export default {
       transform: translate(0, -50%);
       left: 2px;
     }
+
     &__core {
       border-radius: 28px;
       height: 16px;
     }
+
     &.is-checked .el-switch__action {
       margin-left: -13px;
     }
   }
+
   .el-loading-spinner {
     top: 0 !important;
     margin: 0 !important;

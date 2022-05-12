@@ -3,6 +3,11 @@ export const baseWrapperRoutes = [{
     name: 'users',
     component: () => import('@/app/users')
 },
+    {
+        path: '/product',
+        name: 'product',
+        component: () => import('@/app/products/Product'),
+    },
     ...['/products', '/categories'].map(path => ({
         path,
         name: 'products-and-categories',

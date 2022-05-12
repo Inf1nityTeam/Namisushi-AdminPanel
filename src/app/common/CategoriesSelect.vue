@@ -97,33 +97,40 @@ export default {
   }
   &__caret {
     path {
-      fill: #585858;
+      transition: all 0.3s ease 0s;
+      color: #585858;
     }
     svg {
       width: 16px;
       height: 16px;
+      @media (any-hover: hover) {
+        &:hover {
+          path {
+            color: #1857F3;
+          }
+
+        }
+      }
     }
   }
   &__tags-text {
     overflow: hidden;
     margin-right: 5px;
   }
-  &:hover {
-    .el-input__inner {
-      border-color: #1454F2;
-    }
-  }
+
   .el-input {
-    &.is-focus .el-input__inner {
-      border-color: #1454F2;
-    }
-    &__inner {
-      &:focus {
-        border-color: #1454F2;
-      }
-    }
     & .el-select__caret {
       color: #585858;
+    }
+    &.is-focus {
+      .el-input__inner {
+        border-color: #1857F3;
+      }
+      .el-input__icon.is-reverse {
+        path {
+          color: #1857F3;
+        }
+      }
     }
   }
 

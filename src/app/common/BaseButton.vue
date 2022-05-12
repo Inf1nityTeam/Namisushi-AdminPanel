@@ -35,64 +35,35 @@ export default {
 
   cursor: pointer;
   overflow: hidden;
-
+  transition: background-color 0.3s ease 0s;
   background-color: #1454F2;
   padding: 0 47px;
-  &::after {
-    content: "";
-    position: absolute;
+  font-family: Manrope, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
 
-    top: 0;
-    left: 0;
+  text-align: center;
 
-    width: 100%;
-    height: 100%;
-
-    transition: opacity 0.3s ease;
-
-    background: linear-gradient(180deg, #719DF2 0%, #1454F2 100%);
-
-    opacity: 1;
-  }
-  > span {
-    position: relative;
-    z-index: 2;
-    display: inline-flex;
-    align-items: center;
-  }
+  color: #FFFFFF;
   @media (any-hover: hover) {
     &:hover {
-      &::after {
-        opacity: 0;
-      }
+      background-color: #5E8CFF;
     }
   }
-
+  &:active {
+      background-color: #033ED2;
+  }
   &.outline {
-    > span {
-      font-weight: 400;
-    }
+    font-weight: 400;
     background-color: #fff;
     @media (any-hover: hover) {
       &:hover {
         border: 1px solid #1454F2;
-        > span {
-          color: #1454F2;
-        }
+        color: #1454F2;
       }
     }
-  }
-  > span {
-    font-family: Manrope, sans-serif;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 18px;
-
-    text-align: center;
-    transition: color 0.3s ease 0s;
-
-    color: #FFFFFF;
   }
 }
 </style>
@@ -104,6 +75,7 @@ export default {
     position: relative;
     z-index: 3;
   }
+
   .el-icon {
     margin-right: 10px;
   }

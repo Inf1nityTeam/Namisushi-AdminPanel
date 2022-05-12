@@ -1,5 +1,8 @@
 <template>
-  <button class="base-circle-button"
+  <a v-if="isLink" class="base-circle-button" :class="type">
+    <svg-icon :src="srcIcon"/>
+  </a>
+  <button v-else class="base-circle-button"
           :class="type">
     <svg-icon :src="srcIcon"/>
   </button>
@@ -15,10 +18,11 @@ const iconsMap = new Map()
 
 export default {
   name: "base-circle-button",
-  components: { SvgIcon },
+  components: {SvgIcon},
   props: {
-    icon: { type: String, default: null },
-    type: { type: String, default: null }
+    icon: {type: String, default: null},
+    type: {type: String, default: null},
+    isLink: {type: Boolean, default: false}
   },
   computed: {
     srcIcon() {
@@ -49,6 +53,7 @@ export default {
 
   &.delete {
     background: rgba(255, 88, 88, 0.8);
+
     &:hover {
       background: rgba(255, 88, 88, 0.5);
     }
