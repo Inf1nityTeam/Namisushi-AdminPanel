@@ -14,49 +14,26 @@
     <hr class="base-sidebar__hr base-sidebar__hr--top" />
 
     <div class="base-sidebar__menu base-sidebar__menu--top">
-      <template v-for="el of menuList" :key="el.id">
-        <el-tooltip
-          effect="dark"
-          :content="el.title"
-          :enterable="false"
-          placement="right"
-          :disabled="isCollapsed"
-        >
-          <router-link
-            :to="el.path"
-          >
-            <img :src="require(`@/assets/image/sidebar/${el.img}`)" />
-            <span>{{ el.title }}</span>
-          </router-link>
-        </el-tooltip>
-      </template>
+      <router-link to="/users">
+        <img src="@/assets/image/sidebar/icon-user-management.svg" alt="">
+        <span>Управление пользователями</span>
+      </router-link>
+      <router-link to="/products">
+        <img src="@/assets/image/sidebar/icon-order.svg" alt="">
+        <span>Продукты</span>
+      </router-link>
+      <router-link to="/categories">
+        <img src="@/assets/image/sidebar/icon-category.svg" alt="">
+        <span>Категории</span>
+      </router-link>
     </div>
-
-<!--    <hr class="base-sidebar__hr base-sidebar__hr&#45;&#45;center" />-->
-
-<!--    <div class="base-sidebar__menu base-sidebar__menu&#45;&#45;center">-->
-<!--      <el-tooltip-->
-<!--        effect="dark"-->
-<!--        :content="notificationEl.title"-->
-<!--        placement="right"-->
-<!--        :disabled="isCollapsed"-->
-<!--      >-->
-<!--        <router-link-->
-<!--          :to="notificationEl.path"-->
-<!--          :class="$route.path === '/' ? 'active' : ''"-->
-<!--        >-->
-<!--          <img :src="require(`@/assets/image/sidebar/${notificationEl.img}`)" />-->
-<!--          <span>{{ notificationEl.title }}</span>-->
-<!--        </router-link>-->
-<!--      </el-tooltip>-->
-<!--    </div>-->
 
     <hr class="base-sidebar__hr base-sidebar__hr--last" />
 
     <div class="base-sidebar__menu">
       <a @click.prevent="signOut">
-        <img :src="require(`@/assets/image/sidebar/${logoutEl.img}`)" />
-        <span>{{ logoutEl.title }}</span>
+        <img src="@/assets/image/sidebar/icon-logout.svg" alt=""/>
+        <span>Выйти</span>
       </a>
     </div>
   </header>
@@ -65,7 +42,6 @@
 <script>
 import { baseSidebarState } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.state";
 import BaseSidebarToggle from "@/app/common/baseWrapper/baseSidebar/BaseSidebarToggle";
-import { sidebarMenu } from "@/app/common/baseWrapper/baseSidebar/baseSidebar.config";
 import {userInstanceController} from "@/app/userInstance/user-instance.controller";
 
 export default {
@@ -79,15 +55,6 @@ export default {
   computed: {
     isCollapsed() {
       return baseSidebarState.isCollapsed;
-    },
-    menuList() {
-      return sidebarMenu.slice(0, 3)
-    },
-    logoutEl() {
-      return sidebarMenu[sidebarMenu.length - 1];
-    },
-    notificationEl() {
-      return sidebarMenu[sidebarMenu.length - 2];
     },
   },
 };
@@ -140,7 +107,9 @@ export default {
     transition: all 350ms ease-in-out;
 
     > a {
-      margin: auto;
+      margin: 5px auto;
+      //margin-top: 5px;
+      //margin-bottom: 5px;
       padding: 12px 16px;
       height: 52px;
       border-radius: 10px;
@@ -164,9 +133,9 @@ export default {
         color: rgba(255, 255, 255, 0.9);
       }
 
-      &.router-link-exact-active {
-      background-image: linear-gradient(180deg, #7ea8fc 0%, #2662f3 100%);
-    }
+      &.router-link-exact-active, &:hover {
+        background: #1857F3;
+      }
     }
 
     &:nth-last-child(1) {
@@ -177,7 +146,7 @@ export default {
 
         &:hover {
           //background: rgba(21, 21, 21, 0.7);
-          background: linear-gradient(180deg, #7ea8fc 0%, #2662f3 100%);
+          background: #1857F3;
         }
       }
     }

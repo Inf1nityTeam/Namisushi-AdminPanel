@@ -15,10 +15,9 @@
 
       <div class="base-wrapper__view"
            :style="{ height: 'calc(100vh - 64px)' }">
-        <component v-if="layout" :is="layout">
+        <transition name="el-fade-in-linear">
           <router-view />
-        </component>
-        <router-view v-else />
+        </transition>
       </div>
     </div>
   </div>
@@ -36,9 +35,6 @@ export default {
   computed: {
     isCollapsed() {
       return baseSidebarState.isCollapsed;
-    },
-    layout() {
-      return this.$route.meta.layout || null;
     },
   },
   created() {
