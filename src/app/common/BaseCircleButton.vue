@@ -15,6 +15,7 @@ const iconsMap = new Map()
     .set('check', require('@/assets/image/base-icons/icon-check.svg'))
     .set('edit', require('@/assets/image/base-icons/icon-edit.svg'))
     .set('delete', require('@/assets/image/base-icons/icon-delete.svg'))
+    .set('order', require('@/assets/image/base-icons/icon-order.svg'))
 
 export default {
   name: "base-circle-button",
@@ -44,7 +45,7 @@ export default {
   width: 40px;
   height: 40px;
 
-  background: #1454F2;
+  background: #7AA0FF;
   border-radius: 8px;
   border: none;
 
@@ -60,7 +61,7 @@ export default {
   }
 
   &:hover {
-    background: #7AA0FF;
+    background: #1454F2;
   }
 
 }

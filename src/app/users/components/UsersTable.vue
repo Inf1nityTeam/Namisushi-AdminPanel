@@ -53,6 +53,18 @@
             inactive-color="#ff4949"
         />
       </el-table-column>
+      <el-table-column width="180">
+        <template #default="scope">
+          <div style="display: flex">
+            <base-circle-button
+                icon="edit"
+                @click="$emit('edit-user', scope.row)"/>
+            <base-circle-button
+                icon="order"/>
+          </div>
+        </template>
+<!--        @click="$emit('edit', scope.row)"-->
+      </el-table-column>
     </el-table>
     <div class="users-table__pagination">
       <el-pagination
@@ -66,10 +78,11 @@
 <script>
 import BaseUserAvatar from "@/app/common/BaseUserAvatar";
 import UsersService from "@/app/users/users.service";
+import BaseCircleButton from "@/app/common/BaseCircleButton";
 
 export default {
   name: "users-table",
-  components: { BaseUserAvatar },
+  components: { BaseUserAvatar, BaseCircleButton },
   data() {
     return {
       users: [],
