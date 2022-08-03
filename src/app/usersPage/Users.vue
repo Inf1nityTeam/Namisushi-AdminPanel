@@ -19,14 +19,14 @@
 </template>
 
 <script>
-import UsersTable from "@/app/users/components/UsersTable";
-import UsersFilters from "@/app/users/components/UsersFilters";
-import SendSmsPopup from "@/app/users/components/SendSmsPopup";
-import UserPopup from "@/app/users/components/UserPopup";
+import UsersTable from "@/app/usersPage/components/UsersTable";
+import UsersFilters from "@/app/usersPage/components/UsersFilters";
+import SendSmsPopup from "@/app/usersPage/components/SendSmsPopup";
+import UserPopup from "@/app/usersPage/components/UserPopup";
 
 export default {
-  name: "users",
-  components: {UsersTable, UsersFilters, SendSmsPopup, UserPopup},
+  name: "users-page",
+  components: { UsersTable, UsersFilters, SendSmsPopup, UserPopup },
   methods: {
     openSmsPopup() {
       this.$refs.smsPopup.open()

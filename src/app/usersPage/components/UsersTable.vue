@@ -77,8 +77,9 @@
 
 <script>
 import BaseUserAvatar from "@/app/common/BaseUserAvatar";
-import UsersService from "@/app/users/users.service";
+import UsersService from "@/app/usersPage/users.service";
 import BaseCircleButton from "@/app/common/BaseCircleButton";
+import {usersState} from "@/app/usersPage/users.state";
 
 export default {
   name: "users-table",
@@ -87,6 +88,19 @@ export default {
     return {
       users: [],
       total: 0
+    }
+  },
+  computed: {
+    filters() {
+      return usersState.filters
+    }
+  },
+  watch: {
+    filters: {
+      handler: function () {
+        this.getUsers()
+      },
+      deep: true
     }
   },
   created() {

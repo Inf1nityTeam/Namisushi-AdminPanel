@@ -1,0 +1,17 @@
+<template>
+  <div class="user-page">
+    user-page
+  </div>
+</template>
+
+<script>
+export default {
+  name: "user-page",
+}
+</script>
+
+<style lang="scss" scoped>
+.user-page {
+
+}
+</style>

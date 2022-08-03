@@ -1,12 +1,18 @@
-export const baseWrapperRoutes = [{
-    path: '/users',
-    name: 'users',
-    component: () => import('@/app/users/Users')
-},
+export const baseWrapperRoutes = [
+    {
+        path: '/users',
+        name: 'users',
+        component: () => import('@/app/usersPage/Users')
+    },
     {
         path: '/product',
         name: 'product',
         component: () => import('@/app/products/Product'),
+    },
+    {
+        path: '/user/:userId',
+        name: 'user-page',
+        component: () => import('@/app/userPage/UserPage'),
     },
     ...['/products', '/categories'].map(path => ({
         path,

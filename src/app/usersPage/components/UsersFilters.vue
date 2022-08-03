@@ -3,18 +3,28 @@
        :class="{ 'users-filters--focus': isFocus }">
     <div class="users-filters__item">
       <input type="text"
+             v-model="filters.name"
              @focus="isFocus = true"
              @blur="isFocus = false"
-             placeholder="Поиск по имени и e-mail">
+             placeholder="Поиск по имени">
     </div>
     <div class="users-filters__item">
       <input type="text"
+             v-model="filters.email"
+             @focus="isFocus = true"
+             @blur="isFocus = false"
+             placeholder="Поиск по e-mail">
+    </div>
+    <div class="users-filters__item">
+      <input type="text"
+             v-model="filters.phone"
              @focus="isFocus = true"
              @blur="isFocus = false"
              placeholder="Поиск по номеру телефона">
     </div>
     <div class="users-filters__item">
       <input type="text"
+             v-model="filters.address"
              @focus="isFocus = true"
              @blur="isFocus = false"
              placeholder="Поиск по адресу">
@@ -23,11 +33,18 @@
 </template>
 
 <script>
+import {usersState} from "@/app/usersPage/users.state";
+
 export default {
   name: "users-filters",
   data() {
     return {
       isFocus: false
+    }
+  },
+  computed: {
+    filters() {
+      return usersState.filters
     }
   }
 }
